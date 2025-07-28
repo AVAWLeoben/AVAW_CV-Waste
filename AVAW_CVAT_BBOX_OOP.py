@@ -13,19 +13,11 @@ from pathlib import Path
 from ultralytics import YOLO  # Using the Ultralytics YOLO model
 import copy
 from tkinter import messagebox, Message, filedialog, Scale
+from tkinter import colorchooser
 import colorsys
 import webbrowser
 import numpy as np
 import natsort
-
-
-
-# Preload a YOLO model for inference
-#try:
-#    yolo_model = YOLO('best.pt')  # Replace with your pre-trained YOLO model (e.g., yolov8n.pt)
-#except:
-#    messagebox.showinfo("showinfo", "No Custom YOLO Model Found, downloading YOLOv8n...") 
-#    yolo_model = YOLO("yolov8n.pt")
 
 
 class Archive:
@@ -403,7 +395,7 @@ class PredictionModelHandler:
             # Load and validate model
             new_yolo_model = self.load_model(model_path)
             # Test prediction on logo to ensure model works
-            new_yolo_model("files/logo.png")
+            new_yolo_model("files_bbox/logo.png")
             messagebox.showinfo("showinfo", "New YOLO Model loaded")
 
             # Store in owner
@@ -415,6 +407,7 @@ class PredictionModelHandler:
                 "New YOLO Model loading failed - reverting to last model\n"
             )
 
+    
     def run_yolo_inference(self, event=None):
         """Run YOLO inference on the current image and update annotations."""
         if not hasattr(self.owner, "yolo_model") or self.owner.yolo_model is None:
@@ -423,7 +416,7 @@ class PredictionModelHandler:
             return
 
         # Prepare current image for inference
-        image = np.array(self.owner.image_pil)
+        image = self.owner.image
 
         # Perform inference
         results = self.owner.yolo_model(
@@ -573,7 +566,7 @@ class BoxList:
         self.boxlist.protocol("WM_DELETE_WINDOW", self.on_close)
 
         # Set custom icon
-        p1 = tk.PhotoImage(file='files/logo.png')
+        p1 = tk.PhotoImage(file='files_bbox/logo.png')
         self.boxlist.iconphoto(False, p1)
         self.icon_image = p1  # prevent garbage collection
 
@@ -655,6 +648,8 @@ class BoxList:
         self.boxlist.withdraw()
         self.shown = False
 
+
+
 class ImageListWindow:
     def __init__(self, owner, event=None):
         self.owner = owner
@@ -726,7 +721,7 @@ class ModelSettingsWindow:
         self.model_window.bind("<Enter>", lambda event: self.model_window.focus_set())
 
         # Set icon
-        p1 = tk.PhotoImage(file='files/logo.png')
+        p1 = tk.PhotoImage(file='files_bbox/logo.png')
         self.model_window.iconphoto(False, p1)
 
         # Confidence scale
@@ -787,7 +782,7 @@ class TranslateAnnotationsWindow:
         self.translate_window.protocol("WM_DELETE_WINDOW", self.on_close)
 
         # Set icon
-        p1 = tk.PhotoImage(file='files/logo.png')
+        p1 = tk.PhotoImage(file='files_bbox/logo.png')
         self.translate_window.iconphoto(False, p1)
 
         # Vertical scale
@@ -837,6 +832,132 @@ class TranslateAnnotationsWindow:
     def on_close(self):
         """Hide instead of destroy when X is clicked."""
         self.translate_window.withdraw()
+        self.shown = False
+
+class Window:
+    def __init__(self,owner,title="Window", size="400x400"):
+        self.owner = owner
+        self.shown = False
+        # Create Toplevel window
+        self.window = tk.Toplevel(self.owner.root)
+        self.window.title(title)
+        self.window.geometry(size)
+        self.window.withdraw()  # Start hidden
+        self.window.protocol("WM_DELETE_WINDOW", self.on_close)
+        
+    def toggle(self, event=None):
+        """Show/hide the colour selection window."""
+        if self.shown:
+            self.window.withdraw()
+            self.shown = False
+        else:
+            self.window.deiconify()
+            self.shown = True
+
+    def on_close(self):
+        """Hide instead of destroy when X is clicked."""
+        self.window.withdraw()
+        self.shown = False
+
+class ColourSelectWindow(Window):
+    def __init__(self, owner):
+        # Call base class constructor
+        super().__init__(owner, title="Class Colour Selection", size="400x400")
+
+        # Get class names and colours
+        self.class_names = self.owner.class_names
+        self.colour_list = self.owner.class_colors  # Shared reference
+
+        # Left frame for class buttons
+        self.left_frame = tk.Frame(self.window, width=200, bg="lightgray")
+        self.left_frame.pack(side=tk.LEFT, fill=tk.Y)
+
+        # Right frame for colour selector (MS Paint style)
+        self.right_frame = tk.Frame(self.window, width=400, bg="white")
+        self.right_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+        # Build class buttons
+        self.class_buttons = []
+        for idx, name in enumerate(self.class_names):
+            color_hex = self.rgb_to_hex(self.colour_list[idx])
+            btn = tk.Button(
+                self.left_frame,
+                text=name,
+                bg=color_hex,
+                fg="white",
+                command=lambda i=idx: self.open_color_picker(i)
+            )
+            btn.pack(fill=tk.X, padx=5, pady=5)
+            self.class_buttons.append(btn)
+
+        # Build palette UI
+        self.build_palette()
+
+    def rgb_to_hex(self, rgb):
+        """Convert (R,G,B) list or tuple to hex string."""
+        r, g, b = rgb
+        return "#%02x%02x%02x" % (r, g, b)
+
+    def build_palette(self):
+        """Draw a simple palette similar to MS Paint with preset colors."""
+        preset_colors = [
+            "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF",
+            "#000000", "#FFFFFF", "#808080", "#800000", "#008000", "#000080"
+        ]
+        rows, cols = 3, 4
+        for i, color in enumerate(preset_colors):
+            row, col = divmod(i, cols)
+            canvas = tk.Canvas(self.right_frame, bg=color, width=50, height=50, highlightthickness=1, highlightbackground="black")
+            canvas.grid(row=row, column=col, padx=5, pady=5)
+            canvas.bind("<Button-1>", lambda e, c=color: self.set_selected_color(c))
+
+        # Add "Custom Color..." button (like MS Paint)
+        tk.Button(self.right_frame, text="Custom Color...", command=self.choose_custom_color).grid(row=rows, column=0, columnspan=cols, pady=10)
+
+        # Label to show selected color
+        self.selected_color_preview = tk.Label(self.right_frame, text="Selected Color", width=20, height=2, relief=tk.SUNKEN)
+        self.selected_color_preview.grid(row=rows+1, column=0, columnspan=cols, pady=10)
+
+    def set_selected_color(self, hex_color):
+        """Set selected color from palette and preview it."""
+        self.selected_color_preview.config(bg=hex_color)
+        self.current_color = hex_color
+        if hasattr(self, 'current_class_idx'):
+            # Update class button color immediately
+            self.class_buttons[self.current_class_idx].config(bg=hex_color)
+            self.colour_list[self.current_class_idx] = self.hex_to_rgb(hex_color)
+            self.owner.class_colors[self.current_class_idx] = self.hex_to_rgb(hex_color)
+            self.owner.draw_image()
+
+    def choose_custom_color(self):
+        """Open system color chooser dialog."""
+        color_code = colorchooser.askcolor(title="Choose a custom color")
+        if color_code[1]:
+            self.set_selected_color(color_code[1])
+
+    def open_color_picker(self, class_idx):
+        """When a class button is clicked, mark it active and preview its color."""
+        self.current_class_idx = class_idx
+        current_hex = self.rgb_to_hex(self.colour_list[class_idx])
+        self.set_selected_color(current_hex)
+
+    def hex_to_rgb(self, hex_color):
+        """Convert hex (#RRGGBB) to (R,G,B)."""
+        hex_color = hex_color.lstrip("#")
+        return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+
+    def toggle(self, event=None):
+        """Show/hide the colour selection window."""
+        if self.shown:
+            self.window.withdraw()
+            self.shown = False
+        else:
+            self.window.deiconify()
+            self.shown = True
+
+    def on_close(self):
+        """Hide instead of destroy when X is clicked."""
+        self.window.withdraw()
         self.shown = False
 
 class MenuBar:    
@@ -907,6 +1028,7 @@ class UserInterface:
         self.owner.root.bind("<F1>", self.owner.HELPER.show_help)
         self.owner.root.bind("<F2>", self.owner.BOX_LIST.toggle)
         self.owner.root.bind("<F3>", self.owner.IMAGE_LIST_WINDOW.toggle)
+        self.owner.root.bind("<F4>", self.owner.COLOUR_SELECT_WINDOW.toggle)
         self.owner.root.bind("<F12>",self.owner.USER_INPUT_HANDLER.take_screenshot)
         self.owner.root.bind("<p>", self.owner.USER_INPUT_HANDLER.set_save_flag)
         self.owner.root.bind("<h>", self.owner.USER_INPUT_HANDLER.show_confidences)
@@ -1395,7 +1517,7 @@ class UserInputHandler:
         self.owner.draw_image()
 
 class Helper:
-    def __init__(self, owner, help_path="files/help.txt", url="https://docs.ultralytics.com/models/fast-sam/"):
+    def __init__(self, owner, help_path="files_bbox/help.txt", url="https://docs.ultralytics.com/models/fast-sam/"):
         """
         Initialize Helper with paths to help file and URL.
         """
@@ -1442,8 +1564,8 @@ class BBOX_App:
         self.start_x, self.start_y = 0, 0
         self.current_image_index = 0
         self.image_paths = []
-        self.annotation_folder = "annotations"  # Folder containing images and annotations
-        self.files_folder = "files"  # Folder containing setup files
+        self.annotation_folder = "annotations_bbox"  # Folder containing images and annotations
+        self.files_folder = "files_bbox"  # Folder containing setup files
         self.canvas = None  # Initialize canvas variable
         self.adding_new_box = False  # Flag to indicate if we're adding a new bounding box
         self.new_box_start = None  # Starting point for new box creation
@@ -1488,6 +1610,7 @@ class BBOX_App:
         self.IMAGE_LIST_WINDOW = None        
         self.MODEL_SETTINGS_WINDOW = None        
         self.TRANSLATE_ANNOTATIONS_WINDOW = None        
+        self.COLOUR_SELECT_WINDOW = None
         
         self.class_names_path = os.path.join(os.getcwd(),self.files_folder,"class_names.txt")        
         if os.path.exists(self.class_names_path):
@@ -1502,13 +1625,12 @@ class BBOX_App:
         self.class_colors = self.generate_colors(10)
 
         # Initialize the Tkinter window
-        #self.root = tk.Tk()
         self.root = tk.Toplevel(caller_root)
         self.root.title("Image with YOLO Annotations")
 
         # Set window icon
-        #p1 = tk.PhotoImage(file='files/MUL-logo.ico') 
-        #self.root.iconphoto(False, p1)
+        p1 = tk.PhotoImage(file='files_bbox/logo.png') 
+        self.root.iconphoto(False, p1)
 
         # Get the list of image files
         image_extensions = ['.png', '.jpg', '.jpeg']
@@ -1541,7 +1663,7 @@ class BBOX_App:
         self.IMAGE_LIST_WINDOW = ImageListWindow(self)
         self.MODEL_SETTINGS_WINDOW = ModelSettingsWindow(self)
         self.TRANSLATE_ANNOTATIONS_WINDOW = TranslateAnnotationsWindow(self)
-        
+        self.COLOUR_SELECT_WINDOW = ColourSelectWindow(self)
         # Setup User Controls   
         self.USERINTERFACE = UserInterface(self)
         

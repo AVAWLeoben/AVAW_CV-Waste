@@ -1,0 +1,34 @@
+Help - Key Controls
+
+Navigation:
+Right Arrow: Next image
+Left Arrow: Previous image
+Up Arrow: Save Current Annotations
+S: Save Current Annotations
+"Jump To Image" Button: Enter image index and jump to it
+
+Bounding Box Actions:
+N: Start a new bounding box (Click and drag to create)
+Delete: Delete selected bounding box
+Class Selection: Use the dropdown or context menu to change class
+Undo: Undo the last action
+C: Copy Current Box to Clipboard
+V: Paste Box from Clipboard to current Image
+
+Editing:
+Move Box: Click and drag inside a box to move it
+Resize Box: Drag from a corner of a selected box
+Context Menu No Box Selected(Right-click):
+Save Annotations: Save all annotations
+Paste: Paste Box from Clipboard to current Image
+
+Context Menu Box Selected(Right-click):
+Delete: Delete selected bounding box
+Copy: Copy Current Box to Clipboard
+Classes: Change Class of Current Box
+
+Other:
+F1: Show this help message
+F2: Show List of all Boxes
+F3: Show Image selection
+Run YOLO Inference: Auto-detect objects in the image

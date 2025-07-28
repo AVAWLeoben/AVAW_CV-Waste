@@ -1,0 +1,29 @@
+Keyboard Shortcuts:
+
+- N: Toggle new mask creation mode
+- M: Toggle manual polygon drawing mode
+- Delete: Delete selected mask
+- Backspace: Delete selected vertex
+- D: Simplify selected mask
+- Insert: Add vertex to selected mask in counterclockwise mode
+- F1: Show this help menu
+- F2: Open/close box list
+- Left Arrow: Previous image
+- Right Arrow: Next image
+
+Mouse Controls:
+
+- Left Click: Select mask or vertex
+- Middle Click + Drag: Move Segmentation Mask
+- Left Click + Drag: Create new mask in new mask Creation mode
+- Mouse Wheel: Zoom in/out
+- Right Click: Pan
+
+Button Functions:
+
+- Segment Image: Run FastSAM segmentation on whole image
+- Simplify Annotations: Simplify all masks
+- Reset Zoom: Reset zoom level
+- Previous/Next: Navigate between images
+- Jump To Image: Go to image index entered in counter
+- Save Annotations: Save current image annotations
