@@ -447,6 +447,7 @@ class PredictionModelHandler:
         # Redraw updated image
         self.owner.draw_image()
 
+
         
 class ZoomWindow:
     def __init__(self, owner, event=None):
@@ -628,7 +629,10 @@ class BoxList:
         # Create buttons for each annotation
         for i, ann in enumerate(self.owner.ANNOTATION_HANDLER.annotations):
             color_hex = self.rgb2hex(self.owner.class_colors[ann[0]])
-            box_class_name = self.owner.class_names[ann[0]]
+            try:
+                box_class_name = self.owner.class_names[ann[0]]
+            except:
+                box_class_name = "N.A."
 
             btn = tk.Button(
                 self.scrollable_frame,
@@ -859,6 +863,56 @@ class Window:
         self.window.withdraw()
         self.shown = False
 
+class ChangeClassNamesWindow(Window):    
+    def __init__(self,owner):
+        super().__init__(owner,title="Change Class Names",size="400x200")
+
+        self.label = tk.Label(self.window, text="Edit class names (comma-separated):")
+        self.label.pack(pady=10)
+
+        self.text_input = tk.Text(self.window, height=4, width=40)
+        self.text_input.pack(padx=10)
+        self.text_input.insert(tk.END, ", ".join(self.owner.class_names))  # Show current class names
+
+        self.save_button = tk.Button(self.window, text="Save", command=self.save_changes)
+        self.save_button.pack(pady=10)
+    
+    def save_changes(self):
+        input_text = self.text_input.get("1.0", tk.END).strip()
+        class_names = []
+        if input_text:
+            class_names[:] = [name.strip() for name in input_text.split(',') if name.strip()]
+            self.owner.class_names = class_names
+            self.generate_colors(len(class_names))
+            messagebox.showinfo("Success", "Class names updated!")
+            if self.owner.class_dropdown:
+                self.owner.class_dropdown.configure(values=class_names)
+                self.owner.class_dropdown.current(0)
+            if self.owner.CHANGE_CLASS_NAMES_WINDOW:
+                self.owner.COLOUR_SELECT_WINDOW.update_on_class_name_change()
+            if self.owner.USERINTERFACE:    
+                self.owner.USERINTERFACE.create_context_sensitive_drop_down_menu()
+            self.toggle()
+            
+        else:
+            messagebox.showwarning("Empty Input", "Class names cannot be empty.")
+
+    def generate_colors(self,n):
+        global colors
+        base_colors = [
+            (255, 0, 0),       # Red
+            (0, 128, 0),       # Green
+            (0, 0, 255),       # Blue
+            (255, 165, 0),     # Orange
+            (128, 0, 128),     # Purple
+            (0, 255, 255),     # Cyan
+            (0, 0, 0),         # Black
+            (255, 192, 203),   # Pink
+            (139, 69, 19),     # Brown
+        ]
+        # Repeat colors if more are needed, but preserve order
+        self.owner.class_colors = [base_colors[i % len(base_colors)] for i in range(n)]
+
 class ColourSelectWindow(Window):
     def __init__(self, owner):
         # Call base class constructor
@@ -892,7 +946,29 @@ class ColourSelectWindow(Window):
 
         # Build palette UI
         self.build_palette()
-
+    
+    def update_on_class_name_change(self):
+        self.class_names = self.owner.class_names
+        self.colour_list = self.owner.class_colors  # Shared reference
+        
+        # Clear existing widgets in left_frame
+        for widget in self.left_frame.winfo_children():
+            widget.destroy()
+        
+        # Build class buttons
+        self.class_buttons = []
+        for idx, name in enumerate(self.class_names):
+            color_hex = self.rgb_to_hex(self.colour_list[idx])
+            btn = tk.Button(
+                self.left_frame,
+                text=name,
+                bg=color_hex,
+                fg="white",
+                command=lambda i=idx: self.open_color_picker(i)
+            )
+            btn.pack(fill=tk.X, padx=5, pady=5)
+            self.class_buttons.append(btn)
+        
     def rgb_to_hex(self, rgb):
         """Convert (R,G,B) list or tuple to hex string."""
         r, g, b = rgb
@@ -1029,6 +1105,7 @@ class UserInterface:
         self.owner.root.bind("<F2>", self.owner.BOX_LIST.toggle)
         self.owner.root.bind("<F3>", self.owner.IMAGE_LIST_WINDOW.toggle)
         self.owner.root.bind("<F4>", self.owner.COLOUR_SELECT_WINDOW.toggle)
+        self.owner.root.bind("<F5>", self.owner.CHANGE_CLASS_NAMES_WINDOW.toggle)
         self.owner.root.bind("<F12>",self.owner.USER_INPUT_HANDLER.take_screenshot)
         self.owner.root.bind("<p>", self.owner.USER_INPUT_HANDLER.set_save_flag)
         self.owner.root.bind("<h>", self.owner.USER_INPUT_HANDLER.show_confidences)
@@ -1611,6 +1688,7 @@ class BBOX_App:
         self.MODEL_SETTINGS_WINDOW = None        
         self.TRANSLATE_ANNOTATIONS_WINDOW = None        
         self.COLOUR_SELECT_WINDOW = None
+        self.CHANGE_CLASS_NAMES_WINDOW = None
         
         self.class_names_path = os.path.join(os.getcwd(),self.files_folder,"class_names.txt")        
         if os.path.exists(self.class_names_path):
@@ -1664,6 +1742,10 @@ class BBOX_App:
         self.MODEL_SETTINGS_WINDOW = ModelSettingsWindow(self)
         self.TRANSLATE_ANNOTATIONS_WINDOW = TranslateAnnotationsWindow(self)
         self.COLOUR_SELECT_WINDOW = ColourSelectWindow(self)
+        try:
+            self.CHANGE_CLASS_NAMES_WINDOW = ChangeClassNamesWindow(self)
+        except Exception as e:
+            print(e)
         # Setup User Controls   
         self.USERINTERFACE = UserInterface(self)
         
@@ -1704,6 +1786,7 @@ class BBOX_App:
         # Generate colors if not initialized
         if self.class_colors is None:
             self.generate_colors(len(self.class_names))
+            self.generate_colors(20)
     
         # Draw annotations
         for i, box in enumerate(self.ANNOTATION_HANDLER.annotations):
@@ -1731,8 +1814,12 @@ class BBOX_App:
                 cv2.rectangle(self.image_rgb, (x1, y1), (x2, y2), color, 1)
     
             fontSize = 0.6
-            cv2.putText(self.image_rgb, str(self.class_names[label]), (x1, y1 - 5),
-                        cv2.FONT_HERSHEY_SIMPLEX, fontSize, color, 1)
+            try:
+                cv2.putText(self.image_rgb, str(self.class_names[label]), (x1, y1 - 5),
+                            cv2.FONT_HERSHEY_SIMPLEX, fontSize, color, 1)
+            except:
+                cv2.putText(self.image_rgb, "N.A.", (x1, y1 - 5),
+                            cv2.FONT_HERSHEY_SIMPLEX, fontSize, color, 1)
     
             if self.show_conf:
                 try:
