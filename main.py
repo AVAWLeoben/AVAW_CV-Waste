@@ -195,7 +195,7 @@ def initialize_app(image_path):
     spacer_left = tk.Label(choose_app_frame)
     spacer_left.pack(side="left", expand=True)
     
-    seg_button = tk.Button(choose_app_frame, text="Segmentation APP", width=25, height=2, command=lambda: start_seg_app(bu_root))
+    seg_button = tk.Button(choose_app_frame, text="Segmentation APP", width=25, height=2, command=start_old_seg)
     seg_button.pack(side="left", padx=20)
     
     spacer_middle = tk.Label(choose_app_frame)
@@ -215,6 +215,10 @@ def initialize_app(image_path):
     
 def start_old_bbox():
     BBOX_App(bu_root)
+
+def start_old_seg():
+    from AVAW_CVAT_SEG_OOP import initialize_app
+    initialize_app(None,None,bu_root)
     
 def start_seg_app(bu_root):
 
