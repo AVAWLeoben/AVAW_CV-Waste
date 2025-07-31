@@ -1,0 +1,11 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Koinig, Lorber, Aberger, Koinig, Tischberger-Aldrian
+    given-names: Gerald, Bojan, Julian, harald, Alexia
+    orcid: https://orcid.org/0000-0003-1740-7432
+title: "AVAW CVAT"
+version: 0.0.4
+date-released: 2024-10-01
+license: MIT
+repository-code: "https://github.com/AVAWLeoben/AVAW_CVAT
