@@ -1,18 +1,12 @@
-# Updates:
-    # check if new bounding box is inside image size
-    # 0.71 Added Zoom Window, open with "z"
-
-
 import tkinter as tk
 from tkinter import Canvas, ttk
-#from tkinter import ALL, EventType
 from PIL import Image, ImageTk
 import cv2
 import os
 from pathlib import Path
 from ultralytics import YOLO  # Using the Ultralytics YOLO model
 import copy
-from tkinter import messagebox, Message, filedialog, Scale
+from tkinter import messagebox, filedialog
 from tkinter import colorchooser
 import colorsys
 import webbrowser
@@ -141,11 +135,8 @@ class ImageHandler:
             self.load_image(self.owner.current_image_index + 1)
             self.owner.selected_box = None
 
-            # Refresh BoxList if available
-            try:
-                self.owner.BOX_LIST.refresh_boxlist()
-            except Exception:
-                pass
+            # Refresh BoxList
+            self.owner.BOX_LIST.refresh_boxlist()
 
     def previous_image(self, event=None):
         """Go to the previous image."""
@@ -182,7 +173,7 @@ class ImageHandler:
         )
 
         if file_path:
-            cv2.imwrite(file_path, cv2.cvtColor(np.array(self.owner.image_pil), cv2.COLOR_RGB2BGR))
+            cv2.imwrite(file_path, np.array(self.owner.image))
             print(f"Image saved at {file_path}")
 
             self.owner.image_paths.append(file_path)
@@ -2113,7 +2104,6 @@ class BBOX_App:
         # Convert to PIL and then to Tkinter format
         self.image_pil = Image.fromarray(self.image_rgb)
         self.image_tk = ImageTk.PhotoImage(self.image_pil)
-        #self.image_id = self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image_tk)
         
         vx = self.ZOOMER.view_offset_x
         vy = self.ZOOMER.view_offset_y
