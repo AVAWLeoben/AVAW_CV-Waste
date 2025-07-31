@@ -94,6 +94,7 @@ class ImageHandler:
         """Load image by index and update the canvas + annotations."""
         if 0 <= index < len(self.owner.image_paths):
             # Update current image index and paths
+            self.owner.ZOOMER.reset_zoom()
             self.owner.current_image_index = index
             self.owner.image_path = self.owner.image_paths[index]
             self.owner.annotations_path = os.path.splitext(self.owner.image_path)[0] + ".txt"
@@ -247,6 +248,7 @@ class AnnotationHandler:
 
     # Function to save YOLO annotations to .txt file
     def save_yolo_annotations(self,annotations_path, annotations, image_width, image_height):
+        self.owner.ZOOMER.reset_zoom()
         with open(annotations_path, 'w') as file:
             for box in self.annotations:
                 label, x1, y1, x2, y2 = box
@@ -1447,7 +1449,8 @@ class UserInputHandler:
     def on_save(self):
         try:
             self.owner.last_save = copy.deepcopy(self.owner.ANNOTATION_HANDLER.annotations)
-            self.owner.ANNOTATION_HANDLER.save_yolo_annotations(self.owner.annotations_path, self.owner.ANNOTATION_HANDLER.annotations, self.owner.image_pil.width, self.owner.image_pil.height)
+            self.owner.ANNOTATION_HANDLER.save_yolo_annotations(self.owner.annotations_path, self.owner.ANNOTATION_HANDLER.annotations, self.owner.image.shape[0], self.owner.image.shape[1])
+
             messagebox.showinfo("Success", f"Annotations saved to {self.owner.annotations_path}")
             print(f"Annotations saved to {self.owner.annotations_path}")
         except Exception as e:
@@ -2110,7 +2113,7 @@ class BBOX_App:
         # Convert to PIL and then to Tkinter format
         self.image_pil = Image.fromarray(self.image_rgb)
         self.image_tk = ImageTk.PhotoImage(self.image_pil)
-        self.image_id = self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image_tk)
+        #self.image_id = self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image_tk)
         
         vx = self.ZOOMER.view_offset_x
         vy = self.ZOOMER.view_offset_y
