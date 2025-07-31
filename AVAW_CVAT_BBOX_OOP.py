@@ -45,7 +45,7 @@ class Archive:
             # Remove the current state and revert to the previous one
             self.archive.pop()
             self.owner.ANNOTATION_HANDLER.annotations = copy.deepcopy(self.archive[-1])  # Revert to the previous state
-            self.owner.draw_image()
+            self.owner.update_display()
         else:
             print("Nothing to undo")  
 
@@ -56,7 +56,7 @@ class DataAugmentor:
         self.owner.image = cv2.flip(self.owner.image,0)
         self.flip_annotations_lr()
         #delete_all_annotations()
-        self.owner.draw_image()
+        self.owner.update_display()
 
     def flip_annotations_lr(self):
         flipped_annotations = []
@@ -67,13 +67,13 @@ class DataAugmentor:
             y1,y2 = min(y1,y2),max(y1,y2)
             flipped_annotations.append([class_id, x1, y1, x2, y2])
         self.owner.ANNOTATION_HANDLER.annotations = flipped_annotations
-        self.owner.draw_image()
+        self.owner.update_display()
         
     def flip_ud(self):
         self.owner.image = cv2.flip(self.owner.image,1)
         self.flip_annotations_ud()
         #delete_all_annotations()
-        self.owner.draw_image()
+        self.owner.update_display()
 
     def flip_annotations_ud(self):
         flipped_annotations = []
@@ -84,7 +84,7 @@ class DataAugmentor:
             x1,x2 = min(x1,x2),max(x1,x2)
             flipped_annotations.append([class_id, x1, y1, x2, y2])
         self.owner.ANNOTATION_HANDLER.annotations = flipped_annotations
-        self.owner.draw_image()
+        self.owner.update_display()
 
 class ImageHandler:
     def __init__(self, owner):
@@ -125,7 +125,7 @@ class ImageHandler:
             self.owner.title_label.config(text=image_name)
 
             # Draw image on canvas
-            self.owner.draw_image()
+            self.owner.update_display()
 
     def next_image(self, event=None):
         """Go to the next image."""
@@ -188,7 +188,7 @@ class ImageHandler:
             self.load_image(len(self.owner.image_paths) - 1)
             self.owner.number.set(len(self.owner.image_paths) - 1)
             self.owner.USER_INPUT_HANDLER.jump_to_image()
-            self.owner.draw_image()
+            self.owner.update_display()
         else:
             print("Save operation canceled.")
 
@@ -216,7 +216,7 @@ class ImageHandler:
 
         self.owner.current_image_index = 0
         self.load_image(0)
-        self.owner.draw_image()
+        self.owner.update_display()
  
 
 class AnnotationHandler:
@@ -293,7 +293,7 @@ class AnnotationHandler:
                 annotation[i] += 1
         self.clamp_all_coordinates()
         self.remove_dim1_annotations()
-        self.owner.draw_image()
+        self.owner.update_display()
 
     def translate_up(self, event=None):
         for annotation in self.annotations:
@@ -301,7 +301,7 @@ class AnnotationHandler:
                 annotation[i] -= 1
         self.clamp_all_coordinates()
         self.remove_dim1_annotations()
-        self.owner.draw_image()
+        self.owner.update_display()
 
     def translate_right(self, event=None):
         for annotation in self.annotations:
@@ -309,7 +309,7 @@ class AnnotationHandler:
                 annotation[i] += 1
         self.clamp_all_coordinates()
         self.remove_dim1_annotations()
-        self.owner.draw_image()
+        self.owner.update_display()
         
     def translate_left(self, event=None):
         for annotation in self.annotations:
@@ -317,7 +317,7 @@ class AnnotationHandler:
                 annotation[i] -= 1
         self.clamp_all_coordinates()
         self.remove_dim1_annotations()
-        self.owner.draw_image()
+        self.owner.update_display()
     
     def reset_translation(self, event=None):             
         self.w1.set(0)
@@ -325,7 +325,7 @@ class AnnotationHandler:
         self.owner.root.update_idletasks()
         
         self.annotations = copy.deepcopy(self.owner.annotation_backup_before_translation)  
-        self.owner.draw_image()        
+        self.owner.update_display()        
        
     def translate_vertical(self, event=None):
         new_value = self.owner.TRANSLATE_ANNOTATIONS_WINDOW.w1.get()
@@ -333,7 +333,7 @@ class AnnotationHandler:
         self.add_vertical_translation_to_annotations(difference)
         self.clamp_all_coordinates()
         self.remove_dim1_annotations()
-        self.owner.draw_image()
+        self.owner.update_display()
         self.owner.last_translate_value_y.set(new_value)
 
     def add_vertical_translation_to_annotations(self, difference):
@@ -347,7 +347,7 @@ class AnnotationHandler:
         self.add_horizontal_translation_to_annotations(difference)
         self.clamp_all_coordinates()
         self.remove_dim1_annotations()
-        self.owner.draw_image()
+        self.owner.update_display()
         self.owner.last_translate_value_x.set(new_value)
 
     def add_horizontal_translation_to_annotations(self,difference):
@@ -358,7 +358,7 @@ class AnnotationHandler:
 
     def get_last_annotations(self):
         self.annotations = copy.deepcopy(self.owner.last_annotations)
-        self.owner.draw_image()
+        self.owner.update_display()
         
     def delete_duplicates(self, event=None):
         len_old = len(self.annotations)
@@ -369,7 +369,7 @@ class AnnotationHandler:
         
     def delete_all_annotations(self, event=None):
         self.annotations = []
-        self.owner.draw_image()
+        self.owner.update_display()
 
 class PredictionModelHandler:
     def __init__(self, owner):
@@ -445,7 +445,7 @@ class PredictionModelHandler:
             self.owner.ANNOTATION_HANDLER.annotations.append([cls, int(x1), int(y1), int(x2), int(y2)])
 
         # Redraw updated image
-        self.owner.draw_image()
+        self.owner.update_display()
 
 
         
@@ -612,7 +612,7 @@ class BoxList:
         """Set which box is selected and refresh display."""
         self.owner.selected_box = index
         self.refresh_boxlist()
-        self.owner.draw_image()  # external function to redraw main image
+        self.owner.update_display()  # external function to redraw main image
 
     def refresh_boxlist(self):
         """Rebuild the buttons list when annotations change."""
@@ -1003,7 +1003,7 @@ class ColourSelectWindow(Window):
             self.class_buttons[self.current_class_idx].config(bg=hex_color)
             self.colour_list[self.current_class_idx] = self.hex_to_rgb(hex_color)
             self.owner.class_colors[self.current_class_idx] = self.hex_to_rgb(hex_color)
-            self.owner.draw_image()
+            self.owner.update_display()
 
     def choose_custom_color(self):
         """Open system color chooser dialog."""
@@ -1215,9 +1215,11 @@ class UserInputHandler:
         self.owner = owner
     def show_confidences(self,event=None):
         self.owner.show_conf = not self.owner.show_conf
-        self.owner.draw_image()
+        self.owner.update_display()
     def getBox(self,event):        
         a = []
+        x, y = self.owner.ZOOMER.convert_coordinates(event)
+        
         self.owner.start_x, self.owner.start_y = event.x, event.y
         selected_box = None
         self.owner.resize_corner = None
@@ -1228,37 +1230,40 @@ class UserInputHandler:
         
         for i, box in enumerate(self.owner.ANNOTATION_HANDLER.annotations):
             _ ,x1, y1, x2, y2, = box            
-            if event.x > x1-margin and event.x < x2+margin and event.y > y1-margin and event.y < y2+margin:
-                if x1 - margin < event.x < x1 + margin and y1 - margin < event.y < y1 + margin:
+            if x > x1-margin and x < x2+margin and y > y1-margin and y < y2+margin:
+                if x1 - margin < x < x1 + margin and y1 - margin < y < y1 + margin:
                     selected_box = i
                     a.append(i)
                     self.owner.resize_corner = 'top_left'
                     self.owner.resizing = True
                     break
-                elif x2 - margin < event.x < x2 + margin and y1 - margin < event.y < y1 + margin:
+                elif x2 - margin < x < x2 + margin and y1 - margin < event.y < y1 + margin:
                     selected_box = i
                     a.append(i)
                     self.owner.resize_corner = 'top_right'
                     self.owner.resizing = True
                     break
-                elif x1 - margin < event.x < x1 + margin and y2 - margin < event.y < y2 + margin:
+                elif x1 - margin < x < x1 + margin and y2 - margin < y < y2 + margin:
                     selected_box = i
                     a.append(i)
                     self.owner.resize_corner = 'bottom_left'
                     self.owner.resizing = True
                     break
-                elif x2 - margin < event.x < x2 + margin and y2 - margin < event.y < y2 + margin:
+                elif x2 - margin < x < x2 + margin and y2 - margin < y < y2 + margin:
                     selected_box = i
                     a.append(i)
                     self.owner.resize_corner = 'bottom_right'
                     self.owner.resizing = True
                     break
-                elif x1 < event.x < x2 and y1 < event.y < y2:
+                elif x1 < x < x2 and y1 < y < y2:
                     selected_box = i
                     a.append(i)
                     self.owner.dragging = True
                     # When selecting a bounding box, update the class dropdown to show the current class
-                    self.owner.class_dropdown.set(str(self.owner.class_names[box[0]]))  # Set dropdown to the class of the selected box
+                    if box[0] < len(self.owner.class_names):
+                        self.owner.class_dropdown.set(str(self.owner.class_names[box[0]]))  # Set dropdown to the class of the selected box
+                    else:
+                        print(f"Class: {box[0]} not yet in class names list")
                     #break
                 
                 smallest_size = 9999999
@@ -1277,6 +1282,8 @@ class UserInputHandler:
     # Mouse click event to select a bounding box (for moving or resizing)
     def on_click(self,event):        
         self.owner.USER_INPUT_HANDLER.stop_multiselect()
+        x, y = self.owner.ZOOMER.convert_coordinates(event)
+        
         # Check if we are adding a new box
         if self.owner.adding_new_box:
             self.owner.selected_box = None
@@ -1285,14 +1292,14 @@ class UserInputHandler:
 
         self.owner.selected_box = self.getBox(event)
             
-        self.owner.draw_image()  # Redraw the image to highlight the selected box
+        self.owner.update_display()  # Redraw the image to highlight the selected box
 
     def select_all(self, event = None):        
         self.owner.multiselect_on = True
         for idx in range(len(self.owner.ANNOTATION_HANDLER.annotations)):
             if idx not in self.owner.multiselect_idx:
                 self.owner.multiselect_idx.append(idx)
-        self.owner.draw_image()
+        self.owner.update_display()
 
     def on_multiselect(self, event):        
         self.owner.multiselect_on = True
@@ -1305,7 +1312,7 @@ class UserInputHandler:
         if self.owner.multiselect_on and selected_box_idx not in self.owner.multiselect_idx and self.owner.selected_box_idx is not None:
             self.owner.multiselect_idx.append(selected_box_idx)
             
-        self.owner.draw_image()  # Redraw the image to highlight the selected box
+        self.owner.update_display()  # Redraw the image to highlight the selected box
 
     def on_multi_drag(self, event):
         dx = event.x - self.owner.start_x
@@ -1329,16 +1336,18 @@ class UserInputHandler:
         
         self.owner.ANNOTATION_HANDLER.remove_dim1_annotations()
         
-        self.owner.draw_image()
+        self.owner.update_display()
         
             
     # Mouse drag event to move or resize the selected bounding box, or create a new one
     def on_drag(self, event):
-        
+        zoom_factor = self.owner.ZOOMER.zoom_factor
         self.owner.dragging = True
         if self.owner.selected_box is not None:
             dx = event.x - self.owner.start_x
             dy = event.y - self.owner.start_y
+            dx = dx / zoom_factor
+            dy = dy / zoom_factor
 
             # Handle resizing
             if self.owner.resizing:
@@ -1358,13 +1367,13 @@ class UserInputHandler:
                 self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box] = [label, x1 + dx, y1 + dy, x2 + dx, y2 + dy]
 
             self.owner.start_x, self.owner.start_y = event.x, event.y
-            self.owner.draw_image()
+            self.owner.update_display()
 
         # Handle creating a new box
         if self.owner.adding_new_box and self.owner.new_box_start:
             x1, y1 = self.owner.new_box_start
             x2, y2 = event.x, event.y
-            self.owner.draw_image()  # Redraw everything, including the new box outline
+            self.owner.update_display()  # Redraw everything, including the new box outline
             self.owner.canvas.create_rectangle(x1, y1, x2, y2, outline="green", width=2)
         
         if self.owner.selected_box is None:
@@ -1376,12 +1385,13 @@ class UserInputHandler:
         self.owner.dragging = False
         self.owner.resizing = False
         self.owner.resize_corner = ""
-                
+        zoom_factor = self.owner.ZOOMER.zoom_factor
+        view_offset_x = self.owner.ZOOMER.view_offset_x
+        view_offset_y = self.owner.ZOOMER.view_offset_y
         # If adding a new box, finalize it
         if self.owner.adding_new_box and self.owner.new_box_start:
-            x1, y1 = self.owner.new_box_start
-            x2, y2 = event.x, event.y
-            
+            x1, y1 = self.owner.ZOOMER.convert_to_original(self.owner.new_box_start[0], self.owner.new_box_start[1])
+            x2, y2 = self.owner.ZOOMER.convert_to_original(event.x, event.y)
             if x1 > x2:
                 x1, x2 = x2, x1
                 
@@ -1400,7 +1410,7 @@ class UserInputHandler:
                 
             self.owner.new_box_start = None
             self.owner.adding_new_box = False
-            self.owner.draw_image()  # Redraw the image with the new box
+            self.owner.update_display()  # Redraw the image with the new box
             
         elif self.owner.selected_box is not None:
             curr_box = self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box]
@@ -1431,7 +1441,7 @@ class UserInputHandler:
                 self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box][3] = x2
                 self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box][4] = y2
             
-            self.owner.draw_image()  # Redraw the image with the new box
+            self.owner.update_display()  # Redraw the image with the new box
 
     # Function to handle saving the modified annotations
     def on_save(self):
@@ -1464,14 +1474,14 @@ class UserInputHandler:
             for box in self.owner.copying_box:
                 self.owner.ANNOTATION_HANDLER.annotations.append(box)
             self.owner.selected_box = None
-            self.owner.draw_image()
+            self.owner.update_display()
             return
         
         if self.owner.copying_box is not None:
             self.owner.ANNOTATION_HANDLER.annotations.append(self.owner.copying_box)
             self.owner.selected_box = len(self.owner.ANNOTATION_HANDLER.annotations)-1
             print("Pasted")
-            self.owner.draw_image()
+            self.owner.update_display()
         else:
             print("Nothing to Paste")
 
@@ -1508,7 +1518,7 @@ class UserInputHandler:
                 del self.owner.ANNOTATION_HANDLER.annotations[idx]
             self.stop_multiselect()
             self.owner.selected_box = None
-            self.owner.draw_image()
+            self.owner.update_display()
             return
         
         if self.owner.selected_box is not None:
@@ -1516,7 +1526,7 @@ class UserInputHandler:
                 del self.owner.confidences[self.owner.selected_box]
             del self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box]  # Remove the selected box from the list
             self.owner.selected_box = None  # Deselect after deletion
-            self.owner.draw_image()  # Redraw the image without the deleted box
+            self.owner.update_display()  # Redraw the image without the deleted box
 
     def delete_selected_box_menu(self):           
         if 0 <= self.owner.selected_box < len(self.owner.confidences):
@@ -1525,7 +1535,7 @@ class UserInputHandler:
         del self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box]  # Remove the selected box from the list
         
         self.owner.selected_box = None  # Deselect after deletion
-        self.owner.draw_image()  # Redraw the image without the deleted box
+        self.owner.update_display()  # Redraw the image without the deleted box
 
     def jump_to_image(self, event=None):
         try:
@@ -1551,7 +1561,7 @@ class UserInputHandler:
         if self.owner.selected_box is not None:
             new_class = int(self.owner.class_names.index(self.owner.class_dropdown.get()))
             self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box][0] = new_class        
-            self.owner.draw_image()
+            self.owner.update_display()
             if self.owner.buttons:
                 self.owner.buttons[self.owner.selected_box].config(text="Box "+str(self.owner.selected_box)+" "+self.owner.class_names[new_class])
 
@@ -1591,7 +1601,7 @@ class UserInputHandler:
                 
                 self.owner.class_dropdown.set(str(self.owner.class_names[self.owner.ANNOTATION_HANDLER.annotations[idx][0]]))
                 
-        self.owner.draw_image()
+        self.owner.update_display()
 
 class Helper:
     def __init__(self, owner, help_path="files_bbox/help.txt", url="https://docs.ultralytics.com/models/fast-sam/"):
@@ -1627,11 +1637,258 @@ class Helper:
             # Fallback to Google if something goes wrong
             webbrowser.open("https://www.google.com")
 
+class Zoomer:
+    def __init__(self, owner):
+        self.owner = owner
+        self.root = self.owner.root
+                       
+        # Zooming
+        self.owner.root.bind("<MouseWheel>", self.zoom)
+        self.zoom_factor = 1.0
+        self.last_zoom_factor = -1.0
+        self.view_offset_x = 0
+        self.view_offset_y = 0
+        self.do_zoom = False
+                        
+        # Panning
+        self.owner.root.bind("<Button-2>", self.start_pan)
+        self.owner.root.bind("<ButtonRelease-2>", self.stop_pan)
+        self.owner.root.bind("<B2-Motion>", self.do_pan)  # While moving with button 2 pressed
+        self.start_pan_x = 0
+        self.start_pan_y = 0
+        self.image_dragging = False
+        
+        
+    def zoom(self, event):
+        scale_factor = 1.1 if event.delta > 0 else 0.9
+        self.zoom_factor *= scale_factor
+        
+        cursor_x, cursor_y = event.x, event.y
+        
+        self.view_offset_x = (self.view_offset_x - cursor_x) * scale_factor + cursor_x
+        self.view_offset_y = (self.view_offset_y - cursor_y) * scale_factor + cursor_y
+        self.do_zoom = True
+        
+        print(self.zoom_factor)
+        if self.zoom_factor < 1:
+            self.reset_zoom()
+        print(self.zoom_factor)
+        
+        self.owner.update_display()
     
+    def convert_coordinates(self, event):
+        x, y = (event.x - self.view_offset_x) / self.zoom_factor, (event.y - self.view_offset_y) / self.zoom_factor
+        return x,y
+    
+    def convert_to_original(self, x,y):
+        x_orig, y_orig = (x - self.view_offset_x) / self.zoom_factor, (y - self.view_offset_y) / self.zoom_factor
+        return x_orig, y_orig
+    
+    def start_pan(self, event):
+        # Save starting point
+        self.start_pan_x, self.start_pan_y = event.x, event.y
+        self.image_dragging = True
+    
+    def stop_pan(self, event):
+        # Stop dragging
+        self.image_dragging = False
+    
+    def do_pan(self, event):
+        if self.image_dragging:
+            dx, dy = event.x - self.start_pan_x, event.y - self.start_pan_y
+            self.view_offset_x += dx
+            self.view_offset_y += dy
+            self.start_pan_x, self.start_pan_y = event.x, event.y
+    
+            # Calculate image size after zoom
+            img_width = 640 * self.zoom_factor
+            img_height = 640 * self.zoom_factor
+    
+            canvas_width = 640   # You should have this stored somewhere
+            canvas_height = 640
+    
+            # Clamp the offsets
+            max_offset_x = 0
+            max_offset_y = 0
+    
+            min_offset_x = min(0, canvas_width - img_width)
+            min_offset_y = min(0, canvas_height - img_height)
+    
+            if self.view_offset_x > max_offset_x:
+                self.view_offset_x = max_offset_x
+            elif self.view_offset_x < min_offset_x:
+                self.view_offset_x = min_offset_x
+    
+            if self.view_offset_y > max_offset_y:
+                self.view_offset_y = max_offset_y
+            elif self.view_offset_y < min_offset_y:
+                self.view_offset_y = min_offset_y
+    
+            self.owner.update_display()
+              
+    
+    def reset_zoom(self):
+        self.zoom_factor = 1
+        self.last_zoom_factor = -1
+        self.view_offset_x = 0
+        self.view_offset_y = 0
+        self.owner.update_display()
+
+class Zoomer_Old:
+    def __init__(self, owner):
+        self.owner = owner
+        self.zoom_factor = 1.0
+        self.root = self.owner.root
+        self.set_keybinds()
+        self.scale_factor = 1
+        
+        # Zoom center in original image coordinates
+        self.zoom_center_x = 0
+        self.zoom_center_y = 0
+
+        # Current crop offsets
+        self.crop_left = 0
+        self.crop_top = 0
+
+        self.enlarged_image_np = None
+        self.cropped_image_pil = None
+        
+        self.view_offset_x = 0
+        self.view_offset_y = 0
+        self.cursor_x = 0
+        self.cursor_y = 0
+
+    def set_keybinds(self):
+        self.owner.root.bind("<MouseWheel>", self.on_mousewheel)
+
+    def on_mousewheel(self, event):
+        # 1) Convert cursor (canvas coords) → original coords
+        orig_x, orig_y = self.convert_to_original(event.x, event.y)
+        
+        # 2) Adjust zoom factor
+        self.scale_factor = 1.1 if event.delta > 0 else 0.9
+        self.zoom_factor = max(1.0, round(self.scale_factor * self.zoom_factor, 2))
+
+        # 3) Update zoom center in original coords
+        self.zoom_center_x = orig_x
+        self.zoom_center_y = orig_y
+
+        # 4) Redraw
+        self.enlarge_image()
+        self.print_on_enlarged_image()
+        self.crop_image()
+        self.overwrite_image_in_owner()
+
+    def enlarge_image(self):
+        np_image_to_enlarge = self.owner.image
+        np_image_to_enlarge = cv2.cvtColor(np_image_to_enlarge, cv2.COLOR_RGB2BGR)
+        # Original dimensions
+        h, w = np_image_to_enlarge.shape[:2]
+
+        # New dimensions
+        new_w = round(w * self.zoom_factor)
+        new_h = round(h * self.zoom_factor)
+
+        # Resize with OpenCV
+        self.enlarged_image_np = cv2.resize(
+            np_image_to_enlarge,
+            (new_w, new_h),
+            interpolation=cv2.INTER_NEAREST
+        )
+
+    def print_on_enlarged_image(self):
+        zoomed_annotations = [
+            [coord * self.zoom_factor for coord in ann[1:]]
+            for ann in self.owner.ANNOTATION_HANDLER.annotations
+        ]
+        for box in zoomed_annotations:
+            x1, y1, x2, y2 = map(int, box)
+            cv2.rectangle(self.enlarged_image_np, (x1, y1), (x2, y2), (0, 255, 0), 1)
+
+    def crop_image(self):
+        crop_w, crop_h = 640, 640
+
+        # Convert zoom center to enlarged image coords
+        center_x = self.zoom_center_x * self.zoom_factor
+        center_y = self.zoom_center_y * self.zoom_factor
+
+        img_w = self.enlarged_image_np.shape[1]
+        img_h = self.enlarged_image_np.shape[0]
+
+        # Initial crop box
+        left = int(center_x - crop_w // 2)
+        top = int(center_y - crop_h // 2)
+        right = left + crop_w
+        bottom = top + crop_h
+
+        # Clamp to bounds
+        if left < 0:
+            right -= left
+            left = 0
+        if top < 0:
+            bottom -= top
+            top = 0
+        if right > img_w:
+            left -= (right - img_w)
+            right = img_w
+        if bottom > img_h:
+            top -= (bottom - img_h)
+            bottom = img_h
+
+        # Ensure no negatives after shifting
+        left = max(0, left)
+        top = max(0, top)
+
+        # Save crop offsets for coordinate conversions
+        self.crop_left = left
+        self.crop_top = top
+
+        # Crop and store
+        cropped = self.enlarged_image_np[top:bottom, left:right]
+        self.cropped_image_pil = Image.fromarray(cropped)
+
+    def overwrite_image_in_owner(self):     
+        
+        self.owner.image_tk = ImageTk.PhotoImage(self.cropped_image_pil)
+        self.owner.image_id = self.owner.canvas.create_image(
+            self.view_offset_x, self.view_offset_y, anchor=tk.NW, image=self.owner.image_tk
+        )
+
+    def convert_to_original(self, canvas_x, canvas_y):
+        """
+        Convert canvas coords → original image coords
+        considering current zoom and crop offsets.
+        """
+        # Translate canvas to enlarged coords
+        enlarged_x = canvas_x + self.crop_left
+        enlarged_y = canvas_y + self.crop_top
+
+        # Convert to original coords
+        orig_x = enlarged_x / self.zoom_factor
+        orig_y = enlarged_y / self.zoom_factor
+        
+        orig_x = min(max(orig_x, 0), self.owner.image.shape[1] - 1)
+        orig_y = min(max(orig_y, 0), self.owner.image.shape[0] - 1)
+
+        return orig_x, orig_y
+    
+    def convert(self, canvas_x, canvas_y):
+        """
+        Convert canvas click to original image coordinates.
+        """
+        # Account for crop offset (from last crop)
+        abs_x = canvas_x + self.view_offset_x
+        abs_y = canvas_y + self.view_offset_y
+
+        # Convert to original size by removing zoom factor
+        orig_x = abs_x / self.zoom_factor
+        orig_y = abs_y / self.zoom_factor
+
+        return orig_x, orig_y
 
 
 class BBOX_App:
-    def __init__(self,caller_root):        
+    def __init__(self,caller_root=None):        
         # Instance variables for tracking interactions
         self.class_dropdown = None
         self.selected_box = None
@@ -1658,6 +1915,7 @@ class BBOX_App:
         self.scrollable_frame = None
         self.multiselect_on = False
         self.multiselect_idx = []
+        self.selected_box_idx = None
         self.image_pil = None
         self.last_save = None
         self.confidences = []
@@ -1690,6 +1948,7 @@ class BBOX_App:
         self.COLOUR_SELECT_WINDOW = None
         self.CHANGE_CLASS_NAMES_WINDOW = None
         
+        
         self.class_names_path = os.path.join(os.getcwd(),self.files_folder,"class_names.txt")        
         if os.path.exists(self.class_names_path):
             with open(self.class_names_path, 'r') as file:
@@ -1703,13 +1962,19 @@ class BBOX_App:
         self.class_colors = self.generate_colors(10)
 
         # Initialize the Tkinter window
-        self.root = tk.Toplevel(caller_root)
+        if caller_root == None:
+            self.root = tk.Tk()
+        else:
+            self.root = tk.Toplevel(caller_root)
         self.root.title("Image with YOLO Annotations")
-
+        
         # Set window icon
         p1 = tk.PhotoImage(file='files_bbox/logo.png') 
         self.root.iconphoto(False, p1)
-
+        
+        # Create instance of Zoomer Class to handle Zoom function
+        self.ZOOMER = Zoomer(self)
+        
         # Get the list of image files
         image_extensions = ['.png', '.jpg', '.jpeg']
         self.image_paths = [os.path.join(self.annotation_folder, f) 
@@ -1756,6 +2021,8 @@ class BBOX_App:
                                  validate="key", validatecommand=(validate_command, "%P"))
         index_counter.pack(side=tk.BOTTOM)
         
+        
+        
         # Run the Tkinter main loop
         self.root.mainloop()
 
@@ -1772,16 +2039,20 @@ class BBOX_App:
             # Scale RGB from 0-1 to 0-255
             self.class_colors.append([int(c * 255) for c in rgb])
 
-    def setup(self):
-        pass
-    def update(self):
-        pass
-    def draw_image(self):
+    def update_display(self):
         # Clear canvas
         self.canvas.delete("all")
-    
+        
+        # Zoom
+        zoom_factor = self.ZOOMER.zoom_factor
+        if zoom_factor is not self.ZOOMER.last_zoom_factor:
+            self.image_pil = Image.fromarray(self.image)
+            image_resized = self.image_pil.resize((int(self.image_pil.width * zoom_factor), int(self.image_pil.height * zoom_factor)), Image.NEAREST)
+            image_np_orig = np.array(image_resized)   
+        
+        
         # Convert image to RGB for display
-        self.image_rgb = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+        self.image_rgb = cv2.cvtColor(image_np_orig, cv2.COLOR_BGR2RGB)
     
         # Generate colors if not initialized
         if self.class_colors is None:
@@ -1791,11 +2062,15 @@ class BBOX_App:
         # Draw annotations
         for i, box in enumerate(self.ANNOTATION_HANDLER.annotations):
             label, x1, y1, x2, y2 = box
+            x1 = int(x1 * self.ZOOMER.zoom_factor)
+            x2 = int(x2 * self.ZOOMER.zoom_factor)
+            y1 = int(y1 * self.ZOOMER.zoom_factor)
+            y2 = int(y2 * self.ZOOMER.zoom_factor)
             color = self.class_colors[label]
     
             # Highlight selected box
             if i == self.selected_box:
-                vertices = [(box[1], box[2]), (box[3], box[2]), (box[1], box[4]), (box[3], box[4])]
+                vertices = [(x1, y1), (x2, y1), (x1, y2), (x2, y2)]
                 corners = {
                     "top_left": vertices[0],
                     "top_right": vertices[1],
@@ -1836,6 +2111,10 @@ class BBOX_App:
         self.image_pil = Image.fromarray(self.image_rgb)
         self.image_tk = ImageTk.PhotoImage(self.image_pil)
         self.image_id = self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image_tk)
+        
+        vx = self.ZOOMER.view_offset_x
+        vy = self.ZOOMER.view_offset_y
+        self.image_id = self.canvas.create_image(vx, vy, anchor=tk.NW, image=self.image_tk)
     
         # Update archive and UI elements
         self.ARCHIVE.fill_archive()
