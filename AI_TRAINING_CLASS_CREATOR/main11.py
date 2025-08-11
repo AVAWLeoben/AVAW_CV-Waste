@@ -19,6 +19,7 @@ import sys
 
 ###
 #%% Button Callbacks
+    
 def train_model(caller=None):   
     global TRAIN_PROCESS
     if TRAINING_FLAG.value == True:
@@ -476,27 +477,6 @@ def remove_class(caller=None):
         create_class_folder_buttons()
         easygui.msgbox(f"Deleted: {', '.join(selected)}")
 
-
-def save_class(caller):
-    new_folder_name = caller.name
-    new_folder_path = os.path.join(MAIN_FOLDER_PATH,new_folder_name)
-    class_to_save = CLASSES.get(caller.name)
-    images_to_save = class_to_save.image_paths
-    if not os.path.exists(new_folder_path):
-        os.mkdir(new_folder_path)
-    # Copy all images from images_to_save into the new folder
-    # Copy images
-    for image_path in images_to_save:
-        filename = os.path.basename(image_path)
-        dest_path = os.path.join(new_folder_path, filename)
-    
-        # Avoid overwriting existing files (optional)
-        if not os.path.exists(dest_path):
-            shutil.copy2(image_path, dest_path)
-        else:
-            print(f"Skipped: {filename} (already exists)")
-    
-
 def add_new_class(caller):
     new_class_name = easygui.enterbox("Enter new class name:")
     if new_class_name:  # If user didn't cancel
@@ -582,7 +562,7 @@ class Class:
         self.class_name = class_name
         if folder_path is not None:
             self.folder_path = folder_path  # rename to clarify
-            self.image_paths = self._get_image_paths()
+            self.image_paths = self._get_image_paths()            
         else:
             self.image_paths = []
 
@@ -591,11 +571,47 @@ class Class:
         valid_ext = ('.png', '.jpg', '.jpeg', '.bmp', '.gif')
 
         # Build full paths and filter
-        return [
+        return natsorted([
             os.path.join(self.folder_path, f)
             for f in os.listdir(self.folder_path)
             if f.lower().endswith(valid_ext)
-        ]
+        ])
+    
+
+    def save(self,caller=None):
+        new_folder_name = self.class_name
+        new_folder_path = os.path.join(MAIN_FOLDER_PATH,new_folder_name)
+        class_to_save = self
+        images_to_save = self.image_paths
+        if not os.path.exists(new_folder_path):
+            os.mkdir(new_folder_path)
+        # Copy all images from images_to_save into the new folder
+        # Copy images
+        for image_path in images_to_save:
+            filename = os.path.basename(image_path)
+            dest_path = os.path.join(new_folder_path, filename)
+        
+            # Avoid overwriting existing files (optional)
+            if not os.path.exists(dest_path):
+                shutil.copy2(image_path, dest_path)
+            else:
+                print(f"Skipped: {filename} (already exists)")
+        # List files currently in the destination folder
+        target_file_list = os.listdir(new_folder_path)
+    
+        # Build a set of filenames that *should* be there
+        valid_filenames = set(os.path.basename(p) for p in images_to_save)
+    
+        # Delete any files in the folder that are NOT in images_to_save
+        for file in target_file_list:
+            if file not in valid_filenames:
+                try:
+                    os.remove(os.path.join(new_folder_path, file))
+                    print(f"Deleted: {file} (not in source list)")
+                except Exception as e:
+                    print(f"Error deleting {file}: {e}")
+        
+        self._get_image_paths()
 
 class Menu:
     ACTIVE_MENU = None
@@ -887,10 +903,10 @@ class Class_Image_Menu:
         self.remove_buttons = []
         self.marked_image_indices = []
         self.mark_buttons = []
-        
+        self.image_paths = natsorted(self.image_paths)
         for image_path in self.image_paths:
             try:
-                img = pygame.image.load(image_path).convert_alpha()
+                img = pygame.image.load(image_path)
                 img = pygame.transform.scale(img, (100, 100))
                 remove_button = Button(0,0,25,25,self.delete_image,IMAGES.get("remove"),image_path,show_name=False)
                 mark_button = Button(0,0,25,25,self.mark_image,IMAGES.get("checked"),image_path,show_name=False)
@@ -987,6 +1003,8 @@ class Class_Image_Menu:
         
         
         self.marked_image_indices = []
+        target_class.save()
+        target_class.image_paths = target_class._get_image_paths()
     
     def mark_image(self,caller=None):
         idx = self.image_paths.index(caller.name)
@@ -1000,6 +1018,7 @@ class Class_Image_Menu:
         new_folder_path = os.path.join(MAIN_FOLDER_PATH,new_folder_name)
         class_to_save = CLASSES.get(self.name)
         images_to_save = class_to_save.image_paths
+        images_to_save = self.image_paths
         if not os.path.exists(new_folder_path):
             os.mkdir(new_folder_path)
         # Copy all images from images_to_save into the new folder
@@ -1013,7 +1032,24 @@ class Class_Image_Menu:
                 shutil.copy2(image_path, dest_path)
             else:
                 print(f"Skipped: {filename} (already exists)")
+        # List files currently in the destination folder
+        target_file_list = os.listdir(new_folder_path)
+    
+        # Build a set of filenames that *should* be there
+        valid_filenames = set(os.path.basename(p) for p in images_to_save)
+    
+        # Delete any files in the folder that are NOT in images_to_save
+        for file in target_file_list:
+            if file not in valid_filenames:
+                try:
+                    os.remove(os.path.join(new_folder_path, file))
+                    print(f"Deleted: {file} (not in source list)")
+                except Exception as e:
+                    print(f"Error deleting {file}: {e}")
+        
+            ####
         self.archive_length_at_last_save = len(self.archive["paths"])
+        easygui.msgbox(f"Class: {self.name} saved under {new_folder_path}")
     
     def undo(self,caller):
         if self.last_click+self.debounce < time.time():
@@ -1039,6 +1075,7 @@ class Class_Image_Menu:
             idx = self.image_paths.index(caller.name)
             self.images.remove(self.images[idx])
             self.image_paths.remove(caller.name)
+            
             self.remove_buttons.remove(caller)
             self.mark_buttons.remove(self.mark_buttons[idx])
             self.image_draw_rects.remove(self.image_draw_rects[idx])
@@ -1250,7 +1287,7 @@ def create_class_folder_buttons():
     draw_area_x_min = 100
     draw_area_x_max = 900
     draw_area_y_min = 100
-    draw_area_y_max = 800
+    draw_area_y_max = 30000
 
     area_width = draw_area_x_max - draw_area_x_min
     area_height = draw_area_y_max - draw_area_y_min
@@ -1319,6 +1356,9 @@ def load_images():
 
 #%% Setup Functions  
 def setup():    
+    global MAIN_FOLDER_PATH
+    MAIN_FOLDER_PATH = ""
+    
     global TRAIN_PROCESS
     TRAIN_PROCESS = None
     
@@ -1344,10 +1384,7 @@ def setup():
     CLOCK = pygame.time.Clock()
     
     load_images()
-    
-    global MAIN_FOLDER_PATH
-    MAIN_FOLDER_PATH = ""
-    
+            
     global CLASS_NAMES, CLASS_PATHS, CLASS_CONTENTS, CLASSES
     CLASS_NAMES = []
     CLASS_PATHS = {}
