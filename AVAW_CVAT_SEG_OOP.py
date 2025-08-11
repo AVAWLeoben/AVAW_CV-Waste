@@ -1556,9 +1556,15 @@ def load_image():
         aspect_ratio = original_width / original_height
         new_height = max_height
         new_width = int(max_height * aspect_ratio)
-        # Resize the image
+        # Resize the image to fit height of viewport
         image = image.resize((new_width,new_height))
-   
+    
+    # Resize the image to fit width of viewport
+    if image.size[0] > 640:
+        new_width = 640
+        new_height  = int(new_width / aspect_ratio)
+        image = image.resize((new_width,new_height))
+    
     #image.resize((int(image.width * zoom_factor), int(image.height * zoom_factor)), Image.LANCZOS)
     tk_image = ImageTk.PhotoImage(image)    
     image_name = Path(image_paths[curr_image_index]).stem
@@ -1632,3 +1638,4 @@ def y_key_release(event):
 # Run the application
 if __name__=="__main__":
     initialize_app("155.png", "model.pt")
+
