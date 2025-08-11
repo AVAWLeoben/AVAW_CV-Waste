@@ -30,6 +30,9 @@ import webbrowser
 import time
 import pygame.color
 
+from seg_helper import MorphologicSegHelper
+
+
 # Global variables
 annotations = []  # Each entry is [class_id, x1, y1, x2, y2, ..., xn, yn]
 annotations_folder = None
@@ -82,7 +85,16 @@ last_zoom_factor = 1
 image_resized = None
 image_np_orig = None
 
+def segment_image_with_morphhelper(event=None):
+    global annotations
+    annotations = SEGHELPER.segment_image(image_paths[curr_image_index])
+    update_display(None)
+
 def initialize_app(image_path, model_path, caller_root = None):
+    global SEGHELPER
+    SEGHELPER = MorphologicSegHelper()
+    
+    
     global root, canvas, tk_image, original_image, image, model, class_dropdown, colors, number, title_label, w1, is_y_pressed, context_menu_mask_not_selected, context_menu_mask_selected
 
     if caller_root == None:
@@ -230,6 +242,7 @@ def initialize_app(image_path, model_path, caller_root = None):
     root.bind("<Return>",jump_to_image)
     root.bind("q",merge_annotations)
     root.bind("a",select_all)
+    root.bind("l", segment_image_with_morphhelper)
     
     # Translate Annotations
     root.bind("2",translate_down)
@@ -826,7 +839,7 @@ def show_model_settings():
     model_window.title("Model Setting")
     model_window.geometry("400x400")      
     
-    p1 = tk.PhotoImage(file = 'files/logo.png') 
+    p1 = tk.PhotoImage(file = 'MUL-logo.png') 
     model_window.iconphoto(False,p1)
     
     w3 = Scale(model_window, from_=0, to=1, tickinterval=0.1, resolution = 0.1, orient=tk.HORIZONTAL, command=change_conf, length = 300, label="Set Min Confidence", font=("TkDefaultFont", 10))
@@ -929,7 +942,7 @@ def show_boxlist(event=None):
     boxlist.title("Boxlist")
     boxlist.geometry("200x600")
     
-    p1 = tk.PhotoImage(file = 'files/logo.png') 
+    p1 = tk.PhotoImage(file = 'files_bbox/logo.png') 
     boxlist.iconphoto(False,p1)
         
     # Show how many Segments there are in the image
