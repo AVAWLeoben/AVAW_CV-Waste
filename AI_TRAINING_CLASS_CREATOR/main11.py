@@ -558,8 +558,9 @@ class ProgressBar:
 
 
 class Class:
-    def __init__(self, class_name, folder_path=None):
+    def __init__(self, class_name, folder_path=None):             
         self.class_name = class_name
+        self.folder_path = None
         if folder_path is not None:
             self.folder_path = folder_path  # rename to clarify
             self.image_paths = self._get_image_paths()            
@@ -581,6 +582,7 @@ class Class:
     def save(self,caller=None):
         new_folder_name = self.class_name
         new_folder_path = os.path.join(MAIN_FOLDER_PATH,new_folder_name)
+        self.folder_path = new_folder_path
         class_to_save = self
         images_to_save = self.image_paths
         if not os.path.exists(new_folder_path):
