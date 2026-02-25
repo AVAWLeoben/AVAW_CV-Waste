@@ -225,13 +225,8 @@ More Information in INSTALL/install.txt
 
 ## 🤝 Contributing
 
-Pull requests and issues are welcome.
-
-Suggested workflow:
-
-1. Fork the repo
-2. Create a feature branch
-3. Submit a PR
+If you want to contribute, feel free to contact Bojan Lorber via bojan.lorber@unileoben.ac.at. 
+Moreover, you can do so by reporting bugs and/or suggesting new feautures.
 
 ---
 
@@ -261,5 +256,6 @@ Technical University of Leoben
 * Pillow
 
 ---
+
 
 
