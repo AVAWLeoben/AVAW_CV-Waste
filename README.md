@@ -23,13 +23,14 @@ Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assiste
 ## 🖥️ Screenshots
 
 ![Alt text](DEMO/Screenshot_UI.png)
-*(Add screenshots here if desired)*
+
+*(TODO Add More screenshots here)*
 
 ---
 
 ## 📦 Installation
 
-### Option A — Using pip (recommended)
+### Option A — Using pip 
 
 ```bash
 git clone https://github.com/<your-org>/<repo-name>.git
@@ -46,7 +47,7 @@ pip install -r requirements.txt
 
 ---
 
-### Option B — Using Conda
+### Option B — Using Conda (recommended)
 
 ```bash
 conda env create -f environment.yml
@@ -134,17 +135,38 @@ Adjust in the **Model Settings** window inside the app.
 
 ## 🖱️ Basic Controls
 
-| Action       | Description         |
-| ------------ | ------------------- |
-| Left drag    | Create bounding box |
-| Click box    | Select box          |
-| Drag corners | Resize              |
-| Drag box     | Move                |
-| Multi-select | Enabled via UI      |
-| Mouse wheel  | Zoom                |
-| Middle drag  | Pan                 |
+| Action                    | Binding                                         | Description                                          |
+| ------------------------- | ----------------------------------------------- | ---------------------------------------------------- |
+| Click (canvas)            | **Left Click**                                  | Select / interact with a box (`on_click`)            |
+| Draw / drag               | **Left Click + Drag**                           | Draw or move/resize depending on context (`on_drag`) |
+| Finish drag               | **Left Button Release**                         | Finish creation/edit (`on_release`)                  |
+| Multi-drag                | **Ctrl + Left Drag**                            | Drag multiple selected boxes (`on_multi_drag`)       |
+| Multi-select start        | **Ctrl + Left Click**                           | Start multiselect / add selection (`on_multiselect`) |
+| Multi-select stop         | **Ctrl + Right Click**                          | Stop multiselect (`stop_multiselect`)                |
+| Context menu              | **Right Click** *(or App/Menu key)*             | Open context menu (`show_context_menu`)              |
+| Single-click prediction   | **Alt + Left Click** *(or Ctrl+Alt+Left Click)* | Run prediction at click (`single_click_prediction`)  |
+| Add box                   | **n** *(or ↓ Down Arrow)*                       | Add a new box (`add_box`)                            |
+| Delete selected box       | **Delete**                                      | Delete selected box (`delete_box`)                   |
+| Save                      | **s** *(or ↑ Up Arrow)*                         | Save annotations (`on_save`)                         |
+| Force save flag           | **p**                                           | Set save flag (`set_save_flag`)                      |
+| Toggle confidences        | **h**                                           | Show/hide confidences (`show_confidences`)           |
+| YOLO inference            | **y**                                           | Run YOLO inference (`run_yolo_inference`)            |
+| Select all                | **Ctrl + A**                                    | Select all boxes (`select_all`)                      |
+| Copy / paste boxes        | **Ctrl + C / Ctrl + V**                         | Copy / paste selection (`on_copy`, `on_paste`)       |
+| Next image                | **e / d / → Right Arrow**                       | Next image (`next_image`)                            |
+| Previous image            | **q / a / ← Left Arrow**                        | Previous image (`previous_image`)                    |
+| Jump to image             | **Enter / Return**                              | Jump to image index (`jump_to_image`)                |
+| Translate annotations     | **8 / 2 / 4 / 6**                               | Move all annotations up/down/left/right              |
+| Help                      | **F1**                                          | Open help menu                                       |
+| Toggle box list           | **F2**                                          | Show/hide box list                                   |
+| Toggle image list         | **F3**                                          | Show/hide image list window                          |
+| Toggle color selector     | **F4**                                          | Show/hide color selector                             |
+| Toggle class names editor | **F5**                                          | Show/hide class names window                         |
+| Toggle autosave           | **F6**                                          | Enable/disable autosave                              |
+| Screenshot                | **F12**                                         | Take screenshot                                      |
 
-*(Adjust if your actual bindings differ)*
+
+*(TODO KEEP UP TO DATE AND Adjust as actual bindings change during DEV)*
 
 ---
 
@@ -172,24 +194,30 @@ pip install -r requirements.txt
 Recommended setup:
 
 ```bash
+conda env create -f environment.yml
+conda activate <env-name>
+```
+
+---
+
+```bash
 python -m venv .venv
 pip install -U pip
 pip install -r requirements.txt
 ```
-
+More Information in INSTALL/install.txt
 ---
 
 ## ⚠️ Notes
 
 * Tkinter must be available in your Python installation.
 * Large images may require additional RAM.
-* GPU acceleration depends on your PyTorch installation.
+* GPU acceleration depends on your PyTorch installation and Hardware Setup.
 
 ---
 
 ## 🐛 Known Limitations
 
-* Single-window architecture
 * Limited undo history
 * Designed primarily for YOLO bbox workflows
 
@@ -209,14 +237,14 @@ Suggested workflow:
 
 ## 📄 License
 
-MIT License (adjust if different).
+MIT License
 
 ---
 
 ## 👤 Author
 
-Your Name
-Your Organization
+Gerald Koinig
+Technical University of Leoben
 
 ---
 
@@ -228,3 +256,4 @@ Your Organization
 * Pillow
 
 ---
+
