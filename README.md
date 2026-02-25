@@ -30,11 +30,19 @@ Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assiste
 
 ## 📦 Installation
 
-### Option A — Using pip 
-
+### Option A — Using Conda (Recommended) 
 ```bash
-git clone https://github.com/<your-org>/<repo-name>.git
-cd <repo-name>
+conda env create -f environment.yml
+conda activate AVAW_BBOX
+```
+
+
+---
+
+### Option B — Using Pip
+```bash
+git clone https://github.com/AVAWLeoben/AVAW_CVAT.git
+cd AVAW_CVAT
 
 python -m venv .venv
 # Windows
@@ -45,14 +53,6 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
----
-
-### Option B — Using Conda (recommended)
-
-```bash
-conda env create -f environment.yml
-conda activate <env-name>
-```
 
 ---
 
@@ -260,6 +260,7 @@ Technical University of Leoben
 * Pillow
 
 ---
+
 
 
 
