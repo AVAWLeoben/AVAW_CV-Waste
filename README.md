@@ -67,9 +67,9 @@ or
 python AVAW_CVAT_BBOX_v4.py
 ```
 
-or, if on Windows (TO DO PACK AS .exe!):  
-run the dist/AVAW_CVAT_BBOX_v4.exe  
-
+or, if on Windows (TO DO PACK AS .exe!) run the:  
+```
+dist/AVAW_CVAT_BBOX_v4.exe  
 ```
 
 ---
@@ -259,6 +259,7 @@ Technical University of Leoben
 * Pillow
 
 ---
+
 
 
 
