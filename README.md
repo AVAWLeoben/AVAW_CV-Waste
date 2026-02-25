@@ -60,14 +60,15 @@ conda activate <env-name>
 
 Run the application:
 
+Compile and run AVAW_CVAT_BBOX_v4.py in your IDE of choice  
+or
+
 ```bash
 python AVAW_CVAT_BBOX_v4.py
 ```
 
-or (if packaged with entry point):
-
-```bash
-avaw-cvat-bbox
+or, if on Windows (TO DO PACK AS .exe!):
+run the dist/AVAW_CVAT_BBOX_v4.exe
 ```
 
 ---
@@ -256,6 +257,7 @@ Technical University of Leoben
 * Pillow
 
 ---
+
 
 
 
