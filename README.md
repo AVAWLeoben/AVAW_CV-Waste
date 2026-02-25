@@ -225,8 +225,8 @@ More Information in INSTALL/install.txt
 
 ## 🤝 Contributing
 
-If you want to contribute, feel free to contact Bojan Lorber via bojan.lorber@unileoben.ac.at. 
-Moreover, you can do so by reporting bugs and/or suggesting new feautures.
+If you want to contribute, feel free to contact Bojan Lorber via bojan.lorber@unileoben.ac.at.  
+Additionally, you can do so by reporting bugs and/or suggesting new feautures.
 
 ---
 
@@ -256,6 +256,7 @@ Technical University of Leoben
 * Pillow
 
 ---
+
 
 
 
