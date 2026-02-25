@@ -199,7 +199,7 @@ Recommended setup:
 
 ```bash
 conda env create -f environment.yml
-conda activate <env-name>
+conda activate AVAW_BBOX
 ```
 
 ---
@@ -260,6 +260,7 @@ Technical University of Leoben
 * Pillow
 
 ---
+
 
 
 
