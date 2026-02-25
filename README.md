@@ -244,6 +244,11 @@ MIT License
 ## 👤 Author
 
 Gerald Koinig
+
+Technical University of Leoben
+
+Bojan Lorber
+
 Technical University of Leoben
 
 ---
@@ -256,4 +261,5 @@ Technical University of Leoben
 * Pillow
 
 ---
+
 
