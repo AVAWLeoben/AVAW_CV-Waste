@@ -32,7 +32,7 @@ Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assiste
 
 ### Option A — Using Conda (Recommended) 
 ```bash
-conda env create -f environment.yml
+conda env create -f environment.yml -n AVAW_BBOX
 conda activate AVAW_BBOX
 ```
 
@@ -261,6 +261,7 @@ Technical University of Leoben
 * Pillow
 
 ---
+
 
 
 
