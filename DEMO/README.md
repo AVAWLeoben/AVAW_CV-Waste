@@ -22,7 +22,7 @@ Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assiste
 
 ## 🖥️ Screenshots
 
-![UI Screenshot](DEMO/Screenshot_UI.png)
+![UI Screenshot](AVAW_CVAT/DEMO/Screenshot_UI.png)
 
 *(TODO Add More screenshots here)*
 
@@ -261,6 +261,7 @@ Technical University of Leoben
 * Pillow
 
 ---
+
 
 
 
