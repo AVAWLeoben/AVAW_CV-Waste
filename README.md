@@ -215,7 +215,8 @@ More Information in INSTALL/install.txt
 ## ⚠️ Notes
 
 * Tkinter must be available in your Python installation.
-* Large images may require additional RAM.
+* Large Images may require additional RAM.
+* Zooming of Large Images may lead to significant performance drops and RAM usage
 * GPU acceleration depends on your PyTorch installation and Hardware Setup.
 
 ---
@@ -260,6 +261,7 @@ Technical University of Leoben
 * Pillow
 
 ---
+
 
 
 
