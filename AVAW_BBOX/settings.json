@@ -1,0 +1,13 @@
+{
+    "image_folder": "//wfsrv6.unileoben.domain/avaw/Projekte/P0515-F-10-18_GreenPLAST-food/3_Daten_Ergebnisse/Programme_und_Code/AVAW_CVAT_APP/git_hub/AVAW_BBOX/annotations_bbox",
+    "annotation_folder": "//wfsrv6.unileoben.domain/avaw/Projekte/P0515-F-10-18_GreenPLAST-food/3_Daten_Ergebnisse/Programme_und_Code/AVAW_CVAT_APP/git_hub/AVAW_BBOX/annotations_bbox",
+    "model_path": "",
+    "image_index": 5,
+    "class_names": [
+        "Class_1",
+        "Class_2"
+    ],
+    "auto_save": false,
+    "save_flag": false,
+    "show_conf": false
+}
