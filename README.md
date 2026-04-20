@@ -28,7 +28,11 @@ Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assiste
 
 ---
 
-## 📦 Installation
+## 📦 Download Software
+- Download latest release
+- Unpack latest release into folder
+
+## 📦 Installation of Environment
 
 ### Option A — Using Conda (Recommended) 
 ```bash
