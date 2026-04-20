@@ -37,7 +37,10 @@ Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assiste
 
 ### Option A — Using Conda (Recommended) 
 Open Anaconda Prompt and cd into the INSTALL folder
+
 In the INSTALL folder, use conda to recreate the saved environment containing all necessary dependencies for the CVAT Applet.
+
+The following command will create a conda environment named AVAW_BBOX.
 ```bash
 conda env create -f environment.yml -n AVAW_BBOX
 conda activate AVAW_BBOX
