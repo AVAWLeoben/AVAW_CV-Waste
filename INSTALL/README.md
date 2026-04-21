@@ -21,7 +21,7 @@ In the INSTALL folder, use conda to recreate the saved environment containing al
 conda env create -f environment.yml -n AVAW_BBOX
 conda activate AVAW_BBOX
 ```
-## Using GPU libraries
+#### Using GPU libraries
 This Option so far will install the environment for CPU use only, which should run on most machines.
 For faster inference, if a suitable GPU is available, please follow the following steps as well.
 
