@@ -78,7 +78,9 @@ Total generated boxes: 110
 Total reference boxes: 110
 Overall similarity: 100.00%
 ```
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/30d9dd19-fe34-4837-8a0c-ceebbd238d4f" />
+
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/56383f82-249e-443e-bc61-89614bfefaa4" />
+
 
 ### `tol = 1e-6`
 
@@ -104,4 +106,7 @@ Total generated boxes: 110
 Total reference boxes: 110
 Overall similarity: 97.27%
 ```
-<img width="600" alt="image" src="https://github.com/user-attachments/assets/7f3ac595-45b6-4afa-a6d1-385905a98560" />
+
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/00b62a78-bef1-4db7-964a-a7247fb8d2f7" />
+
+
