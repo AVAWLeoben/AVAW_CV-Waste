@@ -34,7 +34,7 @@ Many existing annotation tools are commercial, cloud-based, difficult to customi
 
 The AVAW CVAT BBox Tool was developed as a free and open-source alternative that can be adapted to specific scientific workflows, especially in waste management and recycling research, where open source data is scarce to non-existent. Especially because in this domain, images of particles with contamination, deformation and on conveyor belts, specific to the actual research question are necessary.
 
-Thus, waste datasets often require highly specific object classes, such as plastics, paper, metals, hazardous waste, or mixed waste fractions. Existing tools may not easily support these specialized categories or the frequent changes that occur during research projects.
+Thus, waste datasets often require highly specific object classes, such as plastics, paper, metals, hazardous waste, or mixed waste fractions. Existing tools may not easily support these specialized categories or the frequent changes that occur during research projects. Existing tools also often prohibit or complicate the use of custom pre-trained models, which may speed up the annotation process. Lastly, since many existing tools are cloud based, data sovereignty may not always be guaranteed - an increasingly precarious issue when working with industrial partners in research projects.
 
 This tool allows users to:
 
