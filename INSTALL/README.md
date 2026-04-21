@@ -30,6 +30,13 @@ For faster inference, if a suitable GPU is available, please follow the followin
 pip install -U ultralytics
 ```
 
+To find the current CUDA Version used, run in the command prompt
+```bash
+nvidia-smi
+```
+This will yield output like this, in which the current CUDA version is displayed.
+<img width="862" height="210" alt="image" src="https://github.com/user-attachments/assets/0b475fe1-4334-46a4-9d6c-b52e247c2ecb" />
+
 PyTorch requirements vary by operating system and CUDA requirements, so install PyTorch first by following the instructions at PyTorch.
 
 https://pytorch.org/get-started/locally/
@@ -40,6 +47,10 @@ Selecting the correct combination of OS and CUDA Version will yield an install c
 ```bash
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu130
 ```
+
+With cu1xx representing the selected CUDA version.
+
+
 
 ### Option B — Using Pip
 ```bash
