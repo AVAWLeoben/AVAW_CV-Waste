@@ -26,29 +26,13 @@ Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assiste
 
 
 ---
-## Installation
+## 🚀 Installation
 
 To get started, download the latest version of the software from the [Releases](https://github.com/AVAWLeoben/AVAW_CVAT/releases) page.
 
 After downloading and extracting the release files, open the [INSTALL](https://github.com/AVAWLeoben/AVAW_CVAT/tree/AVAW_BBOX_DEVELOPMENT/INSTALL) folder for detailed setup instructions.
 
 The INSTALL folder contains step-by-step guides for both Conda-based and Pip-based installations, as well as optional instructions for enabling GPU acceleration with PyTorch.
-
----
-
-
-
-## 📁 Project Structure
-
-```
-.
-├── AVAW_CVAT_BBOX_v4.py
-├── annotations_bbox/      # Images and YOLO labels
-├── files_bbox/            # Config files, class names, logo
-├── settings.json          # Persistent user settings
-├── requirements.txt
-└── README.md
-```
 
 ---
 
@@ -146,12 +130,6 @@ Core dependencies:
 * opencv-python
 * natsort
 * ultralytics
-
-Install with:
-
-```bash
-pip install -r requirements.txt
-```
 
 ---
 
