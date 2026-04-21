@@ -24,6 +24,52 @@ Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assiste
 
 ![UI Screenshot](DEMO/Screenshot_UI.png)
 
+---
+
+## Aim of this Tool´s development
+
+Quality annotations are essential for training reliable YOLO object detection models.
+
+Many existing annotation tools are commercial, cloud-based, difficult to customize, or too complex for smaller research groups and industrial partners.
+
+The AVAW CVAT BBox Tool was developed as a free and open-source alternative that can be adapted to specific scientific workflows, especially in waste management and recycling research, where open source data is scarce to non-existent. Especially because in this domain, images of particles with contamination, deformation and on conveyor belts, specific to the actual research question are necessary.
+
+Thus, waste datasets often require highly specific object classes, such as plastics, paper, metals, hazardous waste, or mixed waste fractions. Existing tools may not easily support these specialized categories or the frequent changes that occur during research projects.
+
+This tool allows users to:
+
+Define their own custom annotation classes
+Load and use their own YOLO models for automatic predictions
+Work entirely offline without requiring cloud services
+Organize datasets according to their own folder structures and workflows
+Quickly review, edit, and correct annotations
+
+A major design goal was ease of use.
+
+The interface was developed iteratively to be simple and intuitive, even for users without a technical background.
+
+Many annotation projects involve operators, students, laboratory staff, or industrial personnel who may not have experience with machine learning tools. The AVAW CVAT BBox Tool focuses on clear controls, minimal setup effort, and a straightforward workflow to make annotation accessible to a wider range of users.
+
+The tool is intended to support both research and real-world applications.
+
+By making annotation faster, easier, and more flexible, it can help improve:
+
+Waste sorting and recycling systems
+Material recognition and classification
+Detection of contaminants and hazardous waste
+Dataset creation for custom AI models
+Scientific studies involving object detection and computer vision in waste management
+
+Because the software is free, open-source, and fully customizable, users can adapt it to their own research questions, industrial environments, and annotation needs without being restricted by licensing costs or proprietary systems.
+
+---
+## References
+
+This tool has already been successfully used in the development of scientific datasets and in the publication of research related to waste detection, classification, and recycling workflows.
+
+
+
+Further publication details and citations will be added here as they become available.
 
 ---
 ## 🚀 Installation
