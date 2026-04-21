@@ -105,11 +105,11 @@ pip install -r requirements.txt
 Run the application from your IDE of choice, or from the command line:
 
 ```bash
-python AVAW_CVAT_BBOX_v4.py
+python AVAW_CVAT_BBOX.py
 ```
 
 On Windows, you can also run the executable directly:
 
 ```text
-dist/AVAW_CVAT_BBOX_v4.exe
+dist/AVAW_CVAT_BBOX.exe
 ```
