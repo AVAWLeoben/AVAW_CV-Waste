@@ -105,6 +105,9 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 
+This will install the CPU only version of without CUDA support.
+For CUDA support please follow along the GPU instructions further above.
+
 ---
 
 ## 🚀 Usage
