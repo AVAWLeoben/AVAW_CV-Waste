@@ -53,7 +53,8 @@ The test reports:
 - set_conf, set_iou = 0.7, 0.8
 - num_images = 3
 - display_size = (640, 640)  # width, height
-- `tol = 1e-5`
+
+### `tol = 1e-5`
 
 ```bash
 test (1) similarity: 100.00%
@@ -79,37 +80,7 @@ Overall similarity: 100.00%
 ```
 <img width="1426" height="2145" alt="image" src="https://github.com/user-attachments/assets/30d9dd19-fe34-4837-8a0c-ceebbd238d4f" />
 
-# Test Results Reported on Images provided in TEST folder:
-- yolo_model = YOLO("test_model.pt")
-- set_conf, set_iou = 0.7, 0.8
-- num_images = 3
-- display_size = (640, 640)  # width, height
-- `tol = 1e-6`
-
-```bash
-test (1) similarity: 100.00%
-  Matching boxes: 36
-  Generated boxes: 36
-  Reference boxes: 36
-
-test (2) similarity: 100.00%
-  Matching boxes: 41
-  Generated boxes: 41
-  Reference boxes: 41
-
-test (3) similarity: 100.00%
-  Matching boxes: 33
-  Generated boxes: 33
-  Reference boxes: 33
-
-=== Overall Results ===
-Total matching boxes: 110
-Total generated boxes: 110
-Total reference boxes: 110
-Overall similarity: 100.00%
-```
-
-- `tol = 1e-6`
+### `tol = 1e-6`
 
 ```bash
 test (1) similarity: 100.00%
@@ -133,3 +104,4 @@ Total generated boxes: 110
 Total reference boxes: 110
 Overall similarity: 97.27%
 ```
+<img width="400" alt="image" src="https://github.com/user-attachments/assets/7f3ac595-45b6-4afa-a6d1-385905a98560" />
