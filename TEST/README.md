@@ -46,7 +46,7 @@ The test reports:
 * total number of matching boxes
 * mismatching boxes
 * similarity percentage
-* coordinate differences
+* Comparison Plots
 
 # Test Results Reported on Images provided in TEST folder:
 - yolo_model = YOLO("test_model.pt")
