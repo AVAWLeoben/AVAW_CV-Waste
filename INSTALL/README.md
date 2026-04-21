@@ -4,8 +4,8 @@ A lightweight desktop GUI tool for creating, editing, and managing YOLO-style bo
 Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assisted annotation workflows.
 
 ## Prerequisites
-We recommend using miniconda as environment manager. If not already installed, please follow the following link to miniconda.
-https://www.anaconda.com/docs/getting-started/miniconda/install/overview
+- We recommend using miniconda as environment manager. If not already installed, please follow the following link to miniconda.
+- https://www.anaconda.com/docs/getting-started/miniconda/install/overview
 ---
 ## 📦 Download Software
 - Download latest release source code
