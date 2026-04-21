@@ -577,7 +577,8 @@ class PredictionModelHandler:
                 cls = 0
 
             self.owner.confidences.append(conf)
-            self.owner.ANNOTATION_HANDLER.annotations.append([cls, int(x1), int(y1), int(x2), int(y2)])
+            #self.owner.ANNOTATION_HANDLER.annotations.append([cls, int(x1), int(y1), int(x2), int(y2)])
+            self.owner.ANNOTATION_HANDLER.annotations.append([cls, float(x1), float(y1), float(x2), float(y2)])
 
         # Redraw updated image
         self.owner.update_display()
