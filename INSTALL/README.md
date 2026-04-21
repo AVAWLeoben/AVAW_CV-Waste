@@ -52,6 +52,10 @@ First, update Ultralytics:
 ```bash
 pip install -U ultralytics
 ```
+Uninstall any existing PyTorch packages that may have been installed automatically as Ultralytics dependencies:
+
+```bash
+pip uninstall torch torchvision torchaudio
 
 To check your installed CUDA version, run:
 
@@ -78,6 +82,8 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu130
 ```
 
 In this example, `cu130` refers to CUDA 13.0.
+
+Run this in Anaconda Prompt.
 
 ---
 
