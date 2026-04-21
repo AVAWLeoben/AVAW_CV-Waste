@@ -7,8 +7,6 @@ Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assiste
 
 ## 📚 Demo
 
-Visit the [DEMO](https://github.com/AVAWLeoben/AVAW_CVAT/tree/AVAW_BBOX_DEVELOPMENT/DEMO) page for a detailed walkthrough of the application.
-
 The DEMO section contains example datasets, usage instructions, and a step-by-step tutorial covering the main features of the tool, including:
 
 - loading images and label folders
