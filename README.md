@@ -24,45 +24,11 @@ Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assiste
 
 ![UI Screenshot](DEMO/Screenshot_UI.png)
 
-*(TODO Add More screenshots here)*
 
 ---
+## Installation
 
-## 📦 Download Software
-- Download latest release source code
-- Unpack latest release into folder
-- Install Environment following either Option A or Option B
-
-## 📦 Installation of Environment
-
-### Option A — Using Conda (Recommended) 
-Open Anaconda Prompt and cd into the INSTALL folder
-
-In the INSTALL folder, use conda to recreate the saved environment containing all necessary dependencies for the CVAT Applet.
-
-The following command will create a conda environment named AVAW_BBOX.
-```bash
-conda env create -f environment.yml -n AVAW_BBOX
-conda activate AVAW_BBOX
-```
-
-
----
-
-### Option B — Using Pip
-```bash
-git clone https://github.com/AVAWLeoben/AVAW_CVAT.git
-cd AVAW_CVAT
-
-python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# Linux / macOS
-source .venv/bin/activate
-
-pip install -r requirements.txt
-```
-
+To install the software, download the latest source code from [Releases](https://github.com/AVAWLeoben/AVAW_CVAT/releases) and follow the installation instructions in the [INSTALL](https://github.com/AVAWLeoben/AVAW_CVAT/tree/AVAW_BBOX_DEVELOPMENT/INSTALL) folder.
 
 ---
 
