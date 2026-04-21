@@ -33,7 +33,7 @@ The test should verify that all saved YOLO annotations remain numerically equiva
 
 ## Suggested Test Procedure
 
-Using the test.py in [TEST]([https://github.com/orgs/community/discussions/22534](https://github.com/AVAWLeoben/AVAW_CVAT/tree/AVAW_BBOX_DEVELOPMENT/TEST) and the application itself we can:
+Using the test.py in [TEST](https://github.com/AVAWLeoben/AVAW_CVAT/tree/AVAW_BBOX_DEVELOPMENT/TEST) and the application itself we can:
 
 1. Load the same images and predictions into the application
 2. Export the annotations again from the application
