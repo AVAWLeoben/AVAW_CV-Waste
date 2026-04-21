@@ -38,50 +38,63 @@ The INSTALL folder contains step-by-step guides for both Conda-based and Pip-bas
 
 ## ⚙️ Configuration
 
-### Class Names
+The application can be customized to match your annotation workflow and project setup.
 
-Edit:
+### 🏷️ Class Names
 
-```
+The available object classes are defined in:
+
+```text
 files_bbox/class_names.txt
 ```
 
-Format:
+Edit this file to specify the classes you want to use for annotation.
 
-```
+Use a comma-separated format such as:
+
+```text
 person,car,bicycle,dog
 ```
 
+Each class will automatically appear in the application and can be selected while creating or editing bounding boxes.
+
+You can customize this list at any time to match your dataset or project requirements.
+
 ---
 
-### Settings
+### 💾 Settings
 
-User settings are stored in:
+User-specific settings are stored in:
 
-```
+```text
 settings.json
 ```
 
-The app automatically saves:
+The application automatically saves important information between sessions, including:
 
-* last image index
-* folders
-* model path
-* UI preferences
+- the last opened image index
+- selected image and label folders
+- the currently selected YOLO model path
+- user interface preferences and window settings
+
+This allows you to close and reopen the application without losing your workflow progress.
 
 ---
 
 ## 🧠 YOLO Model Support
 
-You can load a YOLO model for automatic predictions.
+The application supports loading YOLO models for automatic object detection and assisted annotation.
 
-Supported via:
+Currently supported:
 
-* Ultralytics YOLO
+- Ultralytics YOLO
 
-Adjust in the **Model Settings** window inside the app.
+YOLO model settings can be configured in the **Model Settings** window inside the application.
 
----
+Typical model files use the `.pt` format and can be selected through the graphical interface.
+
+Once a model is loaded, the application can generate bounding box predictions automatically, making it much faster to annotate large datasets.
+
 
 ## 🖱️ Basic Controls
 
