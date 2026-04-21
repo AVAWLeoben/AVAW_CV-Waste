@@ -33,6 +33,7 @@ To get started, download the latest version of the software from the [Releases](
 After downloading and extracting the release files, open the [INSTALL](https://github.com/AVAWLeoben/AVAW_CVAT/tree/AVAW_BBOX_DEVELOPMENT/INSTALL) folder for detailed setup instructions.
 
 The INSTALL folder contains step-by-step guides for both Conda-based and Pip-based installations, as well as optional instructions for enabling GPU acceleration with PyTorch.
+
 ---
 
 
