@@ -109,7 +109,7 @@ pip install -r requirements.txt
 
 ## 🚀 Usage
 
-Run the application from your IDE of choice, or from the command line:
+Run the application from your IDE of choice, or from the command line after a cd into the AVAW_BBOX folder:
 
 ```bash
 python AVAW_CVAT_BBOX.py
