@@ -58,7 +58,7 @@ Uninstall any existing PyTorch packages that may have been installed automatical
 ```bash
 pip uninstall torch torchvision torchaudio
 ```
-To check your installed CUDA version, run:
+To check your installed CUDA version, run the following command in the Command Prompt (cmd):
 
 ```bash
 nvidia-smi
