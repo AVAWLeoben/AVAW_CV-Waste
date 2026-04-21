@@ -68,11 +68,17 @@ Because the software is free, open-source, and fully customizable, users can ada
 This tool has already been successfully used in the development of scientific datasets and in the publication of research related to waste detection, classification, and recycling workflows.
 
 -[Koinig, G., Aberger, J., Kuhn, N., & Tischberger-Aldrian, A. (2026). AI Pipeline for sensor based sorting of shredder scrap towards green steel production. in 11th Sensor-Based Sorting & Control 2026](https://pure.unileoben.ac.at/de/publications/ai-pipeline-for-sensor-based-sorting-of-shredder-scrap-towards-gr/)
+
 -[GreenPLAST-food: Grüne Kunststoffrecyclingfabrik für Lebensmittelkontaktmaterialien](https://pure.unileoben.ac.at/de/publications/greenplast-food-gr%C3%BCne-kunststoffrecyclingfabrik-f%C3%BCr-lebensmittelk-2/)
+
 -[Kiramet: KI-basierte Konditionierung von Schredderschrott – für grüneren Stahl](https://pure.unileoben.ac.at/de/publications/kiramet-ki-basierte-konditionierung-von-schredderschrott-f%C3%BCr-gr%C3%BCn/)
+
 -[KiRAMET: KI Basiertes Recycling von Metallverbund-Abfällen](https://pure.unileoben.ac.at/de/publications/kiramet-ki-basiertes-recycling-von-metallverbund-abf%C3%A4llen-2/)
+
 -[Robust YOLO-Based Ejection of Copper-Containing Particles in Heavily Corroded Scrap Towards Green-Steel Production](https://doi.org/10.3390/pr14050746)
+
 -[Detection of copper-containing scrap in a post-shredder fraction with machine vision and artificial intelligence towards green-steel production](https://pure.unileoben.ac.at/de/publications/detection-of-copper-containing-scrap-in-a-post-shredder-fraction-/)
+
 -[Deep learning approaches for classification of copper-containing metal scrap in recycling processes](https://pure.unileoben.ac.at/de/publications/deep-learning-approaches-for-classification-of-copper-containing-/)
 
 
