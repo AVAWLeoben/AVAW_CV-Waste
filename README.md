@@ -205,25 +205,6 @@ Core dependencies:
 
 ---
 
-## 🛠️ Development
-
-Recommended setup:
-
-```bash
-conda env create -f environment.yml
-conda activate AVAW_BBOX
-```
-
----
-
-```bash
-python -m venv .venv
-pip install -U pip
-pip install -r requirements.txt
-```
-More Information in INSTALL/install.txt
----
-
 ## ⚠️ Notes
 
 * Tkinter must be available in your Python installation.
