@@ -120,3 +120,6 @@ On Windows, you can also run the executable directly:
 ```text
 dist/AVAW_CVAT_BBOX.exe
 ```
+
+## 📚 Demo
+Visit the [DEMO](https://github.com/AVAWLeoben/AVAW_CVAT/AVAW_BBOX_DEVELOPMENT/DEMO) page for further instructions and a tutorial on how to use the application
