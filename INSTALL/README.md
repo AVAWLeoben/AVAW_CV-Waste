@@ -1,102 +1,115 @@
 # AVAW CVAT BBox Tool
 
 A lightweight desktop GUI tool for creating, editing, and managing YOLO-style bounding box annotations.
+
 Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assisted annotation workflows.
 
-## ⌨️ Prerequisites
-- We recommend using miniconda as environment manager. If not already installed, please follow the following link to miniconda.
-- https://www.anaconda.com/docs/getting-started/miniconda/install/overview
 ---
+
+## ⌨️ Prerequisites
+
+We recommend using Miniconda as the environment manager.
+
+If Miniconda is not already installed, follow this guide:
+
+[Install Miniconda](https://www.anaconda.com/docs/getting-started/miniconda/install/overview)
+
+---
+
 ## 📦 Download Software
-- Download latest release source code
-- Unpack latest release into folder
-- Install Environment following either Option A or Option B
 
-## 📦 Installation of Environment
+1. Download the latest release source code
+2. Extract the release into a folder
+3. Install the environment using either Option A or Option B below
 
-### Option A — Using Conda (Recommended) 
-Open Anaconda Prompt and cd into the INSTALL folder
-In the INSTALL folder, use conda to recreate the saved environment containing all necessary dependencies for the CVAT Applet.
+---
+
+## 📦 Environment Installation
+
+### Option A — Using Conda (Recommended)
+
+Open an Anaconda Prompt and navigate to the installation folder.
+
+```bash
+cd path\to\AVAW_CVAT
+```
+
+Create and activate the Conda environment:
+
 ```bash
 conda env create -f environment.yml -n AVAW_BBOX
 conda activate AVAW_BBOX
 ```
-#### Using GPU libraries
-This Option so far will install the environment for CPU use only, which should run on most machines.
-For faster inference, if a suitable GPU is available, please follow the following steps as well.
 
-- Install or upgrade the ultralytics package from PyPI
+### Optional: Enable GPU Support
+
+The default environment is CPU-only and should work on most machines.
+
+If you have a compatible NVIDIA GPU and want faster inference, follow these additional steps.
+
+First, update Ultralytics:
+
 ```bash
 pip install -U ultralytics
 ```
 
-To find the current CUDA Version used, run in the command prompt
+To check your installed CUDA version, run:
+
 ```bash
 nvidia-smi
 ```
-This will yield output like this, in which the current CUDA version is displayed.
+
+This will show output similar to the following:
+
 <img width="862" height="210" alt="image" src="https://github.com/user-attachments/assets/0b475fe1-4334-46a4-9d6c-b52e247c2ecb" />
 
-PyTorch requirements vary by operating system and CUDA requirements, so install PyTorch first by following the instructions at PyTorch.
+Next, visit the PyTorch installation page:
 
-https://pytorch.org/get-started/locally/
+[PyTorch Installation Guide](https://pytorch.org/get-started/locally/)
 
 <img width="535" alt="image" src="https://github.com/user-attachments/assets/b2c3863a-ca30-4bf8-ba2d-0a890f879468" />
 
-Selecting the correct combination of OS and CUDA Version will yield an install command like:
+Choose the correct operating system, package manager, Python version, and CUDA version.
+
+This will generate an install command similar to:
+
 ```bash
 pip install torch torchvision --index-url https://download.pytorch.org/whl/cu130
 ```
 
-With cu1xx representing the selected CUDA version.
+In this example, `cu130` refers to CUDA 13.0.
 
-
+---
 
 ### Option B — Using Pip
+
 ```bash
 git clone https://github.com/AVAWLeoben/AVAW_CVAT.git
 cd AVAW_CVAT
 
 python -m venv .venv
+
 # Windows
 .venv\Scripts\activate
+
 # Linux / macOS
 source .venv/bin/activate
 
 pip install -r requirements.txt
 ```
 
-
 ---
 
 ## 🚀 Usage
 
-Run the application:
-
-Compile and run AVAW_CVAT_BBOX_v4.py in your IDE of choice  
-or run the AVAW_CVAT_BBOX_v4.py from CLI:  
-
+Run the application from your IDE of choice, or from the command line:
 
 ```bash
 python AVAW_CVAT_BBOX_v4.py
 ```
 
-or, if on Windows (TO DO PACK AS .exe!) run the:  
+On Windows, you can also run the executable directly:
+
+```text
+dist/AVAW_CVAT_BBOX_v4.exe
 ```
-dist/AVAW_CVAT_BBOX_v4.exe  
-```
-
----
-
-
-
-
-
-
-
-
-
-
-
-
-
