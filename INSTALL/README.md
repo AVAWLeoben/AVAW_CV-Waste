@@ -21,7 +21,23 @@ In the INSTALL folder, use conda to recreate the saved environment containing al
 conda env create -f environment.yml -n AVAW_BBOX
 conda activate AVAW_BBOX
 ```
+## Using GPU libraries
+This Option so far will install the environment for CPU use only, which should run on most machines.
+For faster inference, if a suitable GPU is available, please follow the following steps as well.
 
+- Install or upgrade the ultralytics package from PyPI
+```bash
+pip install -U ultralytics
+```
+
+PyTorch requirements vary by operating system and CUDA requirements, so install PyTorch first by following the instructions at PyTorch.
+https://pytorch.org/get-started/locally/
+<img width="1604" height="1130" alt="image" src="https://github.com/user-attachments/assets/b2c3863a-ca30-4bf8-ba2d-0a890f879468" />
+
+Selecting the correct combination of OS and CUDA Version will yield an install command like:
+```bash
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu130
+```
 
 ### Option B — Using Pip
 ```bash
