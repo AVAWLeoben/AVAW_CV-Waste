@@ -22,7 +22,7 @@ Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assiste
 
 ## 🖥️ Screenshots
 
-![UI Screenshot](DEMO/Screenshot_UI.png)
+<img src="DEMO/Screenshot_UI.png" alt="UI Screenshot" width="600" />
 
 ---
 
