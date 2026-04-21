@@ -31,7 +31,9 @@ pip install -U ultralytics
 ```
 
 PyTorch requirements vary by operating system and CUDA requirements, so install PyTorch first by following the instructions at PyTorch.
+
 https://pytorch.org/get-started/locally/
+
 <img width="535" alt="image" src="https://github.com/user-attachments/assets/b2c3863a-ca30-4bf8-ba2d-0a890f879468" />
 
 Selecting the correct combination of OS and CUDA Version will yield an install command like:
