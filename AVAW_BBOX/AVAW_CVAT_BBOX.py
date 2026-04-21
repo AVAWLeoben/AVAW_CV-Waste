@@ -539,6 +539,7 @@ class PredictionModelHandler:
             messagebox.showinfo("showinfo", "No model selected!")
             return
         self.load_model_by_path(model_path, silent=False)
+        self.owner.update_display()
 
     def load_model_by_path(self, model_path, silent=True):
         """Load a YOLO model from a given path and update UI."""
