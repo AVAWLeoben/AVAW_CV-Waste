@@ -1,4 +1,4 @@
-# AVAW CVAT BBox Tool
+# AVAW CV-Waste Bounding Box Tool
 
 A lightweight desktop GUI tool for creating, editing, and managing YOLO-style bounding box annotations.
 Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assisted annotation workflows.
