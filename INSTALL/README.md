@@ -31,7 +31,7 @@ If Miniconda is not already installed, follow this guide:
 Open an Anaconda Prompt and navigate to the installation folder.
 
 ```bash
-cd path\to\AVAW_CVAT
+cd path\to\AVAW_CV-Waste\INSTALL
 ```
 
 Create and activate the Conda environment:
