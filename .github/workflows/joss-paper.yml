@@ -3,7 +3,7 @@ name: Build JOSS paper
 on:
   push:
     paths:
-      - "paper/**"
+      - "JOSS/**"
       - ".github/workflows/joss-paper.yml"
   pull_request:
   workflow_dispatch:
@@ -18,4 +18,4 @@ jobs:
         uses: openjournals/openjournals-draft-action@master
         with:
           journal: joss
-          paper-path: paper/paper.md
+          paper-path: JOSS/paper.md
