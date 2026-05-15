@@ -66,7 +66,7 @@ In conclusion, the emerging research field of using machine learning models for 
 
 The tool therefore fills a niche between generic cloud annotation platforms and highly customized in-house software solutions used in industrial recycling research.
 
-# Software design
+# 4 Software design
 
 While we are aware that basic code for software like this can rapidly be developed using generative ai, extensive testing under real research scenarios with researchers of varying degrees of technical prowess can’t be offloaded to GenAI. 
 
@@ -76,25 +76,21 @@ Several design trade-offs were made to ensure broad hardware compatibility and s
 
 Overall, we chose Python and tkinter as the underlying architecture to leverage both the wide support for Python applications, its ease of use for other waste management researchers to adapt the tool for their purposes and of course the widespread adoption of Python as the programming language for rapid development of machine learning tools.
 
-# Research impact statement
+# 5 Research impact statement
 
-`AVAW_CV-Waste` has already been successfully used in the development of scientific datasets and in the publication of research related to waste detection, classification, and recycling workflows.
+`AVAW_CV-Waste` has already been successfully used in the development of scientific datasets and in research related to waste detection, classification, and recycling workflows.
 
 `AVAW_CV-Waste` addresses a major bottleneck in the development of computer vision systems for waste management and recycling research, namely the creation of annotated training datasets.
 
-The software is currently being used within multiple recycling and circular economy lighthouse research projects, including:
+The software is currently being used within multiple recycling and circular economy lighthouse research projects, including KiRAMET, StraTex, greenPLAST-food, and Scarpa.
 
-- KiRAMET: AI-based recycling of metal composite wastes,
-- StraTex: Sorting and processing strategies for used textiles,
-- greenPLAST-food: Green plastic recycling for food contact materials, and
-- Scarpa: Strategic recycling of footwear.
+Within these projects, the software has been applied in research workflows involving post-consumer textiles, lightweight packaging waste, and post-shredder scrap, where large quantities of annotated image data are required for training and evaluating object detection models.
 
-Within these projects, the software has already been applied in research workflows involving post-consumer textiles, lightweight packaging waste, and post-shredder scrap, where large quantities of annotated image data are required for training and evaluating object detection models.
+Datasets created using `AVAW_CV-Waste` contributed to research on sensor-based sorting of shredder scrap towards green steel production [@yolo_scrap_2026], AI-assisted recycling workflows for metal composite waste streams [@kiramet_green_steel; @kiramet_recycling], and plastic recycling systems for food-contact materials [@greenplast_food].
 
-The created datasets formed the basis for scientific publications showcasing the applicability of machine learning methods for sorting heterogeneous waste streams and reducing manual sorting requirements
-[@yolo_scrap_2026; @greenplast_food; @kiramet_green_steel;
-@kiramet_recycling; @robust_yolo_2026; @copper_detection;
-@deep_learning_scrap].
+The generated datasets also supported research on robust YOLO-based ejection of copper-containing particles from heavily corroded scrap streams [@robust_yolo_2026], detection of copper-containing scrap in post-shredder fractions using machine vision and artificial intelligence [@copper_detection], and deep learning approaches for classification of copper-containing metal scrap in recycling processes [@deep_learning_scrap].
+
+These applications demonstrate the utility of the software for reducing manual annotation effort and enabling machine learning methods for heterogeneous waste sorting tasks.
 
 # AI usage disclosure
 
