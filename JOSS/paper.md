@@ -22,7 +22,7 @@ date: 15 May 2026
 bibliography: paper.bib
 ---
 
-# Summary
+# 1 Summary
 
 `AVAW_CV-Waste` is a free and open-source offline desktop application for creating and correcting image annotations used to train object detection models. The software allows users to draw, edit, move, resize, copy, and manage bounding boxes around objects in images, with outputs compatible with YOLO-based artificial intelligence workflows, specifically the YOLO PyTorch TXT annotation format commonly used by YOLO11, YOLOv8, YOLOv5, and related computer vision models.
 
@@ -32,68 +32,69 @@ Because the software operates entirely offline, it can be deployed directly at i
 
 The primary goal of `AVAW_CV-Waste` is to simplify and accelerate dataset creation for non-specialist users, including students, laboratory staff, recycling operators, and industrial research partners. By reducing the technical complexity of annotation workflows, the software supports the development of custom machine learning models for applications such as waste classification, contaminant detection, scrap sorting, and sensor-based recycling research.
 
-# Statement of need
+# 2 Statement of need
 
-The development of machine learning systems for waste management and recycling research strongly depends on the availability of annotated image datasets. However, publicly available waste datasets are scarce and often unsuitable for highly specialized industrial research applications. Waste management datasets frequently require custom object classes representing plastics, paper fractions, scrap metal categories, hazardous materials, contaminated objects, or mixed waste streams under realistic industrial conditions.
+The AVAW_CV-Waste Tool was developed as a free and open-source alternative that can be adapted to specific scientific workflows, especially in waste management and recy-cling research, where open-source data is scarce to non-existent. 
 
-Existing annotation tools frequently rely on cloud-based infrastructures that require uploading datasets and annotations to external services. This introduces significant challenges regarding data sovereignty and confidentiality when collaborating with industrial partners. Although self-hosted solutions exist, they typically require advanced technical expertise, additional infrastructure, and substantial setup effort.
+In this domain, images of particles with contamination, deformation and on conveyor belts, specific to the actual re-search question regarding the sorting and classification of waste particles are necessary. 
 
-Furthermore, many existing annotation platforms restrict the use of custom-trained object detection models for automated annotation support. In waste management research, domain-specific pre-trained models are often essential to accelerate annotation tasks involving highly heterogeneous materials.
+Thus, waste datasets often require highly specific object classes, such as plastics, paper, scrap-types, hazardous waste, or mixed waste fractions in environments relevant to the waste management domain.
 
-`AVAW_CV-Waste` was therefore developed as a free and open-source alternative that enables researchers to:
+Existing tools may not easily support these specialized categories or the frequent changes that occur during research projects and often prohibit or disincentivise the use of custom pre-trained models, which may speed up the annotation process. 
 
-- define custom annotation classes,
-- use their own pre-trained object detection models,
-- work completely offline without cloud services,
-- maintain flexible dataset folder structures, and
-- rapidly review and correct annotations.
+Lastly, since many existing tools are cloud based, data sovereignty may not always be guaranteed - an increasingly precarious issue when working with industrial partners in waste management research projects heeding to data often being recorded directly in respective material recovery facilites. 
+
+This tool allows users to define their own custom annotation classes, load and use their own models for automatic predictions, work entirely offline without requiring cloud services organize datasets according to their own folder structures and workflows and quickly review, edit, and correct annotations at no cost.
 
 The software primarily targets researchers and industrial practitioners working in waste management, recycling, circular economy technologies, and sensor-based sorting applications.
 
-# State of the field
+# 3 State of the field
 
-Several commercial and open-source annotation tools are available for object detection dataset generation. Popular platforms provide browser-based interfaces and collaborative workflows but commonly rely on cloud-hosted infrastructures. While these tools are suitable for general computer vision tasks, they are often less appropriate for industrial recycling research where strict requirements regarding data confidentiality and offline usability exist.
+The field of annotation software allows for several pre-build alternatives. 
 
-In principle, self-hosted deployments of cloud annotation systems are possible through containerized infrastructures. However, these approaches typically require advanced technical expertise and dedicated computing resources that may not be available in smaller research groups or industrial pilot environments.
+However, as we noticed in many of our research projects, these tools´ reliance on online annotation with the requirement to upload the dataset and related annotations into a cloud service often clashes with industrial partners need for data sovereignty. 
 
-Additionally, many existing solutions limit the integration of custom pre-trained object detection models or provide automated annotation features only through commercial subscription models. This restriction is problematic for waste management applications where highly specialized, domain-specific models are required.
+In theory one can build a self-hosted version and move docker images to offline machines. 
 
-`AVAW_CV-Waste` was developed to address these limitations by providing a lightweight, fully offline, and freely available annotation environment specifically suited for recycling and waste management research. The software emphasizes:
+But one would need advanced technical skills and additional resource and time for that. 
 
-- offline usability,
-- support for custom YOLO models,
-- modular extensibility,
-- low hardware requirements, and
-- straightforward workflows for non-specialist users.
+Further, this approach would eliminate the application of pre-trained models to semi-automatically segment and annotate objects in one’s dataset. 
+
+However, this automated annotation is oftentimes limited paid plans to alleviate usage limits and the available models provided by cloud service in question, prohibiting using one’s own pre-trained waste management domain specific models for aiding the annotation process. 
+
+In conclusion, the emerging research field of using machine learning models for waste management classification tasks needed an open source, free of cost, offline and adaptable tool that allows for modular expansions and use of domain specific detection models that also ensures data-sovereignty and is not reliant on online services once installed.
 
 The tool therefore fills a niche between generic cloud annotation platforms and highly customized in-house software solutions used in industrial recycling research.
 
 # Software design
 
-The software architecture of `AVAW_CV-Waste` prioritizes accessibility, adaptability, and low hardware requirements. The application was implemented in Python using the `tkinter` graphical user interface framework to ensure compatibility with a wide range of systems commonly encountered in research laboratories and industrial environments.
+While we are aware that basic code for software like this can rapidly be developed using generative ai, extensive testing under real research scenarios with researchers of varying degrees of technical prowess can’t be offloaded to GenAI. 
 
-A central design goal was to support users with varying levels of technical expertise. The graphical user interface and user experience were iteratively improved through extensive testing with students, researchers, and industrial users performing large-scale annotation tasks under realistic working conditions.
+Thus, the UI and UIX of this tool were subject to constant iteration and improvement, spanning multiple years of research projects in this emerging field in waste management research. It could therefore incorporate criticism and feedback from students during lectures, researchers and workers that annotated thousands of images using this tool. Ongoing usage and the everchanging nature of research projects in general and Waste Managment related sorting tasks in particular will inevitably uncover further optimisations and adaptations. The use of Python itself and the common UI framework tkinter as well and an object oriented approach to the tools makeup is aimed at enabling customisation and extension by other researchers working in waste management and recycling domains. Since Python is widely adopted in machine learning and computer vision research, the software integrates naturally into existing scientific workflows.
 
-The application supports both manual and semi-automatic annotation workflows. Users can manually create and modify bounding boxes or accelerate dataset creation through automatic predictions generated using externally trained YOLO object detection models.
+Several design trade-offs were made to ensure broad hardware compatibility and stable operation on lower-performance research machines, while still allowing for quality of life features expected from a tool like this. Lightweight rendering and simplified interaction workflows were prioritized over computationally expensive visualization features.
 
-Several design trade-offs were made to ensure broad hardware compatibility and stable operation on lower-performance research machines. Lightweight rendering and simplified interaction workflows were prioritized over computationally expensive visualization features.
-
-The use of Python additionally enables straightforward customization and extension by other researchers working in waste management and recycling domains. Since Python is widely adopted in machine learning and computer vision research, the software integrates naturally into existing scientific workflows.
+Overall, we chose Python and tkinter as the underlying architecture to leverage both the wide support for Python applications, its ease of use for other waste management researchers to adapt the tool for their purposes and of course the widespread adoption of Python as the programming language for rapid development of machine learning tools.
 
 # Research impact statement
 
-`AVAW_CV-Waste` has already been successfully applied in the development of scientific datasets and research workflows involving waste detection, classification, and recycling automation.
+`AVAW_CV-Waste` has already been successfully used in the development of scientific datasets and in the publication of research related to waste detection, classification, and recycling workflows.
 
-The software addresses a major bottleneck in waste management machine learning applications: the creation of high-quality annotated training datasets. The tool has been used in projects involving post-consumer textiles, lightweight packaging waste, and post-shredder scrap recycling, where large quantities of annotated images are required for training object detection models.
+`AVAW_CV-Waste` addresses a major bottleneck in the development of computer vision systems for waste management and recycling research, namely the creation of annotated training datasets.
 
-Datasets created using `AVAW_CV-Waste` have contributed to scientific publications and research activities focused on sensor-based sorting and automated classification of heterogeneous waste streams. These applications support the development of intelligent recycling systems capable of reducing manual sorting requirements and improving material recovery efficiency.
-
-The software is currently being used within multiple recycling and circular economy research projects, including:
+The software is currently being used within multiple recycling and circular economy lighthouse research projects, including:
 
 - KiRAMET: AI-based recycling of metal composite wastes,
 - StraTex: Sorting and processing strategies for used textiles,
 - greenPLAST-food: Green plastic recycling for food contact materials, and
 - Scarpa: Strategic recycling of footwear.
+
+Within these projects, the software has already been applied in research workflows involving post-consumer textiles, lightweight packaging waste, and post-shredder scrap, where large quantities of annotated image data are required for training and evaluating object detection models.
+
+The created datasets formed the basis for scientific publications showcasing the applicability of machine learning methods for sorting heterogeneous waste streams and reducing manual sorting requirements
+[@yolo_scrap_2026; @greenplast_food; @kiramet_green_steel;
+@kiramet_recycling; @robust_yolo_2026; @copper_detection;
+@deep_learning_scrap].
 
 # AI usage disclosure
 
