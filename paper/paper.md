@@ -24,9 +24,9 @@ bibliography: paper.bib
 
 # 1 Summary
 
-`AVAW_CV-Waste` is a free and open-source offline desktop application for creating and correcting image annotations used to train object detection models. The software allows users to draw, edit, move, resize, copy, and manage bounding boxes around objects in images, with outputs compatible with YOLO-based artificial intelligence workflows, specifically the YOLO PyTorch TXT annotation format commonly used by YOLO11, YOLOv8, YOLOv5, and related computer vision models.
+`AVAW_CV-Waste` is a free and open-source offline desktop application for creating and correcting image annotations used to train object detection models. The software allows users to draw, edit, move, resize, copy, and manage bounding boxes around objects in images. It creates outputs compatible with YOLO-based artificial intelligence workflows, specifically the YOLO PyTorch TXT annotation format commonly used by YOLO11, YOLOv8, YOLOv5, and related computer vision models.
 
-The software also supports the integration of existing YOLO models for semi-automatic annotation generation, reducing the amount of manual labelling required during dataset preparation. The application was designed specifically for waste management, recycling, and material sorting research, where datasets often contain highly domain-specific object classes and cannot easily be processed using generic or cloud-based annotation platforms.
+`AVAW_CV-Waste` supports the integration of existing YOLO models for semi-automatic annotation generation, reducing the amount of manual labelling required during dataset preparation. This assistance can be used to annotate complete images or follow a one-click annotation process in which the user clicks on an object and the currently loaded models tries to fit a bounding box around the selected object. The application was designed specifically for waste management, recycling, and material sorting research, where datasets often contain highly domain-specific object classes and cannot easily be processed using generic or cloud-based annotation platforms.
 
 Because the software operates entirely offline, it can be deployed directly at industrial facilities or research sites where internet access may be limited or unavailable. Local processing additionally guarantees data sovereignty, an important requirement for industrial research collaborations involving sensitive operational data.
 
@@ -34,37 +34,38 @@ The primary goal of `AVAW_CV-Waste` is to simplify and accelerate dataset creati
 
 # 2 Statement of need
 
-The AVAW_CV-Waste Tool was developed as a free and open-source alternative that can be adapted to specific scientific workflows, especially in waste management and recy-cling research, where open-source data is scarce to non-existent. 
+`AVAW_CV-Waste` was developed as a free and open-source alternative that can be adapted to specific scientific workflows, especially in waste management and recycling research.
 
-In this domain, images of particles with contamination, deformation and on conveyor belts, specific to the actual re-search question regarding the sorting and classification of waste particles are necessary. 
-
+The Waste Management domain needs images of particles with contamination, deformation and on conveyor belts, specific to the actual research question regarding the sorting and classification of waste particles are necessary.
 Thus, waste datasets often require highly specific object classes, such as plastics, paper, scrap-types, hazardous waste, or mixed waste fractions in environments relevant to the waste management domain.
+Publicly available datasets that fit all these requirements are scarce to non-existent and thus need to be created for each research project individually. 
 
-Existing tools may not easily support these specialized categories or the frequent changes that occur during research projects and often prohibit or disincentivise the use of custom pre-trained models, which may speed up the annotation process. 
+Existing annotation tools for this purpuse may not easily support these specialized categories or the frequent changes that occur during research projects and often prohibit or disincentivise the use of custom pre-trained models, which may impede up the annotation process. 
 
-Lastly, since many existing tools are cloud based, data sovereignty may not always be guaranteed - an increasingly precarious issue when working with industrial partners in waste management research projects heeding to data often being recorded directly in respective material recovery facilites. 
+Lastly, many existing tools are cloud based, and thus data sovereignty may not always be guaranteed. This is an increasingly precarious issue when working with industrial partners in general and patners in waste management in particular due to research projects requiring data to be recorded directly in respective material recovery facilites. 
 
-This tool allows users to define their own custom annotation classes, load and use their own models for automatic predictions, work entirely offline without requiring cloud services organize datasets according to their own folder structures and workflows and quickly review, edit, and correct annotations at no cost.
+This tool allows users to define their own custom annotation classes, load and use their own models for automatic predictions and to work entirely offline without requiring cloud services.  
 
-The software primarily targets researchers and industrial practitioners working in waste management, recycling, circular economy technologies, and sensor-based sorting applications.
+The software primarily targets researchers and industrial practitioners working in waste management, recycling, circular economy technologies, and sensor-based sorting applications enabling them to
+quickly create, review, edit, and correct annotations at no cost.
 
 # 3 State of the field
 
 The field of annotation software allows for several pre-build alternatives. 
 
-However, as we noticed in many of our research projects, these tools´ reliance on online annotation with the requirement to upload the dataset and related annotations into a cloud service often clashes with industrial partners need for data sovereignty. 
+However, these tools´ reliance on online annotation with the requirement to upload the dataset and related annotations into a cloud service often clashes with industrial partners need for data sovereignty. 
+Additionally, existing annotation tools may not easily integrate with the specialized categories or the frequent changes that occur during research projects.
 
-In theory one can build a self-hosted version and move docker images to offline machines. 
+In addition, many annotation tools restrict or disincentivise the integration of custom pre-trained models, thereby limiting opportunities to accelerate the annotation process through domain-specific automation.
+While some cloud-based services provide server-side automated annotation using existing pre-trained models, such functionality is often confined to paid subscription tiers and restricted to the models supported by the respective platform, or simply limited to set number of uses if using free subscription tiers. 
+Consequently, researchers are frequently unable to leverage their own waste-management-specific pre-trained models to support and aid annotation.
 
-But one would need advanced technical skills and additional resource and time for that. 
+In principle, many of these limitations can be circumvented by deploying self-hosted instances of existing annotation platforms on offline systems. 
+However, accomplishing this typically requires advanced technical expertise, and, most importantly, a considerable time investment.
 
-Further, this approach would eliminate the application of pre-trained models to semi-automatically segment and annotate objects in one’s dataset. 
+Consequently,  the emerging research field of employing machine learning models for waste classification tasks requires an open source, free of cost, offline and adaptable tool that allows for modular expansions and use of domain specific detection models that also ensures data-sovereignty and is not reliant on online services once installed.
 
-However, this automated annotation is oftentimes limited paid plans to alleviate usage limits and the available models provided by cloud service in question, prohibiting using one’s own pre-trained waste management domain specific models for aiding the annotation process. 
-
-In conclusion, the emerging research field of using machine learning models for waste management classification tasks needed an open source, free of cost, offline and adaptable tool that allows for modular expansions and use of domain specific detection models that also ensures data-sovereignty and is not reliant on online services once installed.
-
-The tool therefore fills a niche between generic cloud annotation platforms and highly customized in-house software solutions used in industrial recycling research.
+`AVAW_CV-Waste` addresses this gap by occupying a niche between generic cloud-based annotation platforms and highly specialized in-house software solutions commonly employed in industrial recycling research.
 
 # 4 Software design
 
