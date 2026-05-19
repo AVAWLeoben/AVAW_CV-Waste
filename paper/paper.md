@@ -69,13 +69,17 @@ Consequently,  the emerging research field of employing machine learning models 
 
 # 4 Software design
 
-While we are aware that basic code for software like this can rapidly be developed using generative ai, extensive testing under real research scenarios with researchers of varying degrees of technical prowess can’t be offloaded to GenAI. 
+While generative AI can now accelerate the initial development of software like this, extensive testing in real research environments is still required. In particular, evaluating the tool with researchers of different technical backgrounds cannot be meaningfully outsourced or offloaded to generative AI systems.
 
-Thus, the UI and UIX of this tool were subject to constant iteration and improvement, spanning multiple years of research projects in this emerging field in waste management research. It could therefore incorporate criticism and feedback from students during lectures, researchers and workers that annotated thousands of images using this tool. Ongoing usage and the everchanging nature of research projects in general and Waste Managment related sorting tasks in particular will inevitably uncover further optimisations and adaptations. The use of Python itself and the common UI framework tkinter as well and an object oriented approach to the tools makeup is aimed at enabling customisation and extension by other researchers working in waste management and recycling domains. Since Python is widely adopted in machine learning and computer vision research, the software integrates naturally into existing scientific workflows.
+Thus, the UI and UIX of this tool were subject to constant iteration and improvement, spanning multiple years of research projects in this emerging field in waste management research. It could therefore incorporate criticism and feedback from students during lectures, as well as from researchers and workers that annotated thousands of images using this tool. Ongoing use and the evolving requirements of research projects, particularly in waste-management-related sorting tasks, will inevitably uncover further opportunities for optimisation and adaptation. The use of Python, the widely adopted UI framework Tkinter, and an object-oriented software architecture is intended to support straightforward customisation and extension by researchers in waste management and recycling domains.
 
-Several design trade-offs were made to ensure broad hardware compatibility and stable operation on lower-performance research machines, while still allowing for quality of life features expected from a tool like this. Lightweight rendering and simplified interaction workflows were prioritized over computationally expensive visualization features.
+To maintain simplicity and accessibility, the software intentionally avoids implementation complexity, such as multithreading or multitasking even though these approaches could have potentially improved application responsiveness by offloading annotation tasks to separate processes.
 
-Overall, we chose Python and tkinter as the underlying architecture to leverage both the wide support for Python applications, its ease of use for other waste management researchers to adapt the tool for their purposes and of course the widespread adoption of Python as the programming language for rapid development of machine learning tools.
+Since Python is already widely used in machine learning and computer vision research, the tool integrates naturally into existing scientific workflows.
+
+Several design trade-offs were made to ensure broad hardware compatibility and stable operation on lower-performance research machines while still providing the quality-of-life features expected from such a tool. Lightweight rendering and simplified interaction workflows were prioritized over computationally expensive visualization features. Although the default Python environment is primarily designed for CPU-based inference, the underlying inference modules also enable advanced users to leverage available GPU hardware resources with only minor changes to the installation workflow.
+
+Overall, Python and its ecosystem of modules were selected as the underlying architecture due to the broad support available for Python applications, the ease with which other waste management researchers can adapt the tool to their own requirements, and the widespread adoption of Python for the rapid development of machine learning applications.
 
 # 5 Research impact statement
 
@@ -83,7 +87,7 @@ Overall, we chose Python and tkinter as the underlying architecture to leverage 
 
 `AVAW_CV-Waste` addresses a major bottleneck in the development of computer vision systems for waste management and recycling research, namely the creation of annotated training datasets.
 
-The software is currently being used within multiple recycling and circular economy lighthouse research projects, including KiRAMET, StraTex, greenPLAST-food, and Scarpa.
+`AVAW_CV-Waste` is currently being used within multiple recycling and circular economy lighthouse research projects, including KiRAMET, StraTex, greenPLAST-food, and Scarpa.
 
 Within these projects, the software has been applied in research workflows involving post-consumer textiles, lightweight packaging waste, and post-shredder scrap, where large quantities of annotated image data are required for training and evaluating object detection models.
 
@@ -97,7 +101,7 @@ These applications demonstrate the utility of the software for reducing manual a
 
 Generative artificial intelligence tools were not used for the architectural design or core software implementation of `AVAW_CV-Waste`.
 
-ChatGPT (OpenAI) was used during software development for documentation support, generation of docstrings, bug-fixing assistance, and minor inline code modifications. For this manuscript, generative AI tools were used only for grammatical improvements and formatting support, including conversion of manuscript content from `.docx` to Markdown syntax.
+ChatGPT (OpenAI) was used during software development for documentation support, generation of docstrings, bug-fixing assistance, and inline code modifications. For this manuscript, generative AI tools were used only for grammatical improvements and formatting support, including conversion of manuscript content from `.docx` to Markdown syntax.
 
 All generated content and code modifications were manually reviewed and validated by the authors.
 
