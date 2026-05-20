@@ -55,10 +55,11 @@ class DataAugmentor:
         
     def flip_annotations_lr(self):
         flipped_annotations = []
+        img_width = self.owner.image.shape[1]
         for annotation in self.owner.ANNOTATION_HANDLER.annotations:
             class_id, x1, y1, x2, y2 = annotation
-            x1 = 640 - x1  # Mirror the x-coordinate
-            x2 = 640 - x2  # Mirror the x-coordinate
+            x1 = img_width - x1  # Mirror the x-coordinate
+            x2 = img_width - x2  # Mirror the x-coordinate
             x1,x2 = min(x1,x2),max(x1,x2)
             flipped_annotations.append([class_id, x1, y1, x2, y2])
         self.owner.ANNOTATION_HANDLER.annotations = flipped_annotations
@@ -72,10 +73,11 @@ class DataAugmentor:
         
     def flip_annotations_ud(self):
         flipped_annotations = []
+        img_height = self.owner.image.shape[0]
         for annotation in self.owner.ANNOTATION_HANDLER.annotations:
             class_id, x1, y1, x2, y2 = annotation
-            y1 = self.owner.image.shape[0] - y1  # Mirror the x-coordinate
-            y2 = self.owner.image.shape[0] - y2  # Mirror the x-coordinate
+            y1 = img_height - y1  # Mirror the x-coordinate
+            y2 = img_height - y2  # Mirror the x-coordinate
             y1,y2 = min(y1,y2),max(y1,y2)
             flipped_annotations.append([class_id, x1, y1, x2, y2])
         self.owner.ANNOTATION_HANDLER.annotations = flipped_annotations
