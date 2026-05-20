@@ -122,7 +122,10 @@ For CUDA support please follow along the GPU instructions further above.
 
 Run the application from your IDE of choice, or from the command line after a cd into the AVAW_BBOX folder:
 
+An example with placeholder path is shown below:
+
 ```bash
+cd C:\Path\To\AVAW_CV-Waste\AVAW_BBOX
 python AVAW_CVAT_BBOX.py
 ```
 
