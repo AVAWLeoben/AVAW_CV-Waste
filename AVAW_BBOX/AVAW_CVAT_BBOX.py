@@ -49,6 +49,7 @@ class DataAugmentor:
         
     def flip_lr(self):
         self.owner.image = cv2.flip(self.owner.image,1)
+        self.owner._cached_image_np = None # Clear Cached Images for this zoom level so image is actually shown flipped!
         self.flip_annotations_lr()
         #delete_all_annotations()
         self.owner.update_display()
@@ -67,6 +68,7 @@ class DataAugmentor:
     
     def flip_ud(self):
         self.owner.image = cv2.flip(self.owner.image,0)
+        self.owner._cached_image_np = None # Clear Cached Images for this zoom level so image is actually shown flipped!
         self.flip_annotations_ud()
         #delete_all_annotations()
         self.owner.update_display()
