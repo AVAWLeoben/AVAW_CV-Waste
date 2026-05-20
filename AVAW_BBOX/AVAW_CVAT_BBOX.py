@@ -46,12 +46,19 @@ class Archive:
 class DataAugmentor:
     def __init__(self,owner):
         self.owner = owner
-        
+
+    def clear_undo_archive(self,owner):
+        # Clear undo history after augmentation to avoid image/annotation
+        # desynchronization, since the archive currently stores only annotations
+        # Store the new flipped state as the first valid undo state
+        self.owner.ARCHIVE.clear_archive()
+        self.owner.ARCHIVE.fill_archive()
+    
     def flip_lr(self):
         self.owner.image = cv2.flip(self.owner.image,1)
         self.owner._cached_image_np = None # Clear Cached Images for this zoom level so image is actually shown flipped!
-        self.flip_annotations_lr()
-        #delete_all_annotations()
+        self.flip_annotations_lr()        
+        self.clear_undo_archive()        
         self.owner.update_display()
         
     def flip_annotations_lr(self):
@@ -70,7 +77,7 @@ class DataAugmentor:
         self.owner.image = cv2.flip(self.owner.image,0)
         self.owner._cached_image_np = None # Clear Cached Images for this zoom level so image is actually shown flipped!
         self.flip_annotations_ud()
-        #delete_all_annotations()
+        self.clear_undo_archive()       
         self.owner.update_display()
         
     def flip_annotations_ud(self):
