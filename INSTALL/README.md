@@ -1,4 +1,4 @@
-# AVAW CVAT BBox Tool
+# AVAW_CV-Waste
 
 A lightweight desktop GUI tool for creating, editing, and managing YOLO-style bounding box annotations.
 
@@ -37,8 +37,16 @@ cd path\to\AVAW_CV-Waste\INSTALL
 Create and activate the Conda environment:
 
 ```bash
-conda env create -f environment.yml -n AVAW_BBOX
-conda activate AVAW_BBOX
+conda env create -f environment.yml -n AVAW_CV-Waste
+conda activate AVAW_CV-Waste
+```
+
+### Optional: Install Spyder IDE
+The default environment does not contain an IDE. A preliminary installation to further adapt the application could be Spyder.
+
+To install spyder run the following command after activating the new environment.
+```bash
+conda install spyder
 ```
 
 ### Optional: Enable GPU Support
