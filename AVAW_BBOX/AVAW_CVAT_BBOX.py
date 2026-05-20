@@ -71,7 +71,7 @@ class DataAugmentor:
             x1,x2 = min(x1,x2),max(x1,x2)
             flipped_annotations.append([class_id, x1, y1, x2, y2])
         self.owner.ANNOTATION_HANDLER.annotations = flipped_annotations
-        self.owner.update_display()
+        self.owner.update_display() # Removed as flip_lr already calls self.owner.update_display()
     
     def flip_ud(self):
         self.owner.image = cv2.flip(self.owner.image,0)
@@ -90,7 +90,7 @@ class DataAugmentor:
             y1,y2 = min(y1,y2),max(y1,y2)
             flipped_annotations.append([class_id, x1, y1, x2, y2])
         self.owner.ANNOTATION_HANDLER.annotations = flipped_annotations
-        self.owner.update_display()
+        self.owner.update_display() # Removed as flip_ud already calls self.owner.update_display()
 
 class ImageHandler:
     def __init__(self, owner):
@@ -1062,126 +1062,208 @@ class ChangeClassNamesWindow(Window):
 
 class ColourSelectWindow(Window):
     def __init__(self, owner):
-        # Call base class constructor
-        super().__init__(owner, title="Class Colour Selection", size="400x400")
+        super().__init__(owner, title="Class Colour Selection", size="620x420")
 
-        # Get class names and colours
         self.class_names = self.owner.class_names
-        self.colour_list = self.owner.class_colors  # Shared reference
-
-        # Left frame for class buttons
-        self.left_frame = tk.Frame(self.window, width=200, bg="lightgray")
-        self.left_frame.pack(side=tk.LEFT, fill=tk.Y)
-
-        # Right frame for colour selector (MS Paint style)
-        self.right_frame = tk.Frame(self.window, width=400, bg="white")
-        self.right_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
-
-        # Build class buttons
+        self.colour_list = self.owner.class_colors
         self.class_buttons = []
-        for idx, name in enumerate(self.class_names):
-            color_hex = self.rgb_to_hex(self.colour_list[idx])
-            btn = tk.Button(
-                self.left_frame,
-                text=name,
-                bg=color_hex,
-                fg="white",
-                command=lambda i=idx: self.open_color_picker(i)
-            )
-            btn.pack(fill=tk.X, padx=5, pady=5)
-            self.class_buttons.append(btn)
+        self.current_class_idx = 0
 
-        # Build palette UI
-        self.build_palette()
-    
-    def update_on_class_name_change(self):
-        self.class_names = self.owner.class_names
-        self.colour_list = self.owner.class_colors  # Shared reference
+        # Main layout
+        self.main_frame = tk.Frame(self.window, padx=10, pady=10)
+        self.main_frame.pack(fill=tk.BOTH, expand=True)
+
+        self.main_frame.columnconfigure(0, weight=1)
+        self.main_frame.columnconfigure(1, weight=1)
+        self.main_frame.rowconfigure(1, weight=1)
+
+        # Header
+        tk.Label(
+            self.main_frame,
+            text="Class Colours",
+            font=("TkDefaultFont", 12, "bold")
+        ).grid(row=0, column=0, columnspan=2, sticky="w", pady=(0, 8))
+
+        # Scrollable class list
+        self.list_canvas = tk.Canvas(self.main_frame, highlightthickness=0)
+        self.list_scrollbar = tk.Scrollbar(
+            self.main_frame,
+            orient="vertical",
+            command=self.list_canvas.yview
+        )
+
+        self.left_frame = tk.Frame(self.list_canvas)
+        self.left_frame.bind(
+            "<Configure>",
+            lambda e: self.list_canvas.configure(
+                scrollregion=self.list_canvas.bbox("all")
+            )
+        )
+
+        self.list_canvas.create_window((0, 0), window=self.left_frame, anchor="nw")
+        self.list_canvas.configure(yscrollcommand=self.list_scrollbar.set)
         
-        # Clear existing widgets in left_frame
+        # Enable mousewheel scrolling over the class list
+        self.list_canvas.bind("<Enter>", self._bind_mousewheel)
+        self.list_canvas.bind("<Leave>", self._unbind_mousewheel)
+
+        self.list_canvas.grid(row=1, column=0, sticky="nsew", padx=(0, 8))
+        self.list_scrollbar.grid(row=1, column=0, sticky="nse", padx=(0, 8))
+
+        # Palette area
+        self.right_frame = tk.Frame(self.main_frame)
+        self.right_frame.grid(row=1, column=1, sticky="nsew")
+
+        self.build_class_buttons()
+        self.build_palette()
+
+    def build_class_buttons(self):
         for widget in self.left_frame.winfo_children():
             widget.destroy()
-        
-        # Build class buttons
+    
         self.class_buttons = []
+    
+        # Arrange class buttons in a grid instead of one long vertical list
+        cols = 4
+    
         for idx, name in enumerate(self.class_names):
             color_hex = self.rgb_to_hex(self.colour_list[idx])
+            row, col = divmod(idx, cols)
+    
             btn = tk.Button(
                 self.left_frame,
                 text=name,
                 bg=color_hex,
-                fg="white",
+                fg=self.get_readable_text_color(color_hex),
+                relief=tk.FLAT,
+                width=8,
+                padx=10,
+                pady=6,
                 command=lambda i=idx: self.open_color_picker(i)
             )
-            btn.pack(fill=tk.X, padx=5, pady=5)
+    
+            btn.grid(row=row, column=col, padx=4, pady=4, sticky="ew")
             self.class_buttons.append(btn)
-        
-    def rgb_to_hex(self, rgb):
-        """Convert (R,G,B) list or tuple to hex string."""
-        r, g, b = rgb
-        return "#%02x%02x%02x" % (r, g, b)
+    
+        for col in range(cols):
+            self.left_frame.columnconfigure(col, weight=1)
 
     def build_palette(self):
-        """Draw a simple palette similar to MS Paint with preset colors."""
+        for widget in self.right_frame.winfo_children():
+            widget.destroy()
+
+        tk.Label(
+            self.right_frame,
+            text="Preset Colours",
+            font=("TkDefaultFont", 10, "bold")
+        ).pack(anchor="w", pady=(0, 8))
+
+        palette_frame = tk.Frame(self.right_frame)
+        palette_frame.pack(anchor="w")
+
         preset_colors = [
-            "#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF", "#00FFFF",
-            "#000000", "#FFFFFF", "#808080", "#800000", "#008000", "#000080"
+            "#E53935", "#43A047", "#1E88E5", "#FDD835",
+            "#8E24AA", "#00ACC1", "#FB8C00", "#6D4C41",
+            "#000000", "#757575", "#FFFFFF", "#3949AB",
+            "#D81B60", "#7CB342", "#00897B", "#C0CA33"
         ]
-        rows, cols = 3, 4
+
+        cols = 4
         for i, color in enumerate(preset_colors):
             row, col = divmod(i, cols)
-            canvas = tk.Canvas(self.right_frame, bg=color, width=50, height=50, highlightthickness=1, highlightbackground="black")
-            canvas.grid(row=row, column=col, padx=5, pady=5)
-            canvas.bind("<Button-1>", lambda e, c=color: self.set_selected_color(c))
 
-        # Add "Custom Color..." button (like MS Paint)
-        tk.Button(self.right_frame, text="Custom Color...", command=self.choose_custom_color).grid(row=rows, column=0, columnspan=cols, pady=10)
+            swatch = tk.Button(
+                palette_frame,
+                bg=color,
+                width=4,
+                height=2,
+                relief=tk.RIDGE,
+                command=lambda c=color: self.set_selected_color(c)
+            )
+            swatch.grid(row=row, column=col, padx=4, pady=4)
 
-        # Label to show selected color
-        self.selected_color_preview = tk.Label(self.right_frame, text="Selected Color", width=20, height=2, relief=tk.SUNKEN)
-        self.selected_color_preview.grid(row=rows+1, column=0, columnspan=cols, pady=10)
+        tk.Button(
+            self.right_frame,
+            text="Choose custom colour...",
+            command=self.choose_custom_color
+        ).pack(fill=tk.X, pady=(16, 8))
+
+        self.selected_color_preview = tk.Label(
+            self.right_frame,
+            text="Selected colour",
+            height=2,
+            relief=tk.GROOVE
+        )
+        self.selected_color_preview.pack(fill=tk.X)
+
+        if self.class_names:
+            self.open_color_picker(0)
+
+    def update_on_class_name_change(self):
+        self.class_names = self.owner.class_names
+        self.colour_list = self.owner.class_colors
+        self.build_class_buttons()
+
+    def open_color_picker(self, class_idx):
+        self.current_class_idx = class_idx
+        current_hex = self.rgb_to_hex(self.colour_list[class_idx])
+        self.selected_color_preview.config(
+            bg=current_hex,
+            fg=self.get_readable_text_color(current_hex)
+        )
 
     def set_selected_color(self, hex_color):
-        """Set selected color from palette and preview it."""
-        self.selected_color_preview.config(bg=hex_color)
-        self.current_color = hex_color
-        if hasattr(self, 'current_class_idx'):
-            # Update class button color immediately
-            self.class_buttons[self.current_class_idx].config(bg=hex_color)
-            self.colour_list[self.current_class_idx] = self.hex_to_rgb(hex_color)
-            self.owner.class_colors[self.current_class_idx] = self.hex_to_rgb(hex_color)
-            self.owner.update_display()
+        self.selected_color_preview.config(
+            bg=hex_color,
+            fg=self.get_readable_text_color(hex_color)
+        )
+
+        self.colour_list[self.current_class_idx] = self.hex_to_rgb(hex_color)
+        self.owner.class_colors[self.current_class_idx] = self.hex_to_rgb(hex_color)
+
+        self.class_buttons[self.current_class_idx].config(
+            bg=hex_color,
+            fg=self.get_readable_text_color(hex_color)
+        )
+
+        self.owner.update_display()
 
     def choose_custom_color(self):
-        """Open system color chooser dialog."""
-        color_code = colorchooser.askcolor(title="Choose a custom color")
+        color_code = colorchooser.askcolor(title="Choose a custom colour")
         if color_code[1]:
             self.set_selected_color(color_code[1])
 
-    def open_color_picker(self, class_idx):
-        """When a class button is clicked, mark it active and preview its color."""
-        self.current_class_idx = class_idx
-        current_hex = self.rgb_to_hex(self.colour_list[class_idx])
-        self.set_selected_color(current_hex)
+    def rgb_to_hex(self, rgb):
+        r, g, b = rgb
+        return "#%02x%02x%02x" % (r, g, b)
 
     def hex_to_rgb(self, hex_color):
-        """Convert hex (#RRGGBB) to (R,G,B)."""
         hex_color = hex_color.lstrip("#")
-        return tuple(int(hex_color[i:i+2], 16) for i in (0, 2, 4))
+        return tuple(int(hex_color[i:i + 2], 16) for i in (0, 2, 4))
 
-    def toggle(self, event=None):
-        """Show/hide the colour selection window."""
-        if self.shown:
-            self.window.withdraw()
-            self.shown = False
-        else:
-            self.window.deiconify()
-            self.shown = True
-
-    def on_close(self):
-        """Hide instead of destroy when X is clicked."""
-        self.window.withdraw()
-        self.shown = False
+    def get_readable_text_color(self, hex_color):
+        r, g, b = self.hex_to_rgb(hex_color)
+        brightness = (r * 299 + g * 587 + b * 114) / 1000
+        return "black" if brightness > 140 else "white"
+    
+    def _bind_mousewheel(self, event=None):
+        self.list_canvas.bind_all("<MouseWheel>", self._on_mousewheel)      # Windows/macOS
+        self.list_canvas.bind_all("<Button-4>", self._on_mousewheel_linux)  # Linux scroll up
+        self.list_canvas.bind_all("<Button-5>", self._on_mousewheel_linux)  # Linux scroll down
+    
+    def _unbind_mousewheel(self, event=None):
+        self.list_canvas.unbind_all("<MouseWheel>")
+        self.list_canvas.unbind_all("<Button-4>")
+        self.list_canvas.unbind_all("<Button-5>")
+    
+    def _on_mousewheel(self, event):
+        self.list_canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+    
+    def _on_mousewheel_linux(self, event):
+        if event.num == 4:
+            self.list_canvas.yview_scroll(-1, "units")
+        elif event.num == 5:
+            self.list_canvas.yview_scroll(1, "units")
 
 class MenuBar:    
     def __init__(self, owner):
