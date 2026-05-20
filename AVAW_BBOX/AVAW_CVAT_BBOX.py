@@ -1272,7 +1272,12 @@ class UserInterface:
         self.owner.root.bind("<y>", self.owner.PREDICTION_MODEL_HANDLER.run_yolo_inference)
         self.owner.root.bind("<j>", self.owner.USER_INPUT_HANDLER.single_click_prediction)
 
-        self.owner.root.bind("<App>", self.owner.USER_INPUT_HANDLER.show_context_menu)
+        # self.owner.root.bind("<App>", self.owner.USER_INPUT_HANDLER.show_context_menu) # This will crash on anything but Windows
+        for key in ("<Menu>", "<App>"):
+            try:
+                self.owner.root.bind(key, self.owner.USER_INPUT_HANDLER.show_context_menu)
+            except tk.TclError:
+                pass
         
         self.owner.root.bind("<Enter>", lambda event: self.owner.root.focus_set())
         
