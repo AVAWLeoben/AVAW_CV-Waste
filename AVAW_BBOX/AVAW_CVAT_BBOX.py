@@ -71,7 +71,7 @@ class DataAugmentor:
             x1,x2 = min(x1,x2),max(x1,x2)
             flipped_annotations.append([class_id, x1, y1, x2, y2])
         self.owner.ANNOTATION_HANDLER.annotations = flipped_annotations
-        # self.owner.update_display() # Removed as flip_lr already calls self.owner.update_display()
+        self.owner.update_display()
     
     def flip_ud(self):
         self.owner.image = cv2.flip(self.owner.image,0)
@@ -90,7 +90,7 @@ class DataAugmentor:
             y1,y2 = min(y1,y2),max(y1,y2)
             flipped_annotations.append([class_id, x1, y1, x2, y2])
         self.owner.ANNOTATION_HANDLER.annotations = flipped_annotations
-        #self.owner.update_display() # Removed as flip_ud already calls self.owner.update_display()
+        self.owner.update_display()
 
 class ImageHandler:
     def __init__(self, owner):
