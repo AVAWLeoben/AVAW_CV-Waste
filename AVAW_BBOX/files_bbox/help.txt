@@ -1,36 +1,46 @@
-Help - Key Controls
+AVAW BBOX Annotation Tool — Help
 
-Navigation:
-Right Arrow: Next image
-Left Arrow: Previous image
-Up Arrow: Save Current Annotations
-S: Save Current Annotations
-"Jump To Image" Button: Enter image index and jump to it
+Navigation
+━━━━━━━━━━━━━━━━━━━━
+→ / D / E        Next image
+← / A / Q        Previous image
+↑ / S            Save annotations
+Enter            Jump to image
 
-Bounding Box Actions:
-N: Start a new bounding box (Click and drag to create)
-Delete: Delete selected bounding box
-Class Selection: Use the dropdown or context menu to change class
-Undo: Undo the last action
-C: Copy Current Box to Clipboard
-V: Paste Box from Clipboard to current Image
+Annotation Controls
+━━━━━━━━━━━━━━━━━━━━
+N / ↓            Create new box
+Delete           Delete selected box
+Left Drag        Move / resize box
+Ctrl + Click     Multi-select
+Ctrl + Drag      Move selected boxes
+Ctrl + A         Select all boxes
 
-Editing:
-Move Box: Click and drag inside a box to move it
-Resize Box: Drag from a corner of a selected box
-Context Menu No Box Selected(Right-click):
-Save Annotations: Save all annotations
-Paste: Paste Box from Clipboard to current Image
+Clipboard
+━━━━━━━━━━━━━━━━━━━━
+Ctrl + C         Copy box
+Ctrl + V         Paste box
 
-Context Menu Box Selected(Right-click):
-Delete: Delete selected bounding box
-Copy: Copy Current Box to Clipboard
-Classes: Change Class of Current Box
+Prediction
+━━━━━━━━━━━━━━━━━━━━
+Y                Run YOLO inference
+Alt + Click      Single-click prediction
+J                Prediction shortcut
 
-Other:
-F1: Show this help message
-F2: Show List of all Boxes
-F3: Show Image selection
-F4: Show Class Color Window
-F5: Show Change Class Name Window
-Y/Run YOLO Inference: Auto-detect objects in the image
+Translation
+━━━━━━━━━━━━━━━━━━━━
+8 / 2 / 4 / 6   Move all annotations
+
+Windows
+━━━━━━━━━━━━━━━━━━━━
+F1               Help
+F2               Box list
+F3               Image list
+F4               Class colors
+F5               Class names
+F6               Toggle autosave
+F12              Screenshot
+
+Context Menu
+━━━━━━━━━━━━━━━━━━━━
+Right Click      Open context menu
