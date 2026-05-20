@@ -80,38 +80,43 @@ Typical model files use the `.pt` format and can be selected through the graphic
 
 Once a model is loaded, the application can generate bounding box predictions automatically, making it much faster to annotate large datasets.
 
-
 ## 🖱️ Basic Controls
 
-| Action                    | Binding                                         | Description                                          |
-| ------------------------- | ----------------------------------------------- | ---------------------------------------------------- |
-| Click (canvas)            | **Left Click**                                  | Select / interact with a box (`on_click`)            |
-| Draw / drag               | **Left Click + Drag**                           | Draw or move/resize depending on context (`on_drag`) |
-| Finish drag               | **Left Button Release**                         | Finish creation/edit (`on_release`)                  |
-| Multi-drag                | **Ctrl + Left Drag**                            | Drag multiple selected boxes (`on_multi_drag`)       |
-| Multi-select start        | **Ctrl + Left Click**                           | Start multiselect / add selection (`on_multiselect`) |
-| Multi-select stop         | **Ctrl + Right Click**                          | Stop multiselect (`stop_multiselect`)                |
-| Context menu              | **Right Click** *(or App/Menu key)*             | Open context menu (`show_context_menu`)              |
-| Single-click prediction   | **Alt + Left Click** *(or Ctrl+Alt+Left Click)* | Run prediction at click (`single_click_prediction`)  |
-| Add box                   | **n** *(or ↓ Down Arrow)*                       | Add a new box (`add_box`)                            |
-| Delete selected box       | **Delete**                                      | Delete selected box (`delete_box`)                   |
-| Save                      | **s** *(or ↑ Up Arrow)*                         | Save annotations (`on_save`)                         |
-| Force save flag           | **p**                                           | Set save flag (`set_save_flag`)                      |
-| Toggle confidences        | **h**                                           | Show/hide confidences (`show_confidences`)           |
-| YOLO inference            | **y**                                           | Run YOLO inference (`run_yolo_inference`)            |
-| Select all                | **Ctrl + A**                                    | Select all boxes (`select_all`)                      |
-| Copy / paste boxes        | **Ctrl + C / Ctrl + V**                         | Copy / paste selection (`on_copy`, `on_paste`)       |
-| Next image                | **e / d / → Right Arrow**                       | Next image (`next_image`)                            |
-| Previous image            | **q / a / ← Left Arrow**                        | Previous image (`previous_image`)                    |
-| Jump to image             | **Enter / Return**                              | Jump to image index (`jump_to_image`)                |
-| Translate annotations     | **8 / 2 / 4 / 6**                               | Move all annotations up/down/left/right              |
-| Help                      | **F1**                                          | Open help menu                                       |
-| Toggle box list           | **F2**                                          | Show/hide box list                                   |
-| Toggle image list         | **F3**                                          | Show/hide image list window                          |
-| Toggle color selector     | **F4**                                          | Show/hide color selector                             |
-| Toggle class names editor | **F5**                                          | Show/hide class names window                         |
-| Toggle autosave           | **F6**                                          | Enable/disable autosave                              |
-| Screenshot                | **F12**                                         | Take screenshot                                      |
+| Action | Binding | Description |
+|---|---|---|
+| Select / interact with box | **Left Click** | Select an existing box or start interaction |
+| Draw / drag | **Left Click + Drag** | Draw a new box, move a box, or resize a box depending on context |
+| Finish drag/edit | **Left Button Release** | Finalize box creation, movement, or resizing |
+| Multi-select | **Ctrl + Left Click** | Add boxes to the current multi-selection |
+| Multi-drag | **Ctrl + Left Drag** | Move all currently selected boxes |
+| Stop multi-select | **Ctrl + Right Click** | Clear/stop multi-selection |
+| Context menu | **Right Click** | Open the context-sensitive menu |
+| Context menu key | **Menu** on Linux/macOS, **App** on Windows | Open the context-sensitive menu via keyboard |
+| Single-click prediction | **Alt + Left Click** or **Ctrl + Alt + Left Click** | Run prediction at the clicked position |
+| Add new box | **n** or **↓ Down Arrow** | Enable creation of a new bounding box |
+| Delete selected box | **Delete** | Delete the currently selected box |
+| Save annotations | **s** or **↑ Up Arrow** | Save current annotations |
+| Force save flag | **p** | Mark current annotations as needing save |
+| Toggle confidences | **h** | Show or hide confidence values |
+| Run YOLO inference | **y** | Run model inference on the current image |
+| Single-click prediction shortcut | **j** | Run single-click prediction mode/action |
+| Select all boxes | **Ctrl + A** | Select all annotations in the current image |
+| Copy boxes | **Ctrl + C** | Copy selected box or selected boxes |
+| Paste boxes | **Ctrl + V** | Paste copied box or boxes |
+| Next image | **e**, **d**, or **→ Right Arrow** | Load next image |
+| Previous image | **q**, **a**, or **← Left Arrow** | Load previous image |
+| Jump to image | **Enter / Return** | Jump to selected image index |
+| Move annotations up | **8** | Translate all annotations upward |
+| Move annotations down | **2** | Translate all annotations downward |
+| Move annotations left | **4** | Translate all annotations left |
+| Move annotations right | **6** | Translate all annotations right |
+| Help | **F1** | Open help window |
+| Toggle box list | **F2** | Show or hide annotation/box list |
+| Toggle image list | **F3** | Show or hide image list window |
+| Toggle color selector | **F4** | Show or hide class color selector |
+| Toggle class name editor | **F5** | Show or hide class name editor |
+| Toggle autosave | **F6** | Enable or disable autosave |
+| Screenshot | **F12** | Take screenshot |
 
 
 *(TODO KEEP UP TO DATE AND Adjust as actual bindings change during DEV)*
