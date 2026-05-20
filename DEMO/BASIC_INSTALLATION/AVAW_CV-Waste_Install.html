@@ -1,0 +1,500 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVAW_CV-Waste_Install</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, Arial, sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
+        .page-header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%); color: #fff; padding: 48px 40px 40px; }
+        .page-header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
+        .page-header .meta { font-size: 0.85rem; opacity: 0.65; }
+        .summary-grid { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+        .summary-item { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 20px; min-width: 140px; }
+        .summary-item .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.8px; opacity: 0.6; margin-bottom: 4px; }
+        .summary-item .value { font-size: 1.1rem; font-weight: 600; }
+        .progress-bar-wrap { background: rgba(255,255,255,0.15); border-radius: 4px; height: 4px; margin-top: 24px; }
+        .progress-bar-fill { background: #e94560; border-radius: 4px; height: 4px; width: 100%; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px 20px 60px; }
+        .step-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04); margin-bottom: 28px; overflow: hidden; transition: box-shadow 0.2s; }
+        .step-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.11), 0 2px 6px rgba(0,0,0,0.06); }
+        .step-header { display: flex; align-items: flex-start; gap: 16px; padding: 20px 24px; border-bottom: 1px solid #f0f0f0; }
+        .step-badge { background: #e94560; color: #fff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; border-radius: 20px; padding: 4px 12px; white-space: nowrap; flex-shrink: 0; }
+        .step-header-text { flex: 1; }
+        .step-title { font-size: 0.97rem; font-weight: 500; color: #1a1a2e; line-height: 1.45; }
+        .step-time { font-size: 0.78rem; color: #888; margin-top: 4px; }
+        .step-delta { display: inline-block; background: #f0f2f5; border-radius: 10px; padding: 1px 8px; font-size: 0.72rem; color: #555; margin-left: 8px; }
+        .step-details { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px 20px; padding: 14px 24px; background: #f8f9fb; border-bottom: 1px solid #f0f0f0; font-size: 0.82rem; }
+        .detail-item .detail-label { color: #999; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+        .detail-item .detail-value { color: #1a1a2e; word-break: break-word; }
+        .step-body { padding: 20px 24px; }
+        .step-body img { width: 100%; height: auto; border-radius: 8px; border: 1px solid #e8e8e8; display: block; cursor: zoom-in; }
+        .no-screenshot { color: #aaa; font-size: 0.85rem; font-style: italic; padding: 8px 0; }
+        .footer { text-align: center; color: #aaa; font-size: 0.78rem; padding-bottom: 20px; }
+        .footer a { color: #0f3460; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        #lb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; cursor:zoom-out; }
+        #lb-overlay.active { display:flex; }
+        #lb-img { max-width:92vw; max-height:92vh; border-radius:6px; box-shadow:0 8px 40px rgba(0,0,0,0.6); }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>AVAW_CV-Waste_Install</h1>
+        <div class="meta">Generated 20 May 2026, 12:21</div>
+        <div class="summary-grid">
+            <div class="summary-item"><div class="label">Steps</div><div class="value">22</div></div>
+            <div class="summary-item"><div class="label">Started</div><div class="value">20 May 2026, 11:50:53</div></div>
+            <div class="summary-item"><div class="label">Finished</div><div class="value">12:09:26</div></div>
+            <div class="summary-item"><div class="label">Total Duration</div><div class="value">18m 32s</div></div>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
+    </div>
+    <div class="container">
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 1</span>
+                <div class="step-header-text">
+                    <div class="step-title">In firefox, Left Click on Window AVAWLeoben/AVAW_CV-Waste: Semi Automatic Annotation Tool for AI Model Training — Mozilla Firefox</div>
+                    <div class="step-time">11:50:53</div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">firefox</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">AVAWLeoben/AVAW_CV-Waste: Semi Automatic Annotation Tool for AI Model Training — Mozilla Firefox</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">AVAWLeoben/AVAW_CV-Waste: Semi Automatic Annotation Tool for AI Model Training — Mozilla Firefox</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Window</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1237, 346</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_1_bb30b53b.png" alt="Screenshot for Step 1" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 2</span>
+                <div class="step-header-text">
+                    <div class="step-title">In firefox, Left Click on Window AVAWLeoben/AVAW_CV-Waste: Semi Automatic Annotation Tool for AI Model Training — Mozilla Firefox</div>
+                    <div class="step-time">11:50:53 → 11:50:55 <span class="step-delta">(2s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">firefox</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">AVAWLeoben/AVAW_CV-Waste: Semi Automatic Annotation Tool for AI Model Training — Mozilla Firefox</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">AVAWLeoben/AVAW_CV-Waste: Semi Automatic Annotation Tool for AI Model Training — Mozilla Firefox</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Window</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">965, 642</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_2_e584473c.png" alt="Screenshot for Step 2" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 3</span>
+                <div class="step-header-text">
+                    <div class="step-title">In firefox, Left Click on Group </div>
+                    <div class="step-time">11:50:55 → 11:51:02 <span class="step-delta">(6s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">firefox</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Enter name of file to save to…</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Group</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1170, 912</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_3_d19135d0.png" alt="Screenshot for Step 3" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 4</span>
+                <div class="step-header-text">
+                    <div class="step-title">In explorer, Right Click on ListItem AVAW_CV-Waste-JOSS-short-lived-branch.zip</div>
+                    <div class="step-time">11:51:02 → 11:51:20 <span class="step-delta">(17s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Right Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Program Manager</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">AVAW_CV-Waste-JOSS-short-lived-branch.zip</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">ListItem</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">3052, 133</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_4_2bced24a.png" alt="Screenshot for Step 4" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 5</span>
+                <div class="step-header-text">
+                    <div class="step-title">In explorer, Left Click on List Desktop</div>
+                    <div class="step-time">11:51:20 → 11:51:23 <span class="step-delta">(3s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Pop-upHost</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Desktop</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">List</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">3124, 304</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_5_fc820db6.png" alt="Screenshot for Step 5" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 6</span>
+                <div class="step-header-text">
+                    <div class="step-title">In explorer, Left Click on Button Next</div>
+                    <div class="step-time">11:51:23 → 11:51:27 <span class="step-delta">(3s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Extract Compressed (Zipped) Folders</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Next</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Button</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1168, 719</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_6_44e87a4f.png" alt="Screenshot for Step 6" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 7</span>
+                <div class="step-header-text">
+                    <div class="step-title">In explorer, Left Click on Edit Name</div>
+                    <div class="step-time">11:51:27 → 11:51:32 <span class="step-delta">(5s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">AVAW_CV-Waste-JOSS-short-lived-branch - File Explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Name</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Edit</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">667, 184</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_7_1671241e.png" alt="Screenshot for Step 7" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 8</span>
+                <div class="step-header-text">
+                    <div class="step-title">In explorer, Left Click on  </div>
+                    <div class="step-time">11:51:32 → 11:51:33 <span class="step-delta">(0s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">AVAW_CV-Waste-JOSS-short-lived-branch - File Explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">667, 184</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_8_18d9e19b.png" alt="Screenshot for Step 8" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 9</span>
+                <div class="step-header-text">
+                    <div class="step-title">In explorer, Left Click on Edit Name</div>
+                    <div class="step-time">11:51:33 → 11:51:35 <span class="step-delta">(2s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">AVAW_CV-Waste-JOSS-short-lived-branch - File Explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Name</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Edit</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">599, 261</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_9_2227534d.png" alt="Screenshot for Step 9" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 10</span>
+                <div class="step-header-text">
+                    <div class="step-title">In explorer, Right Click on Button Close</div>
+                    <div class="step-time">11:51:35 → 11:51:38 <span class="step-delta">(3s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Right Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">INSTALL - File Explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Close</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Button</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">602, 69</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_10_c682907f.png" alt="Screenshot for Step 10" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 11</span>
+                <div class="step-header-text">
+                    <div class="step-title">In explorer, Left Click on Pane </div>
+                    <div class="step-time">11:51:38 → 11:51:40 <span class="step-delta">(1s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Pop-upHost</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Pane</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">642, 118</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_11_06005890.png" alt="Screenshot for Step 11" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 12</span>
+                <div class="step-header-text">
+                    <div class="step-title">In explorer, Left Click on Button Anaconda Prompt pinned</div>
+                    <div class="step-time">11:51:40 → 11:52:02 <span class="step-delta">(21s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Anaconda Prompt pinned</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Button</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1041, 1050</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_12_a2442a80.png" alt="Screenshot for Step 12" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 13</span>
+                <div class="step-header-text">
+                    <div class="step-title">In WindowsTerminal, Right Click on Text Command Prompt</div>
+                    <div class="step-time">11:52:02 → 11:52:09 <span class="step-delta">(7s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Right Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">WindowsTerminal</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Anaconda Prompt</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Command Prompt</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Text</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">562, 313</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_13_33d6d801.png" alt="Screenshot for Step 13" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 14</span>
+                <div class="step-header-text">
+                    <div class="step-title">In WindowsTerminal, Left Click on Text Command Prompt</div>
+                    <div class="step-time">11:52:09 → 11:54:07 <span class="step-delta">(1m 57s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">WindowsTerminal</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Anaconda Prompt</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Command Prompt</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Text</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">874, 619</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_14_5cced50b.png" alt="Screenshot for Step 14" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 15</span>
+                <div class="step-header-text">
+                    <div class="step-title">In WindowsTerminal, Right Click on Text Command Prompt</div>
+                    <div class="step-time">11:54:07 → 11:55:31 <span class="step-delta">(1m 24s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Right Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">WindowsTerminal</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Anaconda Prompt</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Command Prompt</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Text</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1382, 625</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_15_34cfc2bb.png" alt="Screenshot for Step 15" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 16</span>
+                <div class="step-header-text">
+                    <div class="step-title">In explorer, Left Click on Button Up to &quot;AVAW_CV-Waste-JOSS-short-lived-branch&quot; (Alt + Up Arrow)</div>
+                    <div class="step-time">11:55:31 → 12:07:55 <span class="step-delta">(12m 23s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">INSTALL - File Explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Up to &quot;AVAW_CV-Waste-JOSS-short-lived-branch&quot; (Alt + Up Arrow)</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Button</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">602, 257</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_16_3d422902.png" alt="Screenshot for Step 16" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 17</span>
+                <div class="step-header-text">
+                    <div class="step-title">In explorer, Left Click on Edit Name</div>
+                    <div class="step-time">12:07:55 → 12:07:57 <span class="step-delta">(1s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">AVAW_CV-Waste-JOSS-short-lived-branch - File Explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Name</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Edit</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">932, 397</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_17_80d97077.png" alt="Screenshot for Step 17" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 18</span>
+                <div class="step-header-text">
+                    <div class="step-title">In explorer, Right Click on Button Close</div>
+                    <div class="step-time">12:07:57 → 12:07:59 <span class="step-delta">(1s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Right Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">AVAW_BBOX - File Explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Close</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Button</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">926, 253</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_18_7a45fe4b.png" alt="Screenshot for Step 18" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 19</span>
+                <div class="step-header-text">
+                    <div class="step-title">In explorer, Left Click on Button Sort</div>
+                    <div class="step-time">12:07:59 → 12:08:01 <span class="step-delta">(1s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">explorer</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Pop-upHost</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Sort</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Button</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">955, 295</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_19_89a5a64e.png" alt="Screenshot for Step 19" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 20</span>
+                <div class="step-header-text">
+                    <div class="step-title">In WindowsTerminal, Right Click on Text Command Prompt</div>
+                    <div class="step-time">12:08:01 → 12:08:06 <span class="step-delta">(5s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Right Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">WindowsTerminal</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Anaconda Prompt</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Command Prompt</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Text</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1475, 711</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_20_273e8ce1.png" alt="Screenshot for Step 20" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 21</span>
+                <div class="step-header-text">
+                    <div class="step-title">In WindowsTerminal, Right Click on Text Command Prompt</div>
+                    <div class="step-time">12:08:06 → 12:09:15 <span class="step-delta">(1m 08s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Right Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">WindowsTerminal</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Anaconda Prompt</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Command Prompt</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Text</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1456, 786</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_21_b9680340.png" alt="Screenshot for Step 21" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 22</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on Pane </div>
+                    <div class="step-time">12:09:15 → 12:09:26 <span class="step-delta">(11s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Image with YOLO Annotations</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Pane</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">381, 499</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_22_b79cd249.png" alt="Screenshot for Step 22" onclick="openLb(this)">
+            </div>
+        </div>
+    </div>
+    <div id="lb-overlay" onclick="closeLb()"><img id="lb-img" src="" alt=""></div>
+    <div class="footer">
+        Generated with <a href="https://github.com/Mentaleak/BetterStepsRecorder" target="_blank">Better Steps Recorder</a>
+    </div>
+    <script>
+        function openLb(img) { document.getElementById('lb-img').src = img.src; document.getElementById('lb-overlay').classList.add('active'); }
+        function closeLb() { document.getElementById('lb-overlay').classList.remove('active'); }
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLb(); });
+    </script>
+</body>
+</html>
