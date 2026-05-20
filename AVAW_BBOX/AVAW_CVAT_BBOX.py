@@ -47,7 +47,7 @@ class DataAugmentor:
     def __init__(self,owner):
         self.owner = owner
 
-    def clear_undo_archive(self,owner):
+    def clear_undo_archive(self):
         # Clear undo history after augmentation to avoid image/annotation
         # desynchronization, since the archive currently stores only annotations
         # Store the new flipped state as the first valid undo state
