@@ -141,7 +141,7 @@ Core dependencies:
 * Designed primarily for YOLO bbox workflows
 
 ---
-## Community guidelines
+## 🌍 Community Guidelines
 : Are there clear guidelines for third parties wishing to 1) Contribute to the software 2) Report issues or problems with the software 3) Seek support
 
 ### 🤝 Contributing
@@ -149,7 +149,7 @@ Core dependencies:
 If you want to contribute, feel free to contact Bojan Lorber via bojan.lorber@unileoben.ac.at.  
 Additionally, you can do so by reporting bugs and/or suggesting new feautures.
 
-### Reporting Issues
+### 🐞 Reporting Issues
 
 If you encounter bugs, unexpected behaviour, crashes, or compatibility issues, please open a GitHub issue or contact Bojan Lorber via bojan.lorber@unileoben.ac.at.
 
@@ -164,7 +164,7 @@ Clear and reproducible bug reports greatly help improving the software and maint
 
 Thank you very much!
 
-### Seeking Support
+### 🛟 Seeking Support
 If you are in need of additional support or look for establishing a colaboratory event to further the efforts in using Computer Vision methods in waste management, feel free to contact Bojan Lorber via bojan.lorber@unileoben.ac.at.  
 
 ---
