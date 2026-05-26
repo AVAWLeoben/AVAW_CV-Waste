@@ -365,18 +365,25 @@ class AnnotationHandler:
         self.annotations = []
         self.owner = owner
         
-    def set_annotations_folder(self):
-        self.owner.annotation_folder = filedialog.askdirectory(title="Select Annotations Directory")
-        print(self.owner.annotation_folder)
-        # Store image dimensions
-        img_width, img_height = self.owner.image_pil.size
-        # Load YOLO annotations
-        filename = os.path.splitext(os.path.basename(self.owner.image_path))[0]
-        self.owner.annotations_path = self.owner.annotation_folder + "/" + filename + ".txt"
-        self.load_yolo_annotations(self.owner.annotations_path, img_width, img_height)   
-        self.owner.save_settings()
-        self.owner.update_display()
-
+    def set_annotations_folder(self):        
+        new_annotations_directory = filedialog.askdirectory(title="Select Annotations Directory")
+        if new_annotations_directory:
+            try:
+                self.owner.annotation_folder = new_annotations_directory
+                print(self.owner.annotation_folder)
+                # Store image dimensions
+                img_width, img_height = self.owner.image_pil.size
+                # Load YOLO annotations
+                filename = os.path.splitext(os.path.basename(self.owner.image_path))[0]
+                self.owner.annotations_path = self.owner.annotation_folder + "/" + filename + ".txt"
+                self.load_yolo_annotations(self.owner.annotations_path, img_width, img_height)   
+                self.owner.save_settings()
+                self.owner.update_display()
+                tk.messagebox.showinfo("Annotations Folder Changed",f"Changed annotations directory to {self.owner.annotation_folder}")
+            except Exception as e:
+                tk.messagebox.showerror("Error when Changing Annotations Folder",f"Error: {e}, please consider opening an issue on GitHub")
+        else:
+            tk.messagebox.showinfo("User Cancelled",f"User Cancelled. \nAnnotations directory remains: \n {self.owner.annotation_folder}")
     
     # Function to load YOLO annotations from .txt file
     def load_yolo_annotations(self,annotations_path, image_width, image_height):
