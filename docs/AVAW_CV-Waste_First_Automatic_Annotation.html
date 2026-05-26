@@ -1,0 +1,371 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AVAW_CV-Waste_First_Automatic_Annotation</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', system-ui, Arial, sans-serif; background: #f0f2f5; color: #1a1a2e; min-height: 100vh; }
+        .page-header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%); color: #fff; padding: 48px 40px 40px; }
+        .page-header h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
+        .page-header .meta { font-size: 0.85rem; opacity: 0.65; }
+        .summary-grid { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+        .summary-item { background: rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 20px; min-width: 140px; }
+        .summary-item .label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.8px; opacity: 0.6; margin-bottom: 4px; }
+        .summary-item .value { font-size: 1.1rem; font-weight: 600; }
+        .progress-bar-wrap { background: rgba(255,255,255,0.15); border-radius: 4px; height: 4px; margin-top: 24px; }
+        .progress-bar-fill { background: #e94560; border-radius: 4px; height: 4px; width: 100%; }
+        .container { max-width: 960px; margin: 0 auto; padding: 40px 20px 60px; }
+        .step-card { background: #fff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07), 0 1px 2px rgba(0,0,0,0.04); margin-bottom: 28px; overflow: hidden; transition: box-shadow 0.2s; }
+        .step-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.11), 0 2px 6px rgba(0,0,0,0.06); }
+        .step-header { display: flex; align-items: flex-start; gap: 16px; padding: 20px 24px; border-bottom: 1px solid #f0f0f0; }
+        .step-badge { background: #e94560; color: #fff; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; border-radius: 20px; padding: 4px 12px; white-space: nowrap; flex-shrink: 0; }
+        .step-header-text { flex: 1; }
+        .step-title { font-size: 0.97rem; font-weight: 500; color: #1a1a2e; line-height: 1.45; }
+        .step-time { font-size: 0.78rem; color: #888; margin-top: 4px; }
+        .step-delta { display: inline-block; background: #f0f2f5; border-radius: 10px; padding: 1px 8px; font-size: 0.72rem; color: #555; margin-left: 8px; }
+        .step-details { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px 20px; padding: 14px 24px; background: #f8f9fb; border-bottom: 1px solid #f0f0f0; font-size: 0.82rem; }
+        .detail-item .detail-label { color: #999; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+        .detail-item .detail-value { color: #1a1a2e; word-break: break-word; }
+        .step-body { padding: 20px 24px; }
+        .step-body img { width: 100%; height: auto; border-radius: 8px; border: 1px solid #e8e8e8; display: block; cursor: zoom-in; }
+        .no-screenshot { color: #aaa; font-size: 0.85rem; font-style: italic; padding: 8px 0; }
+        .footer { text-align: center; color: #aaa; font-size: 0.78rem; padding-bottom: 20px; }
+        .footer a { color: #0f3460; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        #lb-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:9999; align-items:center; justify-content:center; cursor:zoom-out; }
+        #lb-overlay.active { display:flex; }
+        #lb-img { max-width:92vw; max-height:92vh; border-radius:6px; box-shadow:0 8px 40px rgba(0,0,0,0.6); }
+    </style>
+</head>
+<body>
+    <div class="page-header">
+        <h1>AVAW_CV-Waste_First_Automatic_Annotation</h1>
+        <div class="meta">Generated 26 May 2026, 11:42</div>
+        <div class="summary-grid">
+            <div class="summary-item"><div class="label">Steps</div><div class="value">16</div></div>
+            <div class="summary-item"><div class="label">Started</div><div class="value">26 May 2026, 11:37:52</div></div>
+            <div class="summary-item"><div class="label">Finished</div><div class="value">11:38:35</div></div>
+            <div class="summary-item"><div class="label">Total Duration</div><div class="value">43s</div></div>
+        </div>
+        <div class="progress-bar-wrap"><div class="progress-bar-fill"></div></div>
+    </div>
+    <div class="container">
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 1</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on MenuItem File</div>
+                    <div class="step-time">11:37:52</div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Image with YOLO Annotations</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">File</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">MenuItem</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">870, 94</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_1_4f1b1d5c.png" alt="Screenshot for Step 1" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 2</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on Pane </div>
+                    <div class="step-time">11:37:52 → 11:37:53 <span class="step-delta">(1s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Pane</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">876, 113</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_2_c682a637.png" alt="Screenshot for Step 2" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 3</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on Edit Name</div>
+                    <div class="step-time">11:37:53 → 11:37:54 <span class="step-delta">(1s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Select Model</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Name</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Edit</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1084, 257</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_3_e52eaaf4.png" alt="Screenshot for Step 3" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 4</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on Pane </div>
+                    <div class="step-time">11:37:54 → 11:37:56 <span class="step-delta">(1s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Select Model</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Pane</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1669, 879</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_4_a42851be.png" alt="Screenshot for Step 4" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 5</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on Pane </div>
+                    <div class="step-time">11:37:56 → 11:37:57 <span class="step-delta">(1s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">showinfo</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Pane</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1045, 602</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_5_1cde6952.png" alt="Screenshot for Step 5" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 6</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on MenuItem Model</div>
+                    <div class="step-time">11:37:57 → 11:37:59 <span class="step-delta">(1s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Image with YOLO Annotations</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Model</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">MenuItem</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1127, 91</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_6_b77b646b.png" alt="Screenshot for Step 6" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 7</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on Pane </div>
+                    <div class="step-time">11:37:59 → 11:38:00 <span class="step-delta">(1s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Pane</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1151, 159</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_7_01c6f8c4.png" alt="Screenshot for Step 7" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 8</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on Pane </div>
+                    <div class="step-time">11:38:00 → 11:38:02 <span class="step-delta">(1s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Change Class Names</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Pane</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">318, 313</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_8_57d5273b.png" alt="Screenshot for Step 8" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 9</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on Button </div>
+                    <div class="step-time">11:38:02 → 11:38:08 <span class="step-delta">(6s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Change Class Names</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Button</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">445, 399</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_9_8e5f52ab.png" alt="Screenshot for Step 9" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 10</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on Pane </div>
+                    <div class="step-time">11:38:08 → 11:38:10 <span class="step-delta">(1s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Success</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Pane</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1022, 593</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_10_e0eb9057.png" alt="Screenshot for Step 10" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 11</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on MenuItem Model</div>
+                    <div class="step-time">11:38:10 → 11:38:27 <span class="step-delta">(16s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Image with YOLO Annotations</div></div>
+                <div class="detail-item"><div class="detail-label">Element</div><div class="detail-value">Model</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">MenuItem</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1131, 93</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_11_220cf0ae.png" alt="Screenshot for Step 11" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 12</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on Image </div>
+                    <div class="step-time">11:38:27 → 11:38:27 <span class="step-delta">(0s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Image</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1144, 134</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_12_0e7f2350.png" alt="Screenshot for Step 12" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 13</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Drag from (442,261) to (286,275)</div>
+                    <div class="step-time">11:38:27 → 11:38:30 <span class="step-delta">(3s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Drag</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Model Setting</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Pane</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">286, 275</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_13_80cfb3c0.png" alt="Screenshot for Step 13" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 14</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on Group </div>
+                    <div class="step-time">11:38:30 → 11:38:32 <span class="step-delta">(1s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Model Setting</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Group</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">577, 204</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_14_8557cb42.png" alt="Screenshot for Step 14" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 15</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on Button </div>
+                    <div class="step-time">11:38:32 → 11:38:12 <span class="step-delta">(-19s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Image with YOLO Annotations</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Button</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1147, 831</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_15_3c84d2f9.png" alt="Screenshot for Step 15" onclick="openLb(this)">
+            </div>
+        </div>
+        <div class="step-card">
+            <div class="step-header">
+                <span class="step-badge">Step 16</span>
+                <div class="step-header-text">
+                    <div class="step-title">In python, Left Click on Pane </div>
+                    <div class="step-time">11:38:12 → 11:38:35 <span class="step-delta">(22s)</span></div>
+                </div>
+            </div>
+            <div class="step-details">
+                <div class="detail-item"><div class="detail-label">Action</div><div class="detail-value">Left Click</div></div>
+                <div class="detail-item"><div class="detail-label">Application</div><div class="detail-value">python</div></div>
+                <div class="detail-item"><div class="detail-label">Window</div><div class="detail-value">Image with YOLO Annotations</div></div>
+                <div class="detail-item"><div class="detail-label">Element Type</div><div class="detail-value">Pane</div></div>
+                <div class="detail-item"><div class="detail-label">Mouse Position</div><div class="detail-value">1024, 207</div></div>
+            </div>
+            <div class="step-body">
+                <img src="images/step_16_1c1b3519.png" alt="Screenshot for Step 16" onclick="openLb(this)">
+            </div>
+        </div>
+    </div>
+    <div id="lb-overlay" onclick="closeLb()"><img id="lb-img" src="" alt=""></div>
+    <div class="footer">
+        Generated with <a href="https://github.com/Mentaleak/BetterStepsRecorder" target="_blank">Better Steps Recorder</a>
+    </div>
+    <script>
+        function openLb(img) { document.getElementById('lb-img').src = img.src; document.getElementById('lb-overlay').classList.add('active'); }
+        function closeLb() { document.getElementById('lb-overlay').classList.remove('active'); }
+        document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeLb(); });
+    </script>
+</body>
+</html>
