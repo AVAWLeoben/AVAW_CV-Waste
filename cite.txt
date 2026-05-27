@@ -1,0 +1,1 @@
+@software{avaw_cv_waste, author = {Gerald Koinig and Bojan Lorber}, title = {AVAW\_CV-Waste}, year = {2026}, url = {https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/AVAW_CV-Waste}, note = {GitHub repository, accessed 2026-05-27} }
