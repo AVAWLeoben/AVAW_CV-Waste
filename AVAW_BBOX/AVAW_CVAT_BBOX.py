@@ -1574,6 +1574,11 @@ class UserInputHandler:
             
             selected_box.append((int(x1), int(y1), int(x2), int(y2), cls))
             self.owner.ANNOTATION_HANDLER.annotations.append([cls, int(x1), int(y1), int(x2), int(y2)])
+
+            # Ensure confidence list has one slot per existing annotation
+            while len(self.owner.confidences) < len(self.owner.ANNOTATION_HANDLER.annotations) - 1:
+                self.owner.confidences.append(0)
+            
             self.owner.confidences.append(round(conf,2))
             self.owner.update_display()
         else:
