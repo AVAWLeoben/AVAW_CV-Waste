@@ -369,6 +369,9 @@ class AnnotationHandler:
         new_annotations_directory = filedialog.askdirectory(title="Select Annotations Directory")
         if new_annotations_directory:
             try:
+                last_zoom = self.owner.ZOOMER.zoom_factor
+                self.owner.ZOOMER.zoom_factor = 1
+                self.owner.update_display()
                 self.owner.annotation_folder = new_annotations_directory
                 print(self.owner.annotation_folder)
                 # Store image dimensions
@@ -378,6 +381,7 @@ class AnnotationHandler:
                 self.owner.annotations_path = self.owner.annotation_folder + "/" + filename + ".txt"
                 self.load_yolo_annotations(self.owner.annotations_path, img_width, img_height)   
                 self.owner.save_settings()
+                self.owner.ZOOMER.zoom_factor = last_zoom
                 self.owner.update_display()
                 tk.messagebox.showinfo("Annotations Folder Changed",f"Changed annotations directory to {self.owner.annotation_folder}")
             except Exception as e:
