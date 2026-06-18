@@ -22,7 +22,7 @@ Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assiste
 
 ## 🖥️ Screenshots
 
-<img src="DEMO/Screenshot_UI.png" alt="UI Screenshot" width="400" />
+<img src="https://raw.githubusercontent.com/AVAWLeoben/AVAW_CV-Waste/JOSS-short-lived-branch/DEMO/Screenshot_UI.png" alt="UI Screenshot" width="400" />
 
 ---
 
