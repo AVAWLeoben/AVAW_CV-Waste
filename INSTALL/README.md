@@ -99,18 +99,30 @@ Run this in Anaconda Prompt.
 ### Option B — Using Pip
 
 ```bash
-git clone https://github.com/AVAWLeoben/AVAW_CV-Waste.git
-cd AVAW_CVAT
+git clone -b JOSS-short-lived-branch https://github.com/AVAWLeoben/AVAW_CV-Waste.git
+cd AVAW_CV-Waste
 
 python -m venv .venv
 
-# Windows
-.venv\Scripts\activate
+# Windows PowerShell:
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r INSTALL\requirements.txt
+
+# Windows CMD:
+.venv\Scripts\activate.bat
+python -m pip install --upgrade pip
+python -m pip install -r INSTALL\requirements.txt
 
 # Linux / macOS
 source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r INSTALL/requirements.txt
 
-pip install -r requirements.txt
+# Then run the app:
+cd AVAW_BBOX
+python AVAW_CVAT_BBOX.py
+
 ```
 
 This will install the CPU only version of without CUDA support.
