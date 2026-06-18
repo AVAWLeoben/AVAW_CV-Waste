@@ -99,7 +99,7 @@ Run this in Anaconda Prompt.
 ### Option B — Using Pip
 
 ```bash
-git clone https://github.com/AVAWLeoben/AVAW_CVAT.git
+git clone https://github.com/AVAWLeoben/AVAW_CV-Waste.git
 cd AVAW_CVAT
 
 python -m venv .venv
