@@ -89,7 +89,7 @@ Further publication details and citations will be added here as they become avai
 
 To get started, download the latest version of the software from the [Releases](https://github.com/AVAWLeoben/AVAW_CVAT/releases) page.
 
-After downloading and extracting the release files, open the [INSTALL](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/INSTALL) folder for detailed setup instructions.
+After downloading and extracting the release files, open the [INSTALL](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/JOSS-short-lived-branch/INSTALL) folder for detailed setup instructions.
 
 The INSTALL folder contains step-by-step guides for both Conda-based and Pip-based installations, as well as optional instructions for enabling GPU acceleration with PyTorch.
 
@@ -97,7 +97,7 @@ The INSTALL folder contains step-by-step guides for both Conda-based and Pip-bas
 
 ## 📚 Demo
 
-Visit the [DEMO](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/DEMO) page for a detailed walkthrough of the application.
+Visit the [DEMO](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/JOSS-short-lived-branch/DEMO) page for a detailed walkthrough of the application.
 
 The DEMO section contains example datasets, usage instructions, and a step-by-step tutorial covering the main features of the tool, including:
 
