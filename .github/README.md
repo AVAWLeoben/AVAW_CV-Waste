@@ -85,11 +85,24 @@ This tool has already been successfully used in the development of scientific da
 Further publication details and citations will be added here as they become available.
 
 ---
+
+## Quickstart for Windows x64
+
+Prebuilt Windows executables are available on the [Releases](https://github.com/AVAWLeoben/AVAW_CV-Waste/releases) page.
+
+1. Open the [Releases](https://github.com/AVAWLeoben/AVAW_CV-Waste/releases) page.
+2. Download `AVAW_CV-Waste_Windows_x64.exe`.
+3. Run the executable.
+
+No Python installation is required when using the prebuilt Windows executable.
+
+For a detailed walkthrough of the application, visit the [DEMO](DEMO) page.
+
+---
+
 ## 🚀 Installation
 
-To get started, download the latest version of the software from the [Releases](https://github.com/AVAWLeoben/AVAW_CVAT/releases) page.
-
-After downloading and extracting the release files, open the [INSTALL](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/JOSS-short-lived-branch/INSTALL) folder in the repository for detailed setup instructions.
+Open the [INSTALL](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/JOSS-short-lived-branch/INSTALL) folder in the repository for detailed setup instructions.
 
 The INSTALL folder contains step-by-step guides for both Conda-based and Pip-based installations, as well as optional instructions for enabling GPU acceleration with PyTorch.
 
