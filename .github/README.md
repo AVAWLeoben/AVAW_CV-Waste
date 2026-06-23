@@ -92,7 +92,7 @@ Prebuilt Windows executables are available on the [Releases](https://github.com/
 
 1. Open the [Releases](https://github.com/AVAWLeoben/AVAW_CV-Waste/releases) page.
 2. Download `AVAW_CV-Waste_Windows_x64.exe`.
-3. Run the executable.
+3. Run the executable. The first launch may take some time while the application initializes.
 
 No Python installation is required when using the prebuilt Windows executable.
 
