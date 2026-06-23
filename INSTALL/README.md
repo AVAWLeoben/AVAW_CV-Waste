@@ -102,20 +102,20 @@ Run this in Anaconda Prompt.
 git clone -b JOSS-short-lived-branch https://github.com/AVAWLeoben/AVAW_CV-Waste.git
 cd AVAW_CV-Waste
 
-python -m venv .venv
+python -m venv avaw_bbox_env
 
 # Windows PowerShell:
-.\.venv\Scripts\Activate.ps1
+.\avaw_bbox_env\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 python -m pip install -r INSTALL\requirements.txt
 
 # Windows CMD:
-.venv\Scripts\activate.bat
+avaw_bbox_env\Scripts\activate.bat
 python -m pip install --upgrade pip
 python -m pip install -r INSTALL\requirements.txt
 
 # Linux / macOS
-source .venv/bin/activate
+source avaw_bbox_env/bin/activate
 python -m pip install --upgrade pip
 python -m pip install -r INSTALL/requirements.txt
 
