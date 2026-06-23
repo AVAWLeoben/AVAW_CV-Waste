@@ -86,7 +86,7 @@ Further publication details and citations will be added here as they become avai
 
 ---
 
-## Quickstart for Windows x64
+## 🚀 Quickstart for Windows x64
 
 Prebuilt Windows executables are available on the [Releases](https://github.com/AVAWLeoben/AVAW_CV-Waste/releases) page.
 
@@ -100,7 +100,7 @@ For a detailed walkthrough of the application, visit the [DEMO](DEMO) page.
 
 ---
 
-## 🚀 Installation
+## 🛠️ Installation
 
 Open the [INSTALL](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/JOSS-short-lived-branch/INSTALL) folder in the repository for detailed setup instructions.
 
