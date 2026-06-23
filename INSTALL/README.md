@@ -151,12 +151,6 @@ cd C:\Path\To\AVAW_CV-Waste\AVAW_BBOX
 python AVAW_CVAT_BBOX.py
 ```
 
-On Windows, you can also run the executable directly:
-
-```text
-dist/AVAW_CVAT_BBOX.exe
-```
-
 ## 📚 Demo
 
 Visit the [DEMO](https://github.com/AVAWLeoben/AVAW_CVAT/tree/AVAW_BBOX_DEVELOPMENT/DEMO) page for a detailed walkthrough of the application.
