@@ -26,20 +26,30 @@ If Miniconda is not already installed, follow this guide:
 
 ## 📦 Environment Installation
 
-### Option A — Using Conda (Recommended)
+### Option A — Using Conda
 
-Open an Anaconda Prompt and navigate to the installation folder.
-
+In Anaconda Prompt:
+Clone the repository:
 ```bash
-cd path\to\AVAW_CV-Waste\INSTALL
+git clone -b JOSS-short-lived-branch https://github.com/AVAWLeoben/AVAW_CV-Waste.git
+cd AVAW_CV-Waste
 ```
 
-Create and activate the Conda environment:
-
+Create the Conda environment from the INSTALL folder:
 ```bash
-conda env create -f environment.yml -n AVAW_CV-Waste
-conda activate AVAW_CV-Waste
+cd INSTALL
+conda env create -f environment.yml 
+conda activate AVAW_BBOX
 ```
+
+Run the application:
+```bash
+cd ..\AVAW_BBOX
+python AVAW_CVAT_BBOX.py
+```
+
+
+
 
 ### Optional: Install Spyder IDE
 The default environment does not contain an IDE. A preliminary installation to further adapt the application could be Spyder.
