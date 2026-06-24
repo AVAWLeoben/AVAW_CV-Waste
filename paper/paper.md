@@ -22,7 +22,7 @@ date: 15 May 2026
 bibliography: paper.bib
 ---
 
-# 1 Summary
+# Summary
 
 `AVAW_CV-Waste` is a free and open-source offline desktop application for creating and correcting image annotations used to train object detection models. The software allows users to draw, edit, move, resize, copy, and manage bounding boxes around objects in images. It creates outputs compatible with YOLO-based artificial intelligence workflows, specifically the YOLO PyTorch TXT annotation format commonly used by YOLO11, YOLOv8, YOLOv5, and related computer vision models.
 
@@ -32,7 +32,7 @@ Because the software operates entirely offline, it can be deployed directly at i
 
 The primary goal of `AVAW_CV-Waste` is to simplify and accelerate dataset creation for non-specialist users, including students, laboratory staff, recycling operators, and industrial research partners. By reducing the technical complexity of annotation workflows, the software supports the development of custom machine learning models for applications such as waste classification, contaminant detection, scrap sorting, and sensor-based recycling research.
 
-# 2 Statement of need
+# Statement of need
 
 `AVAW_CV-Waste` was developed as a free and open-source alternative that can be adapted to specific scientific workflows, especially in waste management and recycling research.
 
@@ -49,7 +49,7 @@ This tool allows users to define their own custom annotation classes, load and u
 The software primarily targets researchers and industrial practitioners working in waste management, recycling, circular economy technologies, and sensor-based sorting applications enabling them to
 quickly create, review, edit, and correct annotations at no cost.
 
-# 3 State of the field
+# State of the field
 
 The field of annotation software allows for several pre-build alternatives. 
 
@@ -67,7 +67,7 @@ Consequently,  the emerging research field of employing machine learning models 
 
 `AVAW_CV-Waste` addresses this gap by occupying a niche between generic cloud-based annotation platforms and highly specialized in-house software solutions commonly employed in industrial recycling research.
 
-# 4 Software design
+# Software design
 
 While generative AI can now accelerate the initial development of software like this, extensive testing in real research environments is still required. In particular, evaluating the tool with researchers of different technical backgrounds cannot be meaningfully outsourced or offloaded to generative AI systems.
 
@@ -81,7 +81,7 @@ Several design trade-offs were made to ensure broad hardware compatibility and s
 
 Overall, Python and its ecosystem of modules were selected as the underlying architecture due to the broad support available for Python applications, the ease with which other waste management researchers can adapt the tool to their own requirements, and the widespread adoption of Python for the rapid development of machine learning applications.
 
-# 5 Research impact statement
+# Research impact statement
 
 `AVAW_CV-Waste` has already been successfully used in the development of scientific datasets and in research related to waste detection, classification, and recycling workflows.
 
