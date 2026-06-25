@@ -48,7 +48,9 @@ Lastly, many existing tools are cloud based, and thus data sovereignty may not a
 
 This tool allows users to define their own custom annotation classes, load and use their own models for automatic predictions and to work entirely offline without requiring cloud services.  
 
-The software primarily targets researchers and industrial practitioners working in waste management, recycling, circular economy technologies, and sensor-based sorting applications enabling them to
+While there exist solutions that provide a framework for building annotation tools [@ipyanotator], AVAW_CV-Waste addresses a different practical need. Its purpose is not to replace a programmable annotation framework, but to provide an immediately usable, domain-focused desktop GUI for YOLO-style waste annotation workflows. CV-Waste is designed for research assistants, students, laboratory staff, and industrial partners who may not have programming experience, but still need to create, review, and correct high-quality annotations efficiently. In this sense, [@ipyanotator] serves developers and users who want to build or customize annotation tools, whereas AVAW_CV-Waste serves non-programming users who need a polished, accessible, and research-ready annotation environment.
+
+This software thus primarily targets researchers and industrial practitioners working in waste management, recycling, circular economy technologies, and sensor-based sorting applications enabling them to
 quickly create, review, edit, and correct annotations at no cost.
 
 # State of the field
