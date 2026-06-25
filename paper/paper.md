@@ -36,7 +36,7 @@ The primary goal of `AVAW_CV-Waste` is to simplify and accelerate dataset creati
 
 # Statement of need
 
-`AVAW_CV-Waste` was developed as a free and open-source alternative that can be adapted to specific scientific workflows, especially in waste management and recycling research.
+`CV-Waste` was developed as a free and open-source alternative that can be adapted to specific scientific workflows, especially in waste management and recycling research.
 
 The Waste Management domain needs images of particles with contamination, deformation and on conveyor belts, specific to the actual research question regarding the sorting and classification of waste particles are necessary.
 Thus, waste datasets often require highly specific object classes, such as plastics, paper, scrap-types, hazardous waste, or mixed waste fractions in environments relevant to the waste management domain.
@@ -53,11 +53,13 @@ Lastly, as many existing tools are cloud based, and thus data sovereignty may no
 
 This tool allows users to define their own custom annotation classes, load and use their own models for automatic predictions and to work entirely offline without requiring cloud services.  
 
-While there exist solutions that provide a framework for building annotation tools [@Epifânio2022], AVAW_CV-Waste addresses a different practical need. Its purpose is not to replace a programmable annotation framework, but to provide an immediately usable, domain-focused desktop GUI for YOLO-style waste annotation workflows. CV-Waste is designed for research assistants, students, laboratory staff, and industrial partners who may not have programming experience, but still need to create, review, and correct high-quality annotations efficiently. In this sense, [@Epifânio2022] serves developers and users who want to build or customize annotation tools, whereas AVAW_CV-Waste serves non-programming users who need a polished, accessible, and research-ready annotation environment.
+While there exist solutions that provide a framework for building annotation tools [@Epifânio2022], `CV-Waste` addresses a different practical need. Its purpose is not to replace a programmable annotation framework, but to provide an immediately usable, domain-focused desktop GUI for YOLO-style waste annotation workflows. `CV-Waste` is designed for research assistants, students, laboratory staff, and industrial partners who may not have programming experience, but still need to create, review, and correct high-quality annotations efficiently. In this sense, [@Epifânio2022] serves developers and users who want to build or customize annotation tools, whereas AVAW_CV-Waste serves non-programming users who need a polished, accessible, and research-ready annotation environment.
 
+Although several related tools exist, `CV-Waste` fills a distinct gap. AddaxAI is primarily a no-code platform for training and deploying YOLOv5 object detection models, whereas `CV-Waste` focuses specifically on creating, reviewing, and correcting YOLO-style bounding-box annotations for waste and recycling datasets which can then be used to train most object classification networks including YOLO26 and RT-DETR models. SAMBA targets semantic segmentation rather than bounding-box object detection, while LaMa and occupationMeasurement are aimed at labelling or coding text-based qualitative and survey data. `CV-Waste` is therefore necessary because it provides a dedicated, lightweight, offline, and research-oriented GUI for bounding-box annotation in waste-management applications. Bounding Box annotation is itself suited to Waste Management application as it is faster than segmentation annotation and requires less computational hardware when deployed. Additionally usiual ejection mechanisms like high pressure nozzle bars or flippers do not have the spatioal resolution to leverage the additional localisation detail provided by segmentation masks.
 
+Its interface is designed for research assistants, students, laboratory staff, and industrial partners without programming experience, while still supporting custom classes, custom YOLO models, and assisted annotation workflows. This makes it better suited to practical dataset creation in waste and recycling research than more general, segmentation-focused, YOLOv5-specific, or text-labelling tools.
 
-This software thus primarily targets researchers and industrial practitioners working in waste management, recycling, circular economy technologies, and sensor-based sorting applications enabling them to
+This software thus primarily targets researchers and industrial practitioners working in waste management, recycling, circular economy technologies, and related sensor-based sorting applications enabling them to
 quickly create, review, edit, and correct annotations at no cost.
 
 # State of the field
