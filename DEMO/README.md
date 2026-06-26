@@ -23,25 +23,32 @@ The demo is intended to help new users get familiar with the interface and typic
 
 ## Installation Guide
 
-A step-by-step visual installation guide for the manual installation is available here:
+Get started with **AVAW CV-Waste** using the visual installation guide below. It walks through the manual installation process step by step.
 
-[Open installation guide](https://avawleoben.github.io/AVAW_CV-Waste/AVAW_CV-Waste_Install.html)
+👉 [Open the visual installation guide](https://avawleoben.github.io/AVAW_CV-Waste/AVAW_CV-Waste_Install.html)
 
-For git or conda based installation please refer to [INSTALL](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/JOSS-short-lived-branch/INSTALL)
+For Git- or Conda-based installation options, please refer to the repository installation instructions:
+
+📦 [Open INSTALL instructions](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/JOSS-short-lived-branch/INSTALL)
 
 
 ## First Steps
 
-### Loading A Model
-A step-by-step visual installation guide is available here:
-
-[Open Load Model guide](https://avawleoben.github.io/AVAW_CV-Waste/AVAW_CV-Waste_Load_Model.html)
+Once the software is installed, the following guides introduce the basic workflow.
 
 
-### Loading A Model and Performing first automatic Annotation
-A step-by-step visual installation guide is available here:
+### Load a Model
 
-[Open guide](https://avawleoben.github.io/AVAW_CV-Waste/AVAW_CV-Waste_First_Automatic_Annotation.html)
+This guide explains how to load an existing model into the application.
+
+👉 [Open the Load Model guide](https://avawleoben.github.io/AVAW_CV-Waste/AVAW_CV-Waste_Load_Model.html)
+
+
+### Load a Model and Perform a First Automatic Annotation
+
+This guide shows how to load a model and use it to perform the first automatic annotation step.
+
+👉 [Open the First Automatic Annotation guide](https://avawleoben.github.io/AVAW_CV-Waste/AVAW_CV-Waste_First_Automatic_Annotation.html)
 
 ---
 
