@@ -35,6 +35,7 @@ The primary goal of `AVAW_CV-Waste` is to simplify and accelerate dataset creati
 <p align="center">
 <img src="https://raw.githubusercontent.com/AVAWLeoben/AVAW_CV-Waste/JOSS-short-lived-branch/DEMO/Screenshot_UI.png" alt="UI Screenshot" width="300">
 </p>
+
 # Statement of need
 
 `CV-Waste` was developed as a free and open-source alternative that can be adapted to workflows in waste management and recycling research.
