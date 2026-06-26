@@ -16,15 +16,7 @@ If Miniconda is not already installed, follow this guide:
 
 ---
 
-## 📦 Download Software
-
-1. Download the latest release source code
-2. Extract the release into a folder
-3. Install the environment using either Option A or Option B below
-
----
-
-## 📦 Environment Installation
+## 📦 Installation
 
 ### Option A — Using Conda
 
@@ -48,7 +40,39 @@ cd ..\AVAW_BBOX
 python AVAW_CVAT_BBOX.py
 ```
 
+### Option B — Using Pip
 
+```bash
+git clone -b JOSS-short-lived-branch https://github.com/AVAWLeoben/AVAW_CV-Waste.git
+cd AVAW_CV-Waste
+
+python -m venv avaw_bbox_env
+
+# Windows PowerShell:
+.\avaw_bbox_env\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+python -m pip install -r INSTALL\requirements.txt
+
+# Windows CMD:
+avaw_bbox_env\Scripts\activate.bat
+python -m pip install --upgrade pip
+python -m pip install -r INSTALL\requirements.txt
+
+# Linux / macOS
+source avaw_bbox_env/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r INSTALL/requirements.txt
+
+# Then run the app:
+cd AVAW_BBOX
+python AVAW_CVAT_BBOX.py
+
+```
+
+This will install the CPU only version of without CUDA support.
+For CUDA support please follow along the GPU instructions further above.
+
+---
 
 
 ### Optional: Install Spyder IDE
@@ -106,39 +130,7 @@ Run this in Anaconda Prompt.
 
 ---
 
-### Option B — Using Pip
 
-```bash
-git clone -b JOSS-short-lived-branch https://github.com/AVAWLeoben/AVAW_CV-Waste.git
-cd AVAW_CV-Waste
-
-python -m venv avaw_bbox_env
-
-# Windows PowerShell:
-.\avaw_bbox_env\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-python -m pip install -r INSTALL\requirements.txt
-
-# Windows CMD:
-avaw_bbox_env\Scripts\activate.bat
-python -m pip install --upgrade pip
-python -m pip install -r INSTALL\requirements.txt
-
-# Linux / macOS
-source avaw_bbox_env/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -r INSTALL/requirements.txt
-
-# Then run the app:
-cd AVAW_BBOX
-python AVAW_CVAT_BBOX.py
-
-```
-
-This will install the CPU only version of without CUDA support.
-For CUDA support please follow along the GPU instructions further above.
-
----
 
 ## 🚀 Usage
 
