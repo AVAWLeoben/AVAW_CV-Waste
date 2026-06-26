@@ -75,7 +75,7 @@ For CUDA support please follow along the GPU instructions further above.
 ---
 
 
-### Optional: Install Spyder IDE
+### 🚧 Optional: Install Spyder IDE
 The default environment does not contain an IDE. A preliminary installation to further adapt the application could be Spyder.
 
 To install spyder run the following command after activating the new environment.
@@ -83,7 +83,7 @@ To install spyder run the following command after activating the new environment
 conda install spyder
 ```
 
-### Optional: Enable GPU Support
+### 🔥 Advanced: Enable GPU Support
 
 The default environment is CPU-only and should work on most machines.
 
