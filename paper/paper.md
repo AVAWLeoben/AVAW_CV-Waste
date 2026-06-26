@@ -32,7 +32,8 @@ Because the software operates entirely offline, it can be deployed directly at i
 
 The primary goal of `AVAW_CV-Waste` is to simplify and accelerate dataset creation for non-specialist users, including students, laboratory staff, recycling operators, and industrial research partners. By reducing the technical complexity of annotation workflows, the software supports the development of custom machine learning models for applications such as waste classification, contaminant detection, scrap sorting, and sensor-based recycling research.
 
-![Screenshot of the AVAW CV-Waste graphical user interface.](../DEMO/Screenshot_UI.png){ width=50% }
+![Screenshot of the AVAW CV-Waste graphical user interface.](DEMO/Screenshot_UI.png){width="50%"}
+
 
 # Statement of need
 
