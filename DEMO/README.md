@@ -23,9 +23,12 @@ The demo is intended to help new users get familiar with the interface and typic
 
 ## Installation Guide
 
-A step-by-step visual installation guide is available here:
+A step-by-step visual installation guide for the manual installation is available here:
 
 [Open installation guide](https://avawleoben.github.io/AVAW_CV-Waste/AVAW_CV-Waste_Install.html)
+
+For git or conda based installation please refer to [INSTALL](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/JOSS-short-lived-branch/INSTALL)
+
 
 ## First Steps
 
