@@ -96,7 +96,7 @@ Prebuilt Windows executables are available on the [Releases](https://github.com/
 
 No Python installation is required when using the prebuilt Windows executable.
 
-For a detailed walkthrough of the application, visit the [DEMO](DEMO) page.
+For a detailed walkthrough of the application, visit the [DEMO](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/JOSS-short-lived-branch/DEMO) page.
 
 ---
 
