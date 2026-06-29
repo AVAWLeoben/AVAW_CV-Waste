@@ -20,7 +20,14 @@ If Miniconda is not already installed, follow this guide:
 
 ### Option A – Install from PyPI (Recommended)
 
-The latest stable release can be installed directly from PyPI:
+To create a new Environment in Conda for the application use:
+
+```bash
+conda create -n CV-Waste python=3.12
+conda activate CV-Waste
+```
+
+'CV-Waste' can be installed directly from PyPI:
 
 ```bash
 python -m pip install avaw-cv-waste
