@@ -18,7 +18,22 @@ If Miniconda is not already installed, follow this guide:
 
 ## 📦 Installation
 
-### Option A — Using Conda
+### Option A – Install from PyPI (Recommended)
+
+The latest stable release can be installed directly from PyPI:
+
+```bash
+python -m pip install avaw-cv-waste
+```
+
+After installation, you can launch the application from the command line with:
+
+```bash
+avaw-cv-waste
+```
+
+
+### Option B — Using Conda
 
 In Anaconda Prompt:
 Clone the repository:
@@ -40,7 +55,7 @@ cd ..\AVAW_BBOX
 python AVAW_CVAT_BBOX.py
 ```
 
-### Option B — Using Pip
+### Option C — Using Pip (native)
 
 ```bash
 git clone -b JOSS-short-lived-branch https://github.com/AVAWLeoben/AVAW_CV-Waste.git
