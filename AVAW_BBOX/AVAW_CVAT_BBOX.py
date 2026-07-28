@@ -544,6 +544,8 @@ class AnnotationHandler:
 class PredictionModelHandler:
     def __init__(self, owner):
         self.owner = owner
+        self.use_agnostic_nms = True
+        self.use_inference_time_augmentation = True
 
     def load_model(self, model_path):
         """Load a YOLO model and return it."""
@@ -673,10 +675,10 @@ class PredictionModelHandler:
         # Perform inference
         results = self.owner.yolo_model(
             image,
-            agnostic_nms=True,
+            agnostic_nms=self.use_agnostic_nms,
             conf=self.owner.set_conf,
             iou=self.owner.set_iou,
-            augment=True
+            augment=self.use_inference_time_augmentation
         )
 
         # Clear previous annotations and confidences
@@ -872,56 +874,163 @@ class ModelSettingsWindow:
 
         # Create the window
         self.model_window = tk.Toplevel(self.owner.root)
-        self.model_window.title("Model Setting")
+        self.model_window.title("Model Settings")
         self.model_window.geometry("400x400")
-        self.model_window.withdraw()  # Hide initially
+        self.model_window.withdraw()
         self.model_window.protocol("WM_DELETE_WINDOW", self.on_close)
-        self.model_window.bind("<Enter>", lambda event: self.model_window.focus_set())
+        self.model_window.bind(
+            "<Enter>",
+            lambda event: self.model_window.focus_set()
+        )
 
         # Set icon
-        icon_path = Path(__file__).parent / 'files_bbox/logo.png'
+        icon_path = Path(__file__).parent / "files_bbox/logo.png"
         p1 = tk.PhotoImage(file=icon_path)
+
+        # Keep a reference so Tkinter does not garbage-collect the image
+        self.model_window.icon_image = p1
         self.model_window.iconphoto(False, p1)
 
         # Confidence scale
         self.w3 = tk.Scale(
-            self.model_window, from_=0, to=1,
-            tickinterval=0.1, resolution=0.1,
-            orient=tk.HORIZONTAL, command=self.change_conf,
-            length=300, label="Set Min Confidence", font=("TkDefaultFont", 10)
+            self.model_window,
+            from_=0,
+            to=1,
+            tickinterval=0.1,
+            resolution=0.1,
+            orient=tk.HORIZONTAL,
+            command=self.change_conf,
+            length=300,
+            label="Set Minimum Confidence",
+            font=("TkDefaultFont", 10),
         )
         self.w3.set(self.owner.set_conf)
-        self.w3.pack()
+        self.w3.pack(pady=(10, 5))
 
         # IoU scale
         self.w4 = tk.Scale(
-            self.model_window, from_=0, to=1,
-            tickinterval=0.1, resolution=0.1,
-            orient=tk.HORIZONTAL, command=self.change_IoU,
-            length=300, label="Set IoU", font=("TkDefaultFont", 10)
+            self.model_window,
+            from_=0,
+            to=1,
+            tickinterval=0.1,
+            resolution=0.1,
+            orient=tk.HORIZONTAL,
+            command=self.change_iou,
+            length=300,
+            label="Set NMS IoU",
+            font=("TkDefaultFont", 10),
         )
         self.w4.set(self.owner.set_iou)
-        self.w4.pack()
+        self.w4.pack(pady=5)
+
+        # Separator
+        ttk.Separator(
+            self.model_window,
+            orient=tk.HORIZONTAL
+        ).pack(fill=tk.X, padx=20, pady=15)
+
+        # Runtime inference options
+        tk.Label(
+            self.model_window,
+            text="Runtime Inference Options",
+            font=("TkDefaultFont", 10, "bold"),
+        ).pack(anchor="w", padx=25, pady=(0, 5))
+
+        # Agnostic NMS toggle
+        self.agnostic_nms_var = tk.BooleanVar(
+            value=self.owner.PREDICTION_MODEL_HANDLER.use_agnostic_nms
+        )
+
+        self.agnostic_nms_toggle = tk.Checkbutton(
+            self.model_window,
+            text="Use class-agnostic NMS",
+            variable=self.agnostic_nms_var,
+            command=self.toggle_agnostic_nms,
+        )
+        self.agnostic_nms_toggle.pack(anchor="w", padx=25, pady=5)
+
+        # Inference-time augmentation toggle
+        self.augmentation_var = tk.BooleanVar(
+            value=self.owner.PREDICTION_MODEL_HANDLER.use_inference_time_augmentation
+        )
+
+        self.augmentation_toggle = tk.Checkbutton(
+            self.model_window,
+            text="Use inference-time augmentation",
+            variable=self.augmentation_var,
+            command=self.toggle_inference_time_augmentation,
+        )
+        self.augmentation_toggle.pack(anchor="w", padx=25, pady=5)
+
+        # Current settings display
+        self.status_label = tk.Label(
+            self.model_window,
+            text="",
+            justify=tk.LEFT,
+        )
+        self.status_label.pack(anchor="w", padx=25, pady=15)
+
+        self.update_status_label()
 
     def toggle(self, event=None):
-        """Show/hide the window."""
         if self.shown:
             self.model_window.withdraw()
             self.shown = False
         else:
+            # Synchronize controls with current runtime values
+            self.agnostic_nms_var.set(
+                self.owner.PREDICTION_MODEL_HANDLER.use_agnostic_nms
+            )
+            self.augmentation_var.set(
+                self.owner.PREDICTION_MODEL_HANDLER.use_inference_time_augmentation
+            )
+
+            self.update_status_label()
             self.model_window.deiconify()
             self.shown = True
 
-    def change_conf(self, event=None):
-        """Update global confidence value."""
-        self.owner.set_conf = self.w3.get()
+    def change_conf(self, value=None):
+        self.owner.set_conf = float(self.w3.get())
+        self.update_status_label()
 
-    def change_IoU(self, event=None):
-        """Update global IoU value."""
-        self.owner.set_iou = self.w4.get()
-        
+    def change_iou(self, value=None):
+        self.owner.set_iou = float(self.w4.get())
+        self.update_status_label()
+
+    def toggle_agnostic_nms(self):
+        value = bool(self.agnostic_nms_var.get())
+
+        self.owner.PREDICTION_MODEL_HANDLER.use_agnostic_nms = value
+
+        print(f"Class-agnostic NMS: {value}")
+        self.update_status_label()
+
+    def toggle_inference_time_augmentation(self):
+        value = bool(self.augmentation_var.get())
+
+        self.owner.PREDICTION_MODEL_HANDLER.use_inference_time_augmentation = value
+
+        print(f"Inference-time augmentation: {value}")
+        self.update_status_label()
+
+    def update_status_label(self):
+        agnostic_nms = (
+            self.owner.PREDICTION_MODEL_HANDLER.use_agnostic_nms
+        )
+        augmentation = (
+            self.owner.PREDICTION_MODEL_HANDLER.use_inference_time_augmentation
+        )
+
+        self.status_label.config(
+            text=(
+                f"Confidence: {self.owner.set_conf:.2f}\n"
+                f"IoU: {self.owner.set_iou:.2f}\n"
+                f"Agnostic NMS: {'On' if agnostic_nms else 'Off'}\n"
+                f"Inference augmentation: {'On' if augmentation else 'Off'}"
+            )
+        )
+
     def on_close(self):
-        """Hide instead of destroy when X is clicked."""
         self.model_window.withdraw()
         self.shown = False
 
@@ -1381,7 +1490,7 @@ class UserInterface:
             except tk.TclError:
                 pass
         
-        self.owner.root.bind("<Enter>", lambda event: self.owner.root.focus_set())
+        #self.owner.root.bind("<Enter>", lambda event: self.owner.root.focus_set())
         
         # Bind keys to copy paste
         self.owner.root.bind("<Control-c>", lambda event: self.owner.USER_INPUT_HANDLER.on_copy())
@@ -2540,17 +2649,15 @@ class BBOX_App:
         image_height,image_width = self.image.shape[:2]
         print("Image size:", image_width, image_height)
         
-        if image_width > window_width or image_height > window_height:
-            zoom = min(window_width / image_width,
-               window_height / image_height)
-            self.ZOOMER.zoom_factor = zoom
-            self.ZOOMER.min_zoom = zoom
-            
-        if image_width < window_width and image_height < window_height:
-            zoom = min(window_width / image_width,
-               window_height / image_height)
-            self.ZOOMER.zoom_factor = zoom
-            self.ZOOMER.min_zoom = zoom
+        zoom = min(
+            1.0,
+            window_width / image_width,
+            window_height / image_height
+        )
+        
+        self.ZOOMER.zoom_factor = zoom
+        self.ZOOMER.min_zoom = zoom
+        
         self.ZOOMER.center_image()
         self.update_display()
         
