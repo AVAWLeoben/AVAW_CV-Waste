@@ -18,7 +18,7 @@ If Miniconda is not already installed, follow this guide:
 
 If there is no pre-trained ultralytics model available for testing on the local PC, we recommend downloading YOLOv11n for initial tests.
 
-[Download YOLOv11n](https://github.com/AVAWLeoben/AVAW_CV-Waste/blob/JOSS-short-lived-branch/AVAW_BBOX/sample_model/yolo11n.pt)
+[Download Pre Trained Scrap Model](https://github.com/AVAWLeoben/AVAW_CV-Waste/blob/JOSS-short-lived-branch/TEST/test_model.pt)
 
 ---
 
