@@ -61,6 +61,7 @@ The DEMO section contains example datasets, usage instructions, and a step-by-st
 
 The demo is intended to help new users get familiar with the interface and typical annotation workflow as quickly as possible.
 
+---
 
 ### Option B — Using Conda
 
@@ -83,6 +84,8 @@ Run the application:
 cd ..\AVAW_BBOX
 python AVAW_CVAT_BBOX.py
 ```
+
+---
 
 ### Option C — Using Pip (native)
 
