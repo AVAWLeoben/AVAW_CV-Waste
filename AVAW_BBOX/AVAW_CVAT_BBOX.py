@@ -2091,26 +2091,24 @@ class UserInputHandler:
         self.owner.update_display()
 
 class Helper:
-    def __init__(self, owner, help_path="files_bbox/help.txt", url="https://docs.ultralytics.com/models/fast-sam/"):
-        """
-        Initialize Helper with paths to help file and URL.
-        """
-        self.help_path = help_path
-        self.url = url
+    def __init__(
+        self,
+        owner,
+        url="https://docs.ultralytics.com/models/fast-sam/",
+    ):
         self.owner = owner
+        self.url = url
+        self.help_path = (
+            Path(__file__).resolve().parent
+            / "files_bbox"
+            / "help.txt"
+        )
 
     def show_help(self, event=None):
-        """
-        Display help content from the help file. If missing, show fallback message.
-        """
-        if os.path.exists(self.help_path):
-            try:
-                with open(self.help_path, "r", encoding="utf-8") as file:
-                    help_content = file.read()
-            except Exception as e:
-                help_content = f"Error reading help file: {e}"
-        else:
-            help_content = "Help file not found. Please check the files folder for help.txt."
+        try:
+            help_content = self.help_path.read_text(encoding="utf-8")
+        except OSError as exc:
+            help_content = f"Could not load the help file:\n{exc}"
 
         messagebox.showinfo("Help", help_content)
 
