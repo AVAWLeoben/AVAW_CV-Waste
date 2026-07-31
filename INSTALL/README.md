@@ -45,6 +45,22 @@ After installation, you can launch the application from the command line with:
 avaw-cv-waste
 ```
 
+#### 📚 Demo
+
+Visit the [DEMO](https://github.com/AVAWLeoben/AVAW_CVAT/tree/AVAW_BBOX_DEVELOPMENT/DEMO) page for a detailed walkthrough of the application.
+
+The DEMO section contains example datasets, usage instructions, and a step-by-step tutorial covering the main features of the tool, including:
+
+- loading images and label folders
+- creating and editing bounding boxes
+- managing annotation classes
+- loading YOLO models
+- generating automatic predictions
+- reviewing and correcting annotations
+- exporting YOLO-compatible label files
+
+The demo is intended to help new users get familiar with the interface and typical annotation workflow as quickly as possible.
+
 
 ### Option B — Using Conda
 
