@@ -1406,7 +1406,7 @@ class MenuBar:
         # Add the File menu to the menu bar
         menu_bar.add_cascade(label="File", menu=file_menu)
         
-        help_menu = tk.Menu(menu_bar, tearoff=0)
+        _menu = tk.Menu(menu_bar, tearoff=0)
         help_menu.add_command(label="Help", command=self.owner.HELPER.show_help)
         help_menu.add_command(label="Ultralytics", command=self.owner.HELPER.open_ultralytics_webpage)
         menu_bar.add_cascade(label="Help",menu=help_menu)
@@ -2105,7 +2105,7 @@ class Helper:
         """
         if os.path.exists(self.help_path):
             try:
-                with open(self.help_path, "r") as file:
+                with open(self.help_path, "r", encoding="utf-8") as file:
                     help_content = file.read()
             except Exception as e:
                 help_content = f"Error reading help file: {e}"
