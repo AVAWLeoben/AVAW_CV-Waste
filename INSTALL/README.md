@@ -47,7 +47,7 @@ avaw-cv-waste
 
 #### 📚 Demo
 
-Visit the [DEMO](https://github.com/AVAWLeoben/AVAW_CVAT/tree/AVAW_BBOX_DEVELOPMENT/DEMO) page for a detailed walkthrough of the application.
+Visit the [DEMO](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/JOSS-short-lived-branch/DEMO) page for a detailed walkthrough of the application.
 
 The DEMO section contains example datasets, usage instructions, and a step-by-step tutorial covering the main features of the tool, including:
 
@@ -192,7 +192,7 @@ python AVAW_CVAT_BBOX.py
 
 ## 📚 Demo
 
-Visit the [DEMO](https://github.com/AVAWLeoben/AVAW_CVAT/tree/AVAW_BBOX_DEVELOPMENT/DEMO) page for a detailed walkthrough of the application.
+Visit the [DEMO](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/JOSS-short-lived-branch/DEMO) page for a detailed walkthrough of the application.
 
 The DEMO section contains example datasets, usage instructions, and a step-by-step tutorial covering the main features of the tool, including:
 
