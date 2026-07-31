@@ -1406,7 +1406,7 @@ class MenuBar:
         # Add the File menu to the menu bar
         menu_bar.add_cascade(label="File", menu=file_menu)
         
-        _menu = tk.Menu(menu_bar, tearoff=0)
+        help_menu = tk.Menu(menu_bar, tearoff=0)
         help_menu.add_command(label="Help", command=self.owner.HELPER.show_help)
         help_menu.add_command(label="Ultralytics", command=self.owner.HELPER.open_ultralytics_webpage)
         menu_bar.add_cascade(label="Help",menu=help_menu)
