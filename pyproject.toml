@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "avaw-cv-waste"
-version = "0.1.0"
+version = "1.0.0"
 description = "Offline GUI tool for YOLO-style bounding box annotation in waste-management research"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -38,7 +38,7 @@ include = ["AVAW_BBOX*"]
 
 [tool.setuptools.package-data]
 AVAW_BBOX = [
-  "settings.json",
   "files_bbox/*",
-  "sample_model/*"
+  "annotations_bbox/*",
+  "test_model.pt"
 ]
