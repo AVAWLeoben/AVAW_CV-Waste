@@ -1710,7 +1710,11 @@ class UserInputHandler:
         self.owner.resizing = False
         
         # Check if the click is near the edges for resizing
-        margin = 10 # Sensitivity for selecting corners or edges        
+        # margin = 10 # Sensitivity for selecting corners or edges        
+        
+        # Keep corner hitbox constant in SCREEN pixels
+        screen_margin = 8
+        margin = screen_margin / self.owner.ZOOMER.zoom_factor
         
         for i, box in enumerate(self.owner.ANNOTATION_HANDLER.annotations):
             _ ,x1, y1, x2, y2, = box            
@@ -2129,6 +2133,8 @@ class Zoomer:
                        
         # Zooming
         self.owner.root.bind("<MouseWheel>", self.zoom)
+        self.owner.root.bind("<Button-4>", self.zoom) # On X11/Linux, Tk traditionally reports wheel-up/down as mouse buttons 4 and 5, rather than <MouseWheel>.
+        self.owner.root.bind("<Button-5>", self.zoom)
         self.zoom_factor = 1.0
         self.min_zoom = 1.0
         self.last_zoom_factor = -1.0
@@ -2146,7 +2152,16 @@ class Zoomer:
         
         
     def zoom(self, event):
-        scale_factor = 1.1 if event.delta > 0 else 0.9
+        # Linux/X11
+        if getattr(event, "num", None) == 4:
+            scale_factor = 1.1
+        elif getattr(event, "num", None) == 5:
+            scale_factor = 0.9
+    
+        # Windows / macOS / newer Tk
+        else:
+            scale_factor = 1.1 if event.delta > 0 else 0.9       
+                        
         self.zoom_factor *= scale_factor
         
         cursor_x, cursor_y = event.x, event.y
