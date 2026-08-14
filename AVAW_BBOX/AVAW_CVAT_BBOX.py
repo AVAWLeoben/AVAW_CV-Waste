@@ -1600,7 +1600,7 @@ class UserInterface:
     def create_context_sensitive_drop_down_menu(self):
         # Create Drop Down Menu at Cursor when box is selected
         self.owner.context_menu_mask_selected = tk.Menu(self.owner.root, tearoff=0)
-        self.owner.context_menu_mask_selected.add_command(label="Delete Box", command=self.owner.USER_INPUT_HANDLER.delete_selected_box_menu)
+        self.owner.context_menu_mask_selected.add_command(label="Delete Box", command=self.owner.USER_INPUT_HANDLER.delete_selected_box)
         self.owner.context_menu_mask_selected.add_command(label="Copy Box", command=self.owner.USER_INPUT_HANDLER.on_copy)
         for idx, class_name in enumerate(self.owner.class_names):
                 self.owner.context_menu_mask_selected.add_command(label=class_name, command=lambda i=idx: self.owner.USER_INPUT_HANDLER.change_class_from_context_menu(i))
