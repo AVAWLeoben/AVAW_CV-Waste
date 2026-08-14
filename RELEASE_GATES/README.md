@@ -16,6 +16,8 @@ N/A
 
 ## 0. Prepare a clean test environment
 
+In this we use version 1.0.1 as placeholder, change the naming scheme according to current version or release
+
 Activate the clean Anaconda environment:
 
 ```cmd
