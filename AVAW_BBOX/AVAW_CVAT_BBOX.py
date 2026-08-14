@@ -410,6 +410,7 @@ class AnnotationHandler:
                     y2 = int(y_center + (box_height / 2))
                     
                     self.annotations.append([int(label), x1, y1, x2, y2])  # Save the box with the label
+        return self.annotations
 
     # Function to save YOLO annotations to .txt file
     def save_yolo_annotations(self,annotations_path, annotations, image_width, image_height):
@@ -2050,7 +2051,7 @@ class UserInputHandler:
      
             else:
                 # Just clicking empty canvas deselects everything
-                self.owner.stop_multiselect()
+                self.stop_multiselect()
                 self.owner.selected_box = None
      
             # Reset rectangle state
@@ -2226,7 +2227,7 @@ class UserInputHandler:
             return
                 
         # Check if current number is different from desired jump number, only jump if different
-        if jump_index is self.owner.current_image_index:
+        if jump_index == self.owner.current_image_index:
             print("Already at that image")
             return
         
