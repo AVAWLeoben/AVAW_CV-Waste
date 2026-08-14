@@ -1147,8 +1147,11 @@ class ChangeClassNamesWindow(Window):
         
         if input_text:
             class_names[:] = [name.strip() for name in input_text.split(',') if name.strip()]
+           
+            if len(class_names) is not len(self.owner.class_names):
+                self.generate_colors(len(class_names))
             self.owner.class_names = class_names
-            self.generate_colors(len(class_names))
+            
             messagebox.showinfo("Success", "Class names updated!")
             if self.owner.class_dropdown:
                 self.owner.class_dropdown.configure(values=class_names)
