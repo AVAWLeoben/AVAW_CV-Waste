@@ -1,150 +1,185 @@
-Below is the manual release acceptance test suite I would run before uploading 1.0.1 to PyPI. It is based on the functionality actually exposed by your current code: navigation, annotation editing, marquee/multiselect, zoom/pan, YOLO inference, class management, auxiliary windows, augmentation, saving, shortcuts, settings, and packaging. The keyboard bindings alone cover F1–F6, F12, navigation keys, copy/paste, saving, translation, YOLO inference, select-all, and others.
+# AVAW CV-Waste — Manual Release Acceptance Test Suite
 
-Use a simple result notation while testing:
+Use this checklist before publishing a new release to PyPI.
 
+Recommended result notation:
+
+```text
 PASS
 FAIL - short description
 N/A
+```
 
-0. Prepare a clean test environment
+> **Important:** Run destructive tests against a throwaway copy of your demo images and labels. Several tests intentionally save, delete, flip, or overwrite annotations.
 
-Use your clean Anaconda environment:
+---
 
+## 0. Prepare a clean test environment
+
+Activate the clean Anaconda environment:
+
+```cmd
 conda activate CV-Waste_1.0.1_test
+```
 
 Install the exact wheel:
 
+```cmd
 pip install dist\avaw_cv_waste-1.0.1-py3-none-any.whl
+```
 
 Confirm installation:
 
+```cmd
 pip show avaw-cv-waste
+```
 
 Expected:
 
+```text
 Name: avaw-cv-waste
 Version: 1.0.1
+```
 
-Create a temporary working directory with copies of several .png/.jpg images and their .txt annotation files. Do not use irreplaceable annotation files for these tests because we will intentionally overwrite/delete annotations.
+Create a temporary working directory with copies of several `.png` / `.jpg` images and their `.txt` annotation files.
 
-1. Package/launcher smoke test — CRITICAL
-1.1 Start through installed command
+---
+
+# 1. Package / launcher smoke test — CRITICAL
+
+## 1.1 Start through installed command
 
 Run:
 
+```cmd
 avaw-cv-waste
+```
 
 Expected:
 
-GUI opens.
-No traceback appears in Anaconda Prompt.
-Main window has an image canvas.
-Menus appear.
-Controls below the image appear.
-No missing logo.png, help.txt, or other resource error.
+- GUI opens.
+- No traceback appears in Anaconda Prompt.
+- Main window has an image canvas.
+- Menus appear.
+- Controls below the image appear.
+- No missing `logo.png`, `help.txt`, or other resource error.
 
-The PyPI launcher points to initialize_bbox_app(), which exists in the module.
-
-1.2 Close and reopen
+## 1.2 Close and reopen
 
 Close normally.
 
 Run again:
 
+```cmd
 avaw-cv-waste
+```
 
 Expected:
 
-Starts normally a second time.
-No stale-process issue.
-No corrupted settings issue.
-2. Initial UI and startup state — CRITICAL
-2.1 Image display
+- Starts normally a second time.
+- No stale-process issue.
+- No corrupted settings issue.
+
+---
+
+# 2. Initial UI and startup state — CRITICAL
+
+## 2.1 Image display
 
 Expected on startup:
 
-Image is visible.
-Bounding boxes from its .txt file appear.
-Class colors appear.
-Title contains the image name.
-No boxes appear offset from their objects.
-2.2 Progress indicator
+- Image is visible.
+- Bounding boxes from its `.txt` file appear.
+- Class colors appear.
+- Title contains the image name.
+- No boxes appear offset from their objects.
 
-If there are, for example, 100 images and saved index is 13:
+## 2.2 Progress indicator
+
+If there are, for example, 100 images and the saved index is 13:
 
 Expected:
 
+```text
 13/99
+```
 
-and progress bar should be approximately 13% filled.
+The progress bar should be approximately 13% filled.
 
-This now works because the progress widgets are initialized before initial load_image(), while load_image() updates both the bar and label.
-
-2.3 Current-image entry
+## 2.3 Current-image entry
 
 Expected:
 
-Numeric entry shows the current image index.
-It agrees with progress label and displayed image.
-2.4 Window resizing
+- Numeric entry shows the current image index.
+- It agrees with the progress label and displayed image.
+
+## 2.4 Window resizing
 
 Resize the window several times:
 
-wider
-narrower
-taller
-smaller
+- wider
+- narrower
+- taller
+- smaller
 
 Expected:
 
-Canvas resizes.
-Controls remain usable.
-Image stays sensibly positioned.
-Boxes stay aligned with the image.
-No exceptions.
-3. Image navigation — CRITICAL
+- Canvas resizes.
+- Controls remain usable.
+- Image stays sensibly positioned.
+- Boxes stay aligned with the image.
+- No exceptions.
 
-Your app supports buttons plus several keyboard alternatives.
+---
 
-3.1 Next button
+# 3. Image navigation — CRITICAL
 
-Click Next.
+## 3.1 Next button
 
-Expected:
-
-Next image appears.
-Correct annotations load.
-image counter increments by 1.
-progress bar advances.
-title changes.
-3.2 Previous button
-
-Click Previous.
+Click **Next**.
 
 Expected:
 
-Previous image returns.
-counter decrements.
-annotations correspond to correct image.
-3.3 Arrow keys
+- Next image appears.
+- Correct annotations load.
+- Image counter increments by 1.
+- Progress bar advances.
+- Title changes.
+
+## 3.2 Previous button
+
+Click **Previous**.
+
+Expected:
+
+- Previous image returns.
+- Counter decrements.
+- Annotations correspond to the correct image.
+
+## 3.3 Arrow keys
 
 Test:
 
-Right Arrow → next
-Left Arrow  → previous
-3.4 Alternative navigation keys
+```text
+Right Arrow -> next
+Left Arrow  -> previous
+```
+
+## 3.4 Alternative navigation keys
 
 Test:
 
-D → next
-E → next
+```text
+D -> next
+E -> next
 
-A → previous
-Q → previous
+A -> previous
+Q -> previous
+```
 
 Expected: same behavior as navigation buttons.
 
-3.5 Boundary behavior
+## 3.5 Boundary behavior
 
 Navigate to image 0.
 
@@ -152,8 +187,8 @@ Press Previous / Left / A / Q.
 
 Expected:
 
-Remains at image 0.
-No crash.
+- Remains at image 0.
+- No crash.
 
 Navigate to final image.
 
@@ -161,152 +196,178 @@ Press Next / Right / D / E.
 
 Expected:
 
-Remains at last image.
-No crash.
-4. Jump-to-image — CRITICAL
-4.1 Valid index
+- Remains at last image.
+- No crash.
+
+---
+
+# 4. Jump-to-image — CRITICAL
+
+## 4.1 Valid index
 
 Enter, for example:
 
+```text
 2
+```
 
 into the image index entry.
 
-Press Jump To Image.
+Press **Jump To Image**.
 
 Expected:
 
-Image 2 appears.
-label becomes 2/max.
-progress bar moves.
-4.2 Enter shortcut
+- Image 2 appears.
+- Label becomes `2/max`.
+- Progress bar moves.
+
+## 4.2 Enter shortcut
 
 Enter another valid number and press:
 
+```text
 Enter
+```
 
 Expected: jumps to that image.
 
-4.3 Current index
+## 4.3 Current index
 
-Enter current index and press Enter.
-
-Expected:
-
-Nothing harmful happens.
-Console may print Already at that image.
-4.4 Invalid high index
-
-Enter something larger than final image index.
+Enter the current index and press Enter.
 
 Expected:
 
-Image does not change.
-No crash.
-Console reports valid range.
-4.5 Non-numeric input
+- Nothing harmful happens.
+- Console may print `Already at that image`.
+
+## 4.4 Invalid high index
+
+Enter something larger than the final image index.
+
+Expected:
+
+- Image does not change.
+- No crash.
+- Console reports valid range.
+
+## 4.5 Non-numeric input
 
 Try typing letters.
 
 Expected:
 
-Numeric validation should reject them.
-5. Image list window
+- Numeric validation rejects them.
+
+---
+
+# 5. Image list window
 
 Press:
 
+```text
 F3
+```
 
 Expected:
 
-Image List window opens.
-all loaded image names appear.
+- Image List window opens.
+- All loaded image names appear.
 
-Select a different image and click Load Image.
-
-Expected:
-
-selected image becomes current image.
-annotations update.
-index updates.
-
-Press F3 again / close the window.
+Select a different image and click **Load Image**.
 
 Expected:
 
-window hides.
-opening it again works.
-6. Load a different image folder — CRITICAL
+- Selected image becomes current image.
+- Annotations update.
+- Index updates.
+
+Press `F3` again / close the window.
+
+Expected:
+
+- Window hides.
+- Opening it again works.
+
+---
+
+# 6. Load a different image folder — CRITICAL
 
 Use:
 
-File → Load Images
-
-This menu action is wired to folder selection.
+```text
+File -> Load Images
+```
 
 Choose your disposable test folder.
 
 Expected:
 
-folder contents load.
-natural sorting is sensible.
-current image becomes image 0.
-annotations are loaded from that folder.
-image list window updates.
-progress becomes 0/(N-1).
-6.1 Folder with no supported images
+- Folder contents load.
+- Natural sorting is sensible.
+- Current image becomes image 0.
+- Annotations are loaded from that folder.
+- Image list window updates.
+- Progress becomes `0/(N-1)`.
+
+## 6.1 Folder with no supported images
 
 Choose an empty folder.
 
 Expected:
 
-warning appears.
-no crash.
-application remains usable.
-6.2 Update image list
+- Warning appears.
+- No crash.
+- Application remains usable.
 
-While app is running, add a new .png to the directory.
+## 6.2 Update image list
+
+While app is running, add a new `.png` to the directory.
 
 Choose:
 
-File → Update Image List
+```text
+File -> Update Image List
+```
 
 Expected:
 
-new file appears in image list.
-7. Single bounding-box selection — CRITICAL
-7.1 Select box
+- New file appears in image list.
+
+---
+
+# 7. Single bounding-box selection — CRITICAL
+
+## 7.1 Select box
 
 Left-click inside an existing bounding box.
 
 Expected:
 
-box becomes selected.
-selection highlight appears.
-class dropdown changes to its class.
+- Box becomes selected.
+- Selection highlight appears.
+- Class dropdown changes to its class.
 
-The click routine converts screen coordinates back into image coordinates before selecting.
-
-7.2 Deselect
+## 7.2 Deselect
 
 Left-click empty image space without meaningfully dragging.
 
 Expected:
 
-current selection clears.
-no exception.
+- Current selection clears.
+- No exception.
 
-This specifically tests the self.stop_multiselect() fix.
+## 7.3 Overlapping boxes
 
-7.3 Overlapping boxes
-
-If you have nested/overlapping boxes, click an overlapping region.
+If you have nested / overlapping boxes, click an overlapping region.
 
 Expected:
 
-sensible box is selected.
-no random crash.
-8. Move bounding box — CRITICAL
+- Sensible box is selected.
+- No random crash.
+
+---
+
+# 8. Move bounding box — CRITICAL
 
 Select a box in its center.
 
@@ -314,43 +375,47 @@ Hold left mouse button and drag it.
 
 Expected:
 
-entire box moves.
-size stays unchanged.
-release finalizes position.
-box remains aligned with cursor.
-8.1 Move against image boundary
+- Entire box moves.
+- Size stays unchanged.
+- Release finalizes position.
+- Box remains aligned with cursor.
+
+## 8.1 Move against image boundary
 
 Drag box partly beyond:
 
-left edge
-right edge
-top
-bottom
+- left edge
+- right edge
+- top
+- bottom
 
 Expected:
 
-coordinates are clamped.
-annotation does not remain outside the image.
-no negative-coordinate corruption.
-9. Resize bounding boxes — CRITICAL
+- Coordinates are clamped.
+- Annotation does not remain outside the image.
+- No negative-coordinate corruption.
+
+---
+
+# 9. Resize bounding boxes — CRITICAL
 
 Test all four corners:
 
+```text
 top-left
 top-right
 bottom-left
 bottom-right
+```
 
 Expected:
 
-correct corner follows mouse.
-opposite corner stays fixed.
-box updates live.
-releasing finalizes new shape.
+- Correct corner follows mouse.
+- Opposite corner stays fixed.
+- Box updates live.
+- Releasing finalizes new shape.
 
-Your current corner hit-test deliberately uses a constant 8 screen-pixel sensitivity by dividing by zoom factor.
-
-9.1 Repeat while zoomed
+## 9.1 Repeat while zoomed
 
 Zoom substantially in.
 
@@ -358,52 +423,53 @@ Repeat corner resize.
 
 Expected:
 
-corner remains approximately equally easy to grab.
-hit area does not become huge.
-resize movement remains proportional to mouse movement.
+- Corner remains approximately equally easy to grab.
+- Hit area does not become huge.
+- Resize movement remains proportional to mouse movement.
 
-This is an important regression test for the recent zoom fix.
+---
 
-10. Marquee / rectangle selection — CRITICAL
-10.1 Rectangle around several boxes
+# 10. Marquee / rectangle selection — CRITICAL
+
+## 10.1 Rectangle around several boxes
 
 Start on empty canvas.
 
 Hold left button.
 
-Drag white dashed rectangle around 2–3 complete boxes.
+Drag a white dashed rectangle around 2–3 complete boxes.
 
 Release.
 
 Expected:
 
-white dashed rectangle appears during drag.
-boxes fully inside become multiselected.
-boxes only partly inside should not be selected.
+- White dashed rectangle appears during drag.
+- Boxes fully inside become multiselected.
+- Boxes only partly inside should **not** be selected.
 
-The implementation explicitly selects boxes completely contained by the rectangle.
-
-10.2 Drag in opposite direction
+## 10.2 Drag in opposite direction
 
 Repeat:
 
-bottom-right → top-left
-top-right → bottom-left
+- bottom-right -> top-left
+- top-right -> bottom-left
 
 Expected:
 
-selection works regardless of drag direction.
-10.3 Empty marquee
+- Selection works regardless of drag direction.
+
+## 10.3 Empty marquee
 
 Draw a rectangle containing no boxes.
 
 Expected:
 
-nothing selected.
-no crash.
-10.4 Marquee while zoomed
+- Nothing selected.
+- No crash.
 
-Zoom to approximately 2× or more.
+## 10.4 Marquee while zoomed
+
+Zoom to approximately 2x or more.
 
 Pan image.
 
@@ -411,55 +477,66 @@ Draw marquee around several boxes.
 
 Expected:
 
-correct boxes are selected despite zoom and pan.
+- Correct boxes are selected despite zoom and pan.
 
-This is important because marquee release converts canvas coordinates back to original-image coordinates.
+---
 
-11. Ctrl multiselect — CRITICAL
+# 11. Ctrl multiselect — CRITICAL
 
 Hold:
 
+```text
 Ctrl
+```
 
 and left-click several boxes individually.
 
 Expected:
 
-boxes accumulate in selection.
-previously selected boxes stay selected.
+- Boxes accumulate in selection.
+- Previously selected boxes stay selected.
 
-The binding is explicitly Ctrl + left mouse.
-
-11.1 Clear multiselect
+## 11.1 Clear multiselect
 
 Use:
 
+```text
 Ctrl + Right Click
+```
 
 Expected:
 
-multiselection clears.
-11.2 Select all
+- Multiselection clears.
+
+## 11.2 Select all
 
 Press:
 
+```text
 Ctrl+A
+```
 
 Expected:
 
-all boxes become selected.
-12. Move multiple boxes — CRITICAL
+- All boxes become selected.
+
+---
+
+# 12. Move multiple boxes — CRITICAL
 
 Select several boxes.
 
 Hold:
 
+```text
 Ctrl + Left Drag
+```
 
 Expected:
 
-all selected boxes move together.
-12.1 Repeat at high zoom
+- All selected boxes move together.
+
+## 12.1 Repeat at high zoom
 
 Zoom in significantly.
 
@@ -467,63 +544,74 @@ Ctrl-drag selected boxes approximately 50 screen pixels.
 
 Expected:
 
-boxes move by the visually expected amount.
-movement does not become exaggerated according to zoom.
+- Boxes move by the visually expected amount.
+- Movement does **not** become exaggerated according to zoom.
 
-The current implementation divides drag delta by the zoom factor.
+---
 
-13. Create new manual bounding box — CRITICAL
+# 13. Create new manual bounding box — CRITICAL
 
 Press:
 
+```text
 N
+```
 
-Expected console message indicates new-box mode. N and Down Arrow are both bound to this function.
+Expected console message indicates new-box mode.
 
 Click-drag a new box.
 
 Expected:
 
-green preview rectangle appears while dragging.
-releasing creates the annotation.
-resulting annotation stays within image bounds.
+- Green preview rectangle appears while dragging.
+- Releasing creates the annotation.
+- Resulting annotation stays within image bounds.
 
 Repeat using:
 
+```text
 Down Arrow
-13.1 Context-menu creation
+```
+
+## 13.1 Context-menu creation
 
 Right-click empty canvas:
 
+```text
 New Box
+```
 
 Expected:
 
-same new-box behavior.
+- Same new-box behavior.
 
-The empty-selection context menu exposes New Box, Paste, Undo, Save, and Track Annotations.
+---
 
-14. Delete annotations — CRITICAL
-14.1 Single box
+# 14. Delete annotations — CRITICAL
+
+## 14.1 Single box
 
 Select a box.
 
 Press:
 
+```text
 Delete
+```
 
 Expected:
 
-selected box disappears.
-14.2 Context menu
+- Selected box disappears.
+
+## 14.2 Context menu
 
 Select a box.
 
-Right-click → Delete Box.
+Right-click -> **Delete Box**.
 
 Expected: same result.
 
-14.3 Multiple boxes
+## 14.3 Multiple boxes
 
 Multiselect several boxes.
 
@@ -531,66 +619,80 @@ Press Delete.
 
 Expected:
 
-selected boxes are removed.
-unrelated boxes remain.
-15. Undo — CRITICAL
+- Selected boxes are removed.
+- Unrelated boxes remain.
+
+---
+
+# 15. Undo — CRITICAL
 
 Modify a box.
 
 Click:
 
+```text
 Undo
+```
 
 Expected:
 
-previous annotation state returns.
+- Previous annotation state returns.
 
 Repeat after:
 
-moving
-deleting
-creating
+- moving
+- deleting
+- creating
 
 Expected:
 
-undo behaves consistently.
+- Undo behaves consistently.
 
-The main UI exposes a dedicated Undo button.
+---
 
-16. Copy/paste
-16.1 Single box
+# 16. Copy / paste
+
+## 16.1 Single box
 
 Select a box.
 
 Press:
 
+```text
 Ctrl+C
 Ctrl+V
+```
 
 Expected:
 
-duplicate annotation appears.
-16.2 Context menu
+- Duplicate annotation appears.
 
-Select box → Right Click → Copy Box.
+## 16.2 Context menu
 
-Click empty space → Right Click → Paste Box.
+Select box -> Right Click -> **Copy Box**.
+
+Click empty space -> Right Click -> **Paste Box**.
 
 Expected: same result.
 
-16.3 Multiple boxes
+## 16.3 Multiple boxes
 
 Select several boxes.
 
 Press:
 
+```text
 Ctrl+C
 Ctrl+V
+```
 
 Expected:
 
-all selected annotations are duplicated.
-17. Class dropdown — CRITICAL
+- All selected annotations are duplicated.
+
+---
+
+# 17. Class dropdown — CRITICAL
 
 Select a box.
 
@@ -598,64 +700,79 @@ Choose a different class in dropdown.
 
 Expected:
 
-annotation changes to chosen class.
-displayed color changes accordingly.
-right-click menu/class state remains consistent.
-18. Change class names — CRITICAL
+- Annotation changes to chosen class.
+- Displayed color changes accordingly.
+- Right-click menu / class state remains consistent.
+
+---
+
+# 18. Change class names — CRITICAL
 
 Press:
 
+```text
 F5
+```
 
 or:
 
-Model → Change Class Names
+```text
+Model -> Change Class Names
+```
 
-Rename classes without changing class count.
+Rename classes **without changing class count**.
 
 Example:
 
+```text
 Plastic, Metal, Paper
+```
 
-→
+to:
 
+```text
 Plastic Waste, Metal Waste, Paper Waste
+```
 
 Expected:
 
-names change.
-class count remains the same.
-existing class colors remain unchanged.
-dropdown updates.
-context menu updates.
+- Names change.
+- Class count remains the same.
+- Existing class colors remain unchanged.
+- Dropdown updates.
+- Context menu updates.
 
-This is precisely the behavior we fixed around class-count comparison.
-
-18.1 Change number of classes
+## 18.1 Change number of classes
 
 Add one class.
 
 Expected:
 
-no index errors.
-color list is regenerated/adjusted according to current implementation.
-dropdown and color window contain every class.
+- No index errors.
+- Color list is regenerated / adjusted according to current implementation.
+- Dropdown and color window contain every class.
 
 Remove a class again.
 
 Expected:
 
-no crash.
-19. Class color window
+- No crash.
+
+---
+
+# 19. Class color window
 
 Press:
 
+```text
 F4
+```
 
 Expected:
 
-Class Colours window opens.
-19.1 Preset color
+- Class Colours window opens.
+
+## 19.1 Preset color
 
 Choose a class.
 
@@ -663,219 +780,245 @@ Click a preset color.
 
 Expected:
 
-class button changes.
-existing boxes of that class change color immediately.
-19.2 Custom color
+- Class button changes.
+- Existing boxes of that class change color immediately.
+
+## 19.2 Custom color
 
 Click:
 
+```text
 Choose custom colour...
+```
 
 Select a color.
 
 Expected:
 
-preview updates.
-annotation color updates.
-19.3 Many classes
+- Preview updates.
+- Annotation color updates.
 
-If practical, create >9 classes.
+## 19.3 Many classes
+
+If practical, create more than 9 classes.
 
 Expected:
 
-color window remains usable.
-scrolling works.
-no IndexError.
-19.4 Restart behavior
+- Color window remains usable.
+- Scrolling works.
+- No `IndexError`.
 
-At present your settings file stores class names but not class_colors, so custom colors are not clearly designed to persist across restart.
+## 19.4 Restart behavior
 
-If you expect color persistence as a product requirement, treat reset-after-restart as a bug. Otherwise test only same-session behavior.
+If color persistence is expected as a product requirement, verify that custom colors survive restart.
 
-20. Right-click context menus
-Box selected
+Otherwise test only same-session behavior.
+
+---
+
+# 20. Right-click context menus
+
+## Box selected
 
 Right-click selected box.
 
 Verify:
 
-Delete Box
-Copy Box
-each class name
-
-are shown.
+- Delete Box
+- Copy Box
+- each class name
 
 Change class using context menu.
 
 Expected:
 
-selected box class updates.
-No box selected
+- Selected box class updates.
+
+## No box selected
 
 Right-click empty canvas.
 
 Verify:
 
-Undo
-Save Annotations
-Paste Box
-Track Annotations
-New Box
-
-appear.
+- Undo
+- Save Annotations
+- Paste Box
+- Track Annotations
+- New Box
 
 Execute each once.
 
-Expected: no errors.
+Expected:
 
-21. Zoom — CRITICAL
+- No errors.
+
+---
+
+# 21. Zoom — CRITICAL
 
 Mouse wheel up.
 
 Expected:
 
-image zooms in around cursor.
+- Image zooms in around cursor.
 
 Mouse wheel down.
 
 Expected:
 
-zooms out.
-cannot zoom below minimum fit level.
+- Zooms out.
+- Cannot zoom below minimum fit level.
 
-The active Zoomer binds MouseWheel plus Linux Button-4/5.
-
-21.1 Annotation alignment
+## 21.1 Annotation alignment
 
 At several zoom levels:
 
-boxes remain aligned.
-labels remain attached.
-clicks select the correct underlying box.
-21.2 Zoom around different points
+- Boxes remain aligned.
+- Labels remain attached.
+- Clicks select the correct underlying box.
+
+## 21.2 Zoom around different points
 
 Place cursor near:
 
-top-left
-center
-bottom-right
+- top-left
+- center
+- bottom-right
 
 Zoom in.
 
 Expected:
 
-image zooms around mouse position rather than jumping unpredictably.
-22. Pan — CRITICAL
+- Image zooms around mouse position rather than jumping unpredictably.
+
+---
+
+# 22. Pan — CRITICAL
 
 Zoom in until image exceeds canvas.
 
 Hold middle mouse button:
 
+```text
 Middle Mouse + Drag
+```
 
 Expected:
 
-image pans.
+- Image pans.
 
 Release middle button.
 
 Expected:
 
-panning stops.
+- Panning stops.
 
-Bindings are Button-2 / B2-Motion.
-
-22.1 Pan limits
+## 22.1 Pan limits
 
 Attempt to drag image completely off-screen.
 
 Expected:
 
-panning is clamped.
-image cannot disappear irretrievably.
-22.2 Select after pan
+- Panning is clamped.
+- Image cannot disappear irretrievably.
+
+## 22.2 Select after pan
 
 Pan image, then:
 
-select box
-move box
-resize box
-marquee select
+- select box
+- move box
+- resize box
+- marquee select
 
 Expected:
 
-all operate on correct annotations.
-23. YOLO model loading — CRITICAL if inference is advertised
+- All operate on correct annotations.
+
+---
+
+# 23. YOLO model loading — CRITICAL if inference is advertised
 
 Use:
 
-File → Load Model
+```text
+File -> Load Model
+```
 
 or:
 
-Model → Load Model
+```text
+Model -> Load Model
+```
 
-Choose your .pt test model.
+Choose your `.pt` test model.
 
 Expected:
 
-model loads.
-no exception.
-class names behave as expected.
-model path is remembered.
+- Model loads.
+- No exception.
+- Class names behave as expected.
+- Model path is remembered.
 
-The menu exposes Load Model in both File and Model menus.
+---
 
-24. Full YOLO inference — CRITICAL
+# 24. Full YOLO inference — CRITICAL
 
 With model loaded:
 
 Click:
 
+```text
 Run YOLO Inference
+```
 
 Expected:
 
-existing annotation set is replaced by detections.
-boxes appear.
-class colors are correct.
-no invalid class index.
-confidence values are stored.
+- Existing annotation set is replaced by detections.
+- Boxes appear.
+- Class colors are correct.
+- No invalid class index.
+- Confidence values are stored.
 
 Repeat using shortcut:
 
+```text
 Y
+```
 
-The button and keyboard shortcut both call YOLO inference.
+Expected: same result.
 
-25. Single-click YOLO annotation
+---
+
+# 25. Single-click YOLO annotation
 
 With model loaded:
 
 Hold:
 
+```text
 Alt + Left Click
+```
 
 on an obvious detected object.
 
 Expected:
 
-YOLO runs.
-highest-confidence prediction containing clicked point is added.
-only one annotation is added.
+- YOLO runs.
+- Highest-confidence prediction containing clicked point is added.
+- Only one annotation is added.
 
-The mouse binding invokes single_click_prediction() directly.
-
-25.1 Empty location
+## 25.1 Empty location
 
 Alt-click area with no detection.
 
 Expected:
 
-console reports no detected object.
-nothing added.
-no crash.
-25.2 Zoom/pan
+- Console reports no detected object.
+- Nothing added.
+- No crash.
+
+## 25.2 Zoom / pan
 
 Zoom and pan.
 
@@ -883,180 +1026,227 @@ Alt-click object again.
 
 Expected:
 
-correct object is detected, demonstrating coordinate conversion still works.
-25.3 J shortcut
+- Correct object is detected.
+
+## 25.3 J shortcut
 
 Press:
 
+```text
 J
+```
 
-Your code binds J to the same prediction handler.
+Verify whether it acts at the intended mouse location.
 
-Verify carefully whether it acts at the intended mouse location. If it behaves unpredictably, log it as a shortcut bug.
+If it behaves unpredictably, log it as a shortcut bug.
 
-26. Model settings
+---
+
+# 26. Model settings
 
 Open:
 
-Model → Change Model Setting
+```text
+Model -> Change Model Setting
+```
 
 Test:
 
-confidence slider
-IoU slider
-class-agnostic NMS checkbox
-inference-time augmentation checkbox
+- confidence slider
+- IoU slider
+- class-agnostic NMS checkbox
+- inference-time augmentation checkbox
 
 Expected:
 
-status text updates.
-next YOLO inference uses current values.
-reopening window reflects current in-session values.
-27. Confidence display
+- Status text updates.
+- Next YOLO inference uses current values.
+- Reopening window reflects current in-session values.
+
+---
+
+# 27. Confidence display
 
 After YOLO inference press:
 
+```text
 H
+```
 
 Expected:
 
-confidence display toggles.
-boxes remain.
-annotations do not change.
+- Confidence display toggles.
+- Boxes remain.
+- Annotations do not change.
 
-Press H again.
+Press `H` again.
 
-Expected: returns to original display.
+Expected:
 
-28. Annotation translation
+- Returns to original display.
+
+---
+
+# 28. Annotation translation
 
 Use a box well away from image edges.
 
 Press:
 
-4 → left
-6 → right
-8 → up
-2 → down
+```text
+4 -> left
+6 -> right
+8 -> up
+2 -> down
+```
 
 Expected:
 
-all annotations move exactly one image pixel in requested direction.
-28.1 Boundary behavior
+- All annotations move exactly one image pixel in requested direction.
+
+## 28.1 Boundary behavior
 
 Translate boxes repeatedly into an image edge.
 
 Expected:
 
-values clamp.
-boxes do not become invalid.
-28.2 Translation window
+- Values clamp.
+- Boxes do not become invalid.
+
+## 28.2 Translation window
 
 Open:
 
-Global → Translate Annotations
+```text
+Global -> Translate Annotations
+```
 
-Move horizontal/vertical sliders.
+Move horizontal / vertical sliders.
 
 Expected:
 
-annotations translate interactively.
-no desynchronization.
-29. Delete duplicates
+- Annotations translate interactively.
+- No desynchronization.
 
-Create an exact duplicate using copy/paste.
+---
+
+# 29. Delete duplicates
+
+Create an exact duplicate using copy / paste.
 
 Choose:
 
-Global → Delete Duplicates
+```text
+Global -> Delete Duplicates
+```
 
 Expected:
 
-reports at least one duplicate removed.
-only one equivalent box remains.
-30. Delete all annotations
+- Reports at least one duplicate removed.
+- Only one equivalent box remains.
 
-Use disposable image.
+---
+
+# 30. Delete all annotations
+
+Use a disposable image.
 
 Choose:
 
-Global → Delete All Annotations
+```text
+Global -> Delete All Annotations
+```
 
 Expected:
 
-every box disappears.
-app remains usable.
+- Every box disappears.
+- App remains usable.
 
 Then use Undo if expected.
 
 Do not save unless intentionally testing empty-label saving.
 
-31. Flip augmentation
+---
+
+# 31. Flip augmentation
 
 Use:
 
-Augmentation → Flip Image Vertically
+```text
+Augmentation -> Flip Image Vertically
+```
 
 Expected:
 
-image flips according to application's command semantics.
-bounding boxes flip with image.
-annotations remain aligned.
+- Image flips according to application's command semantics.
+- Bounding boxes flip with image.
+- Annotations remain aligned.
 
 Then:
 
-Augmentation → Flip Image Horizontally
+```text
+Augmentation -> Flip Image Horizontally
+```
 
 Expected same alignment.
 
-Because image and annotation flip operations are coupled, alignment is what matters most.
+---
 
-32. Save annotation — CRITICAL
+# 32. Save annotation — CRITICAL
 
 Modify one box.
 
 Use:
 
+```text
 Save Annotations
+```
 
 Expected:
 
-success dialog.
-.txt file timestamp changes.
-file contains normalized YOLO lines.
-
-The save routine records current annotation state and writes the corresponding .txt.
+- Success dialog.
+- `.txt` file timestamp changes.
+- File contains normalized YOLO lines.
 
 Repeat using:
 
+```text
 S
+```
 
 and:
 
+```text
 Up Arrow
+```
 
 Expected: same save behavior.
 
-32.1 Reload verification
+## 32.1 Reload verification
 
 After saving:
 
-navigate away
-navigate back
+1. Navigate away.
+2. Navigate back.
 
 Expected:
 
-edited annotation reloads exactly.
+- Edited annotation reloads exactly.
 
 This validates the full cycle:
 
+```text
 pixel coordinates
-→ YOLO normalized text
-→ reload
-→ pixel coordinates
-33. Unsaved-change prompt — CRITICAL
+-> YOLO normalized text
+-> reload
+-> pixel coordinates
+```
 
-Turn Auto Save OFF.
+---
+
+# 33. Unsaved-change prompt — CRITICAL
+
+Turn **Auto Save OFF**.
 
 Modify a box.
 
@@ -1064,40 +1254,40 @@ Navigate to next image.
 
 Expected:
 
-prompt asks whether to save.
+- Prompt asks whether to save.
 
-Choose No.
+Choose **No**.
 
 Expected:
 
-navigates without saving.
+- Navigates without saving.
 
 Return to image.
 
 Expected:
 
-old on-disk state is restored.
+- Old on-disk state is restored.
 
 Repeat:
 
-modify
-navigate
-choose Yes
+- modify
+- navigate
+- choose **Yes**
 
 Expected:
 
-file is saved.
-returning shows modification.
+- File is saved.
+- Returning shows modification.
 
-This also validates the last_save fix we discussed.
+---
 
-34. Auto Save — CRITICAL
+# 34. Auto Save — CRITICAL
 
 Toggle using checkbox.
 
 Expected:
 
-checkbox state changes.
+- Checkbox state changes.
 
 Modify box.
 
@@ -1105,78 +1295,99 @@ Navigate away.
 
 Expected:
 
-no save confirmation.
-annotation file is automatically saved.
+- No save confirmation.
+- Annotation file is automatically saved.
 
 Return.
 
 Expected:
 
-modification persists.
+- Modification persists.
 
 Now press:
 
+```text
 F6
+```
 
 Expected:
 
-Auto Save toggles and checkbox follows it.
-35. Save-change prompting toggle
+- Auto Save toggles and checkbox follows it.
+
+---
+
+# 35. Save-change prompting toggle
 
 Press:
 
+```text
 P
+```
 
 Expected:
 
-notification reports save-change setting toggled.
+- Notification reports save-change setting toggled.
 
 With prompting disabled:
 
-modify box
-navigate
+- modify box
+- navigate
 
-Expected according to code:
+Expected:
 
-save prompt is suppressed.
+- Save prompt is suppressed.
 
 Toggle back on afterwards.
 
-36. Save image
+---
+
+# 36. Save image
 
 Choose:
 
-Augmentation → Save Image
+```text
+Augmentation -> Save Image
+```
 
 Select destination.
 
 Expected:
 
-PNG is created.
-saved image opens normally.
-app remains functional.
-37. Save annotated image
+- PNG is created.
+- Saved image opens normally.
+- App remains functional.
+
+---
+
+# 37. Save annotated image
 
 Choose:
 
-Augmentation → Save Annotated Image
+```text
+Augmentation -> Save Annotated Image
+```
 
 Expected:
 
-output image is created.
-it visually contains expected annotation rendering.
-temporary deselection during save does not permanently alter selected state.
-38. Screenshot
+- Output image is created.
+- It visually contains expected annotation rendering.
+- Temporary deselection during save does not permanently alter selected state.
+
+---
+
+# 38. Screenshot
 
 Press:
 
+```text
 F12
+```
 
 Expected console:
 
+```text
 Screenshot Saved!
-
-The code saves a file named from the title plus _viewport.png.
+```
 
 Verify file appears in the current working directory.
 
@@ -1184,180 +1395,222 @@ Open it.
 
 Expected:
 
-valid image.
-39. Box List window
+- Valid image.
+
+---
+
+# 39. Box List window
 
 Press:
 
+```text
 F2
+```
 
 Expected:
 
-annotation list opens.
-object count agrees with visible annotations.
+- Annotation list opens.
+- Object count agrees with visible annotations.
 
 Click an entry.
 
 Expected:
 
-corresponding annotation becomes selected.
+- Corresponding annotation becomes selected.
 
-Delete/add boxes.
+Delete / add boxes.
 
 Expected:
 
-list refreshes appropriately.
+- List refreshes appropriately.
 
-Close/reopen several times.
+Close / reopen several times.
 
-Expected: no stale/destroyed-window error.
+Expected:
 
-40. Help functionality
+- No stale or destroyed-window error.
+
+---
+
+# 40. Help functionality
 
 Press:
 
+```text
 F1
+```
 
 Expected:
 
-help opens.
-help text loads from packaged files_bbox/help.txt.
+- Help opens.
+- Help text loads.
 
 Use:
 
-Help → Ultralytics
+```text
+Help -> Ultralytics
+```
 
 Expected:
 
-browser attempts to open correct external resource.
-41. Show folders externally
+- Browser attempts to open the correct external resource.
+
+---
+
+# 41. Show folders externally
 
 Test:
 
-File → Show Image Folder Externally
-File → Show Annotations Folder Externally
+```text
+File -> Show Image Folder Externally
+File -> Show Annotations Folder Externally
+```
 
 Expected on Windows:
 
-File Explorer opens correct directory.
-no console exception.
-42. Separate annotation folder
+- File Explorer opens the correct directory.
+- No console exception.
+
+---
+
+# 42. Separate annotation folder
 
 Prepare:
 
+```text
 images\
     img1.png
 
 labels\
     img1.txt
+```
 
 Load the image directory.
 
 Then:
 
-File → Load Annotations from different Folder
+```text
+File -> Load Annotations from different Folder
+```
 
-choose labels.
+Choose `labels`.
 
 Expected:
 
-annotation appears.
-saving writes to label folder rather than image folder.
+- Annotation appears.
+- Saving writes to label folder rather than image folder.
 
 Navigate images and verify correct matching by filename.
 
-43. Missing/empty annotation files
+---
 
-Prepare image with no matching .txt.
+# 43. Missing / empty annotation files
+
+Prepare image with **no matching `.txt`**.
 
 Load it.
 
 Expected:
 
-image loads with zero boxes.
-no error.
+- Image loads with zero boxes.
+- No error.
 
-Create an empty .txt.
+Create an empty `.txt`.
 
 Reload.
 
 Expected:
 
-zero boxes.
-no error.
+- Zero boxes.
+- No error.
 
 Create a box and save.
 
 Expected:
 
-.txt receives annotation line.
-44. Settings persistence — CRITICAL
+- `.txt` receives annotation line.
+
+---
+
+# 44. Settings persistence — CRITICAL
 
 Set a recognizable state:
 
-image folder = test folder
-annotation folder = test folder
-current image = e.g. 2
-custom class names
-Auto Save = chosen value
-confidence visibility = chosen value
-save-prompt flag = chosen value
-model path = test model
+- image folder = test folder
+- annotation folder = test folder
+- current image = e.g. 2
+- custom class names
+- Auto Save = chosen value
+- confidence visibility = chosen value
+- save-prompt flag = chosen value
+- model path = test model
 
 Exit normally.
 
 Restart:
 
+```cmd
 avaw-cv-waste
+```
 
 Expected:
 
-correct folder restored.
-correct image index restored.
-progress matches restored index.
-class names restored.
-Auto Save restored.
-confidence setting restored.
-save flag restored.
-model path reloads if still valid.
+- Correct folder restored.
+- Correct image index restored.
+- Progress matches restored index.
+- Class names restored.
+- Auto Save restored.
+- Confidence setting restored.
+- Save flag restored.
+- Model path reloads if still valid.
 
-Those are the values currently written into settings.json.
+Pay particular attention to whether settings survive an installed PyPI launch.
 
-Pay particular attention to whether settings actually survive an installed PyPI launch, because your current settings path is inside the package directory.
+---
 
-45. Startup after folder deletion
+# 45. Startup after folder deletion
 
 Close app.
 
-Rename/delete the previously saved image folder.
+Rename or delete the previously saved image folder.
 
 Start app again.
 
 Expected:
 
-app handles invalid saved path gracefully.
-resets/falls back rather than crashing.
-46. No-model behavior
+- App handles invalid saved path gracefully.
+- Resets / falls back rather than crashing.
 
-Start without valid model loaded.
+---
+
+# 46. No-model behavior
+
+Start without a valid model loaded.
 
 Click:
 
+```text
 Run YOLO Inference
+```
 
 Expected:
 
-informative No YOLO model loaded message.
-no traceback.
+- Informative `No YOLO model loaded` message.
+- No traceback.
 
 Alt-click image.
 
-Expected: same graceful warning.
+Expected:
 
-47. UI window cycling
+- Same graceful warning.
+
+---
+
+# 47. UI window cycling
 
 Open and close repeatedly:
 
+```text
 F2 Box List
 F3 Image List
 F4 Class Colors
@@ -1365,107 +1618,117 @@ F5 Class Names
 Model Settings
 Translation
 Help
+```
 
 Expected:
 
-every window can be reopened.
-no invalid command name, destroyed-widget, or stale-reference errors.
-48. High-interaction regression test — CRITICAL
+- Every window can be reopened.
+- No `invalid command name`, destroyed-widget, or stale-reference errors.
 
-This is the one I would do last.
+---
+
+# 48. High-interaction regression test — CRITICAL
 
 On one image:
 
-Zoom to ~2×.
-Pan.
-Select a box.
-Resize it.
-Move it.
-Create a new box.
-Marquee-select several boxes.
-Ctrl-drag them.
-Change their class.
-Copy/paste them.
-Delete one.
-Undo.
-Save.
-Move to next image.
-Return.
+1. Zoom to approximately 2x.
+2. Pan.
+3. Select a box.
+4. Resize it.
+5. Move it.
+6. Create a new box.
+7. Marquee-select several boxes.
+8. Ctrl-drag them.
+9. Change their class.
+10. Copy / paste them.
+11. Delete one.
+12. Undo.
+13. Save.
+14. Move to next image.
+15. Return.
 
 Expected:
 
-no crash.
-saved geometry remains correct.
-no boxes jump when changing zoom.
-no selection state leaks into the next image.
-progress and title remain correct.
+- No crash.
+- Saved geometry remains correct.
+- No boxes jump when changing zoom.
+- No selection state leaks into the next image.
+- Progress and title remain correct.
 
-This sequence exercises most of the code paths that have recently changed.
+---
 
-49. Final clean-install test — CRITICAL
+# 49. Final clean-install test — CRITICAL
 
 After all development testing, uninstall:
 
+```cmd
 pip uninstall avaw-cv-waste
+```
 
 Confirm removal.
 
-Then reinstall only from the wheel:
+Then reinstall **only from the wheel**:
 
+```cmd
 pip install dist\avaw_cv_waste-1.0.1-py3-none-any.whl
+```
 
-Do not run the Python file from your source directory.
+Do **not** run the Python file from your source directory.
 
 Prefer changing to another directory first:
 
+```cmd
 cd %USERPROFILE%
 avaw-cv-waste
+```
 
-This is important because it proves the installed wheel contains everything it needs instead of accidentally finding files from your source checkout.
+This proves the installed wheel contains everything it needs instead of accidentally finding files from your source checkout.
 
-Then repeat just this final smoke subset:
+Repeat this final smoke subset:
 
+```text
 launch
 load demo image
 navigate
-select/move/resize
+select / move / resize
 marquee select
-zoom/pan
+zoom / pan
 load model
 YOLO inference
 save annotation
 restart
 settings restore
+```
 
-If those all pass from outside the source repository, I would consider the wheel ready for upload.
+---
 
-Release gate
+# Release gate
 
-I would classify these as must-pass before PyPI:
+These are the **must-pass before PyPI** tests:
 
-1   package launch
-2   startup/progress
-3   navigation
-7   selection
-8   move
-9   resize
-10  marquee selection
-11  multiselect
-12  multidrag at zoom
-13  new box
-14  delete
-15  undo
-17  class changes
-18  class-name rename
-21  zoom
-22  pan
-23  model load
-24  inference
-32  annotation saving
-33  unsaved-change detection
-34  autosave
-44  settings persistence
-48  mixed-interaction regression
-49  clean installed-wheel test
+- [ ] 1 — Package launch
+- [ ] 2 — Startup / progress
+- [ ] 3 — Navigation
+- [ ] 7 — Selection
+- [ ] 8 — Move
+- [ ] 9 — Resize
+- [ ] 10 — Marquee selection
+- [ ] 11 — Multiselect
+- [ ] 12 — Multidrag at zoom
+- [ ] 13 — New box
+- [ ] 14 — Delete
+- [ ] 15 — Undo
+- [ ] 17 — Class changes
+- [ ] 18 — Class-name rename
+- [ ] 21 — Zoom
+- [ ] 22 — Pan
+- [ ] 23 — Model load
+- [ ] 24 — Inference
+- [ ] 32 — Annotation saving
+- [ ] 33 — Unsaved-change detection
+- [ ] 34 — Auto Save
+- [ ] 44 — Settings persistence
+- [ ] 48 — Mixed-interaction regression
+- [ ] 49 — Clean installed-wheel test
 
-If all of those pass and the remaining convenience/UI tests don't expose a crash, that is a strong release candidate for 1.0.1.
+If all of those pass and the remaining convenience / UI tests do not expose a crash, the build is a strong release candidate.
