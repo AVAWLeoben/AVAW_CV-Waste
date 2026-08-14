@@ -1768,23 +1768,41 @@ class UserInputHandler:
         return selected_box
     
     # Mouse click event to select a bounding box (for moving or resizing)
-    def on_click(self,event):     
+    def on_click(self, event):
+        # Single-click YOLO mode
         if self.owner.single_click_mode:
             self.owner.USER_INPUT_HANDLER.single_click_prediction(event)
             return
-            
+    
+        # Stop previous multiselect
         self.owner.USER_INPUT_HANDLER.stop_multiselect()
-        x, y = self.owner.ZOOMER.convert_coordinates(event)
-        
-        # Check if we are adding a new box
+    
+        # Reset rectangle-selection state
+        self.owner.rectangle_selecting = False
+        self.owner.rectangle_select_start = None
+        self.owner.rectangle_select_end = None
+    
+        # Check if we are adding a new manual box
         if self.owner.adding_new_box:
             self.owner.selected_box = None
-            self.owner.new_box_start = (event.x, event.y)  # Record the starting point
+            self.owner.new_box_start = (event.x, event.y)
             return
-
+    
+        # First check whether an existing box was clicked
         self.owner.selected_box = self.getBox(event)
-            
-        self.owner.update_display()  # Redraw the image to highlight the selected box
+    
+        if self.owner.selected_box is None:
+            # Empty space was clicked:
+            # start Windows-style rectangle selection
+            self.owner.rectangle_selecting = True
+            self.owner.rectangle_select_start = (event.x, event.y)
+            self.owner.rectangle_select_end = (event.x, event.y)
+    
+            # Important: this is NOT box dragging
+            self.owner.dragging = False
+            self.owner.resizing = False
+    
+        self.owner.update_display()
 
     def select_all(self, event = None):        
         self.owner.multiselect_on = True
@@ -1807,70 +1825,178 @@ class UserInputHandler:
         self.owner.update_display()  # Redraw the image to highlight the selected box
 
     def on_multi_drag(self, event):
-        dx = event.x - self.owner.start_x
-        dy = event.y - self.owner.start_y
-        
+        zoom_factor = self.owner.ZOOMER.zoom_factor
+    
+        dx = (event.x - self.owner.start_x) / zoom_factor
+        dy = (event.y - self.owner.start_y) / zoom_factor
+    
         for idx in self.owner.multiselect_idx:
             curr_box = self.owner.ANNOTATION_HANDLER.annotations[idx]
-            curr_box[1] = curr_box[1]+dx
-            curr_box[2] = curr_box[2]+dy
-            curr_box[3] = curr_box[3]+dx
-            curr_box[4] = curr_box[4]+dy
+    
+            curr_box[1] += dx
+            curr_box[2] += dy
+            curr_box[3] += dx
+            curr_box[4] += dy
+    
             self.owner.ANNOTATION_HANDLER.annotations[idx] = curr_box
-        
-        self.owner.start_x, self.owner.start_y = event.x, event.y
+    
+        self.owner.start_x = event.x
+        self.owner.start_y = event.y
+    
         self.owner.ANNOTATION_HANDLER.clamp_all_coordinates()
-        
+    
         for idx in self.owner.multiselect_idx:
             curr_box = self.owner.ANNOTATION_HANDLER.annotations[idx]
-            if abs(curr_box[1]-curr_box[3]) <= 1 or abs(curr_box[2] - curr_box[4])  <= 1:
+    
+            if (
+                abs(curr_box[1] - curr_box[3]) <= 1
+                or abs(curr_box[2] - curr_box[4]) <= 1
+            ):
                 self.owner.USER_INPUT_HANDLER.stop_multiselect()
-        
+                break
+    
         self.owner.ANNOTATION_HANDLER.remove_dim1_annotations()
-        
         self.owner.update_display()
         
             
     # Mouse drag event to move or resize the selected bounding box, or create a new one
     def on_drag(self, event):
         zoom_factor = self.owner.ZOOMER.zoom_factor
-        self.owner.dragging = True
-        if self.owner.selected_box is not None:
-            dx = event.x - self.owner.start_x
-            dy = event.y - self.owner.start_y
-            dx = dx / zoom_factor
-            dy = dy / zoom_factor
-
-            # Handle resizing
-            if self.owner.resizing:
-                label, x1, y1, x2, y2 = self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box]
-                if self.owner.resize_corner == 'top_left':
-                    self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box] = [label, x1 + dx, y1 + dy, x2, y2]
-                elif self.owner.resize_corner == 'top_right':
-                    self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box] = [label, x1, y1 + dy, x2 + dx, y2]
-                elif self.owner.resize_corner == 'bottom_left':
-                    self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box] = [label, x1 + dx, y1, x2, y2 + dy]
-                elif self.owner.resize_corner == 'bottom_right':
-                    self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box] = [label, x1, y1, x2 + dx, y2 + dy]
-            
-            # Handle moving
-            elif self.owner.dragging:
-                label, x1, y1, x2, y2 = self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box]
-                self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box] = [label, x1 + dx, y1 + dy, x2 + dx, y2 + dy]
-
-            self.owner.start_x, self.owner.start_y = event.x, event.y
-            self.owner.update_display()
-
-        # Handle creating a new box
+    
+        # ---------------------------------------------------------
+        # 1. Creating a new manual bounding box
+        # ---------------------------------------------------------
         if self.owner.adding_new_box and self.owner.new_box_start:
             x1, y1 = self.owner.new_box_start
             x2, y2 = event.x, event.y
-            self.owner.update_display()  # Redraw everything, including the new box outline
-            self.owner.canvas.create_rectangle(x1, y1, x2, y2, outline="green", width=2)
-        
-        if self.owner.selected_box is None:
-            self.owner.start_x, self.owner.start_y = event.x, event.y
-            #self.owner.ZOOM_WINDOW.update_zoom_window()
+    
+            self.owner.update_display()
+    
+            self.owner.canvas.create_rectangle(
+                x1,
+                y1,
+                x2,
+                y2,
+                outline="green",
+                width=2
+            )
+    
+            return
+    
+        # ---------------------------------------------------------
+        # 2. Rectangle / marquee selection
+        # ---------------------------------------------------------
+        if (
+            self.owner.rectangle_selecting
+            and self.owner.rectangle_select_start is not None
+        ):
+            x1, y1 = self.owner.rectangle_select_start
+            x2, y2 = event.x, event.y
+    
+            self.owner.rectangle_select_end = (x2, y2)
+    
+            # update_display clears/redraws the canvas
+            self.owner.update_display()
+    
+            # Draw marquee ON TOP of image
+            self.owner.canvas.create_rectangle(
+                x1,
+                y1,
+                x2,
+                y2,
+                outline="white",
+                width=2,
+                dash=(6, 4)
+            )
+    
+            return
+    
+        # ---------------------------------------------------------
+        # 3. Existing box selected -> move / resize
+        # ---------------------------------------------------------
+        if self.owner.selected_box is not None:
+            self.owner.dragging = True
+    
+            dx = event.x - self.owner.start_x
+            dy = event.y - self.owner.start_y
+    
+            # Screen pixels -> original image pixels
+            dx /= zoom_factor
+            dy /= zoom_factor
+    
+            if self.owner.resizing:
+                label, x1, y1, x2, y2 = (
+                    self.owner.ANNOTATION_HANDLER.annotations[
+                        self.owner.selected_box
+                    ]
+                )
+    
+                if self.owner.resize_corner == "top_left":
+                    self.owner.ANNOTATION_HANDLER.annotations[
+                        self.owner.selected_box
+                    ] = [
+                        label,
+                        x1 + dx,
+                        y1 + dy,
+                        x2,
+                        y2,
+                    ]
+    
+                elif self.owner.resize_corner == "top_right":
+                    self.owner.ANNOTATION_HANDLER.annotations[
+                        self.owner.selected_box
+                    ] = [
+                        label,
+                        x1,
+                        y1 + dy,
+                        x2 + dx,
+                        y2,
+                    ]
+    
+                elif self.owner.resize_corner == "bottom_left":
+                    self.owner.ANNOTATION_HANDLER.annotations[
+                        self.owner.selected_box
+                    ] = [
+                        label,
+                        x1 + dx,
+                        y1,
+                        x2,
+                        y2 + dy,
+                    ]
+    
+                elif self.owner.resize_corner == "bottom_right":
+                    self.owner.ANNOTATION_HANDLER.annotations[
+                        self.owner.selected_box
+                    ] = [
+                        label,
+                        x1,
+                        y1,
+                        x2 + dx,
+                        y2 + dy,
+                    ]
+    
+            else:
+                # Moving entire bounding box
+                label, x1, y1, x2, y2 = (
+                    self.owner.ANNOTATION_HANDLER.annotations[
+                        self.owner.selected_box
+                    ]
+                )
+    
+                self.owner.ANNOTATION_HANDLER.annotations[
+                    self.owner.selected_box
+                ] = [
+                    label,
+                    x1 + dx,
+                    y1 + dy,
+                    x2 + dx,
+                    y2 + dy,
+                ]
+    
+            self.owner.start_x = event.x
+            self.owner.start_y = event.y
+    
+            self.owner.update_display()
         
             
     # Mouse release event to stop dragging or resizing or finalize the new box
@@ -1878,6 +2004,62 @@ class UserInputHandler:
         self.owner.dragging = False
         self.owner.resizing = False
         self.owner.resize_corner = ""
+        
+        # ---------------------------------------------------------
+        # Rectangle / marquee selection finished
+        # ---------------------------------------------------------
+        if (
+            self.owner.rectangle_selecting
+            and self.owner.rectangle_select_start is not None
+        ):
+            start_x, start_y = self.owner.rectangle_select_start
+            end_x, end_y = event.x, event.y
+     
+            # Require a small actual drag.
+            # This value is SCREEN pixels, so it is intentionally
+            # independent of zoom.
+            drag_distance_x = abs(end_x - start_x)
+            drag_distance_y = abs(end_y - start_y)
+     
+            if drag_distance_x >= 4 or drag_distance_y >= 4:
+     
+                # Canvas/screen coordinates -> ORIGINAL IMAGE coordinates.
+                #
+                # convert_to_original() handles BOTH:
+                #   - zoom_factor
+                #   - view_offset / panning
+                rx1, ry1 = self.owner.ZOOMER.convert_to_original(
+                    start_x,
+                    start_y
+                )
+     
+                rx2, ry2 = self.owner.ZOOMER.convert_to_original(
+                    end_x,
+                    end_y
+                )
+     
+                self.select_boxes_in_rectangle(
+                    rx1,
+                    ry1,
+                    rx2,
+                    ry2
+                )
+     
+            else:
+                # Just clicking empty canvas deselects everything
+                self.owner.stop_multiselect()
+                self.owner.selected_box = None
+     
+            # Reset rectangle state
+            self.owner.rectangle_selecting = False
+            self.owner.rectangle_select_start = None
+            self.owner.rectangle_select_end = None
+     
+            # This also removes the temporary dashed rectangle
+            self.owner.update_display()
+     
+            return
+        
         zoom_factor = self.owner.ZOOMER.zoom_factor
         view_offset_x = self.owner.ZOOMER.view_offset_x
         view_offset_y = self.owner.ZOOMER.view_offset_y
@@ -2093,6 +2275,42 @@ class UserInputHandler:
             self.owner.class_dropdown.set(str(self.owner.class_names[index]))
                 
         self.owner.update_display()
+        
+    def select_boxes_in_rectangle(self, rx1, ry1, rx2, ry2):
+        """
+        Select all bounding boxes completely contained inside the
+        rectangle (rx1, ry1, rx2, ry2).
+    
+        All coordinates are ORIGINAL IMAGE coordinates.
+        """
+    
+        # Normalize selection rectangle
+        rx1, rx2 = min(rx1, rx2), max(rx1, rx2)
+        ry1, ry2 = min(ry1, ry2), max(ry1, ry2)
+    
+        selected_indices = []
+    
+        for idx, box in enumerate(self.owner.ANNOTATION_HANDLER.annotations):
+            _, bx1, by1, bx2, by2 = box
+    
+            # Normalize bounding box too, just to be safe
+            bx1, bx2 = min(bx1, bx2), max(bx1, bx2)
+            by1, by2 = min(by1, by2), max(by1, by2)
+    
+            # Box must be COMPLETELY inside selection rectangle
+            if (
+                bx1 >= rx1
+                and by1 >= ry1
+                and bx2 <= rx2
+                and by2 <= ry2
+            ):
+                selected_indices.append(idx)
+    
+        self.owner.multiselect_idx = selected_indices
+        self.owner.multiselect_on = len(selected_indices) > 0
+        self.owner.selected_box = None
+    
+        print("Rectangle selected boxes:", selected_indices)
 
 class Helper:
     def __init__(
@@ -2452,6 +2670,12 @@ class BBOX_App:
         self.dragging = False
         self.resizing = False
         self.resize_corner = None
+        
+        # Rectangle / marquee multi-selection
+        self.rectangle_selecting = False
+        self.rectangle_select_start = None
+        self.rectangle_select_end = None
+        
         self.start_x, self.start_y = 0, 0
         self.current_image_index = 0
         self.image_paths = []
@@ -2551,7 +2775,25 @@ class BBOX_App:
         self.ui_container.grid(row=2, column=0, sticky="ew")
         self.ui_container.grid_columnconfigure(0, weight=1)
 
+        # Add a counter to show the current image index
+        self.number = tk.StringVar(value=str(self.current_image_index))
+        validate_command = self.root.register(self.USER_INPUT_HANDLER.validate_numeric_input)
         
+        # Create a frame for the progress indicator at the bottom
+        progress_frame = tk.Frame(self.root)
+        progress_frame.grid(row=3, column=0, sticky="ew", pady=5)
+        progress_frame.grid_columnconfigure(0, weight=1)
+
+        self.progress_label = tk.Label(progress_frame, text="0/0")
+        self.progress_label.pack(side=tk.BOTTOM)
+
+        self.progress_bar = ttk.Progressbar(progress_frame, orient=tk.HORIZONTAL, length=400, mode='determinate')
+        self.progress_bar.pack(side=tk.BOTTOM, pady=2, fill=tk.X, expand=True)
+
+        index_counter = tk.Entry(progress_frame, textvariable=self.number, justify="center", 
+                                 validate="key", validatecommand=(validate_command, "%P"), width=10)
+        index_counter.pack(side=tk.BOTTOM, pady=2)        
+
         # Create instance of Zoomer Class to handle Zoom function
         self.ZOOMER = Zoomer(self)
         
@@ -2585,7 +2827,7 @@ class BBOX_App:
             self.canvas.grid(row=1, column=0, sticky="nsew")
 
 
-            # Load the first image
+            # Load the current image from the startup config saved image
             self.IMAGE_HANDLER.load_image(self.current_image_index)
         else:
             self.title_label = tk.Label(self.root, text="No Images Loaded", font=("Helvetica", 16))
@@ -2612,24 +2854,7 @@ class BBOX_App:
         # Setup User Controls   
         self.USERINTERFACE = UserInterface(self)
         
-        # Add a counter to show the current image index
-        self.number = tk.StringVar(value=str(self.current_image_index))
-        validate_command = self.root.register(self.USER_INPUT_HANDLER.validate_numeric_input)
         
-        # Create a frame for the progress indicator at the bottom
-        progress_frame = tk.Frame(self.root)
-        progress_frame.grid(row=3, column=0, sticky="ew", pady=5)
-        progress_frame.grid_columnconfigure(0, weight=1)
-
-        self.progress_label = tk.Label(progress_frame, text="0/0")
-        self.progress_label.pack(side=tk.BOTTOM)
-
-        self.progress_bar = ttk.Progressbar(progress_frame, orient=tk.HORIZONTAL, length=400, mode='determinate')
-        self.progress_bar.pack(side=tk.BOTTOM, pady=2, fill=tk.X, expand=True)
-
-        index_counter = tk.Entry(progress_frame, textvariable=self.number, justify="center", 
-                                 validate="key", validatecommand=(validate_command, "%P"), width=10)
-        index_counter.pack(side=tk.BOTTOM, pady=2)
         
         
         
