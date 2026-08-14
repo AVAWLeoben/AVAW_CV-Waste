@@ -994,10 +994,18 @@ Expected: same result.
 
 With model loaded:
 
-Hold:
+Hold on Windows:
 
 ```text
 Alt + Left Click
+```
+
+J shortcut For Linux:
+
+Press:
+
+```text
+J
 ```
 
 on an obvious detected object.
@@ -1007,6 +1015,8 @@ Expected:
 - YOLO runs.
 - Highest-confidence prediction containing clicked point is added.
 - Only one annotation is added.
+
+---
 
 ## 25.1 Empty location
 
@@ -1028,19 +1038,6 @@ Expected:
 
 - Correct object is detected.
 
-## 25.3 J shortcut
-
-Press:
-
-```text
-J
-```
-
-Verify whether it acts at the intended mouse location.
-
-If it behaves unpredictably, log it as a shortcut bug.
-
----
 
 # 26. Model settings
 
