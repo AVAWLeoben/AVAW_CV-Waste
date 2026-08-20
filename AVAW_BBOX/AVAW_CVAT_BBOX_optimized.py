@@ -113,7 +113,7 @@ class ImageHandler:
 
             # Load image using OpenCV
             self.owner.image = cv2.imread(self.owner.image_path)
-            self.owner.image = cv2.resize(self.owner.image, (640, 640))
+            #self.owner.image = cv2.resize(self.owner.image, (640, 640))
             self.owner.image_rgb = cv2.cvtColor(self.owner.image, cv2.COLOR_BGR2RGB)
             self.owner.image_pil = Image.fromarray(self.owner.image_rgb)
             self.owner.image_tk = ImageTk.PhotoImage(self.owner.image_pil)
@@ -183,8 +183,7 @@ class ImageHandler:
     def previous_image(self, event=None):
         """Go to the previous image."""
         if self.owner.current_image_index - 1 >= 0:
-            if len(self.owner.archive) > 1:
-                self.owner.USER_INPUT_HANDLER.prompt_saving()
+            self.owner.USER_INPUT_HANDLER.prompt_saving()
             
             # Do Auto Save
             if self.owner.auto_save:
@@ -405,6 +404,7 @@ class AnnotationHandler:
     # Function to save YOLO annotations to .txt file
     def save_yolo_annotations(self,annotations_path, annotations, image_width, image_height):
         self.owner.ZOOMER.reset_zoom()
+        image_height, image_width = self.owner.image.shape[:2]
         with open(annotations_path, 'w') as file:
             for box in self.annotations:
                 label, x1, y1, x2, y2 = box
@@ -480,13 +480,19 @@ class AnnotationHandler:
         self.remove_dim1_annotations()
         self.owner.update_display()
     
-    def reset_translation(self, event=None):             
-        self.w1.set(0)
-        self.w2.set(0)   
-        self.owner.root.update_idletasks()
-        
-        self.annotations = copy.deepcopy(self.owner.annotation_backup_before_translation)  
-        self.owner.update_display()        
+    def reset_translation(self, event=None):
+        window = self.owner.TRANSLATE_ANNOTATIONS_WINDOW
+    
+        window.w1.set(0)
+        window.w2.set(0)
+        window.last_translate_value_x.set(0)
+        window.last_translate_value_y.set(0)
+    
+        self.annotations = copy.deepcopy(
+            self.owner.annotation_backup_before_translation
+        )
+    
+        self.owner.update_display()      
        
     def translate_vertical(self, event=None):
         new_value = self.owner.TRANSLATE_ANNOTATIONS_WINDOW.w1.get()
@@ -495,7 +501,7 @@ class AnnotationHandler:
         self.clamp_all_coordinates()
         self.remove_dim1_annotations()
         self.owner.update_display()
-        self.owner.last_translate_value_y.set(new_value)
+        self.owner.TRANSLATE_ANNOTATIONS_WINDOW.last_translate_value_y.set(new_value)
 
     def add_vertical_translation_to_annotations(self, difference):
         for annotation in self.annotations:
@@ -509,7 +515,7 @@ class AnnotationHandler:
         self.clamp_all_coordinates()
         self.remove_dim1_annotations()
         self.owner.update_display()
-        self.owner.last_translate_value_x.set(new_value)
+        self.owner.TRANSLATE_ANNOTATIONS_WINDOW.last_translate_value_x.set(new_value)
 
     def add_horizontal_translation_to_annotations(self,difference):
         for annotation in self.annotations:
@@ -1139,11 +1145,11 @@ class ChangeClassNamesWindow(Window):
         self.save_button = tk.Button(self.window, text="Save", command=self.save_changes)
         self.save_button.pack(pady=10)
     
-    def save_changes(self,class_names = []):
+    def save_changes(self):
         input_text = self.text_input.get("1.0", tk.END).strip()
         
         if input_text:
-            class_names[:] = [name.strip() for name in input_text.split(',') if name.strip()]
+            class_names = [name.strip() for name in input_text.split(',') if name.strip()]
            
             if len(class_names) != len(self.owner.class_names):
                 self.generate_colors(len(class_names))
@@ -1153,7 +1159,7 @@ class ChangeClassNamesWindow(Window):
             if self.owner.class_dropdown:
                 self.owner.class_dropdown.configure(values=class_names)
                 self.owner.class_dropdown.current(0)
-            if self.owner.CHANGE_CLASS_NAMES_WINDOW:
+            if self.owner.COLOUR_SELECT_WINDOW:
                 self.owner.COLOUR_SELECT_WINDOW.update_on_class_name_change()
             if self.owner.USERINTERFACE:    
                 self.owner.USERINTERFACE.create_context_sensitive_drop_down_menu()
@@ -2172,9 +2178,36 @@ class UserInputHandler:
         self.delete_selected_box(event)
 
     def take_screenshot(self, event=None):
-        fileName = self.owner.title_label.cget("text") + "_viewport.png"
-        self.owner.render_viewport_snapshot().save(fileName)
-        print("Screenshot Saved!")
+        try:
+            screenshot_dir = Path.home() / "AVAW_CV-Waste_Screenshots"
+            screenshot_dir.mkdir(parents=True, exist_ok=True)
+    
+            image_name = Path(self.owner.image_path).stem
+    
+            file_path = screenshot_dir / f"{image_name}_viewport.png"
+    
+            counter = 1
+            while file_path.exists():
+                file_path = screenshot_dir / f"{image_name}_viewport_{counter}.png"
+                counter += 1
+    
+            self.owner.render_viewport_snapshot().save(file_path)
+    
+            print(f"Screenshot Saved: {file_path}")
+    
+            messagebox.showinfo(
+                "Screenshot Saved",
+                f"Screenshot saved successfully:\n\n{file_path}"
+            )
+            
+        except Exception as e:
+            print(f"Screenshot failed: {e}")
+    
+            messagebox.showerror(
+                "Screenshot Failed",
+                f"Could not save screenshot:\n\n{e}\n\n"
+                f"Try Augmentation -> Save Annotated Image"
+            )
 
     def validate_numeric_input(self, new_value):
         return new_value.isdigit() or new_value == ""
