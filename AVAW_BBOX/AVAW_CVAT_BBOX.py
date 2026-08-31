@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import Canvas, ttk
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageDraw
 import cv2
 import os
 import json
@@ -56,7 +56,7 @@ class DataAugmentor:
     
     def flip_lr(self):
         self.owner.image = cv2.flip(self.owner.image,1)
-        self.owner._cached_image_np = None # Clear Cached Images for this zoom level so image is actually shown flipped!
+        self.owner.invalidate_render_cache() # Source image changed; invalidate viewport/source render caches
         self.flip_annotations_lr()        
         self.clear_undo_archive()        
         self.owner.update_display()
@@ -75,7 +75,7 @@ class DataAugmentor:
     
     def flip_ud(self):
         self.owner.image = cv2.flip(self.owner.image,0)
-        self.owner._cached_image_np = None # Clear Cached Images for this zoom level so image is actually shown flipped!
+        self.owner.invalidate_render_cache() # Source image changed; invalidate viewport/source render caches
         self.flip_annotations_ud()
         self.clear_undo_archive()       
         self.owner.update_display()
@@ -113,7 +113,7 @@ class ImageHandler:
 
             # Load image using OpenCV
             self.owner.image = cv2.imread(self.owner.image_path)
-            self.owner.image = cv2.resize(self.owner.image, (640, 640))
+            #self.owner.image = cv2.resize(self.owner.image, (640, 640))
             self.owner.image_rgb = cv2.cvtColor(self.owner.image, cv2.COLOR_BGR2RGB)
             self.owner.image_pil = Image.fromarray(self.owner.image_rgb)
             self.owner.image_tk = ImageTk.PhotoImage(self.owner.image_pil)
@@ -148,9 +148,8 @@ class ImageHandler:
             except AttributeError:
                 pass
             
-            # Clear Zoom Cache
-            self.owner._cached_image_np = None
-            self.owner._cached_zoom_factor = -1.0
+            # Source image changed: clear rendering caches
+            self.owner.invalidate_render_cache()
             
             # Draw image on canvas
             self.owner.ZOOMER.reset_zoom()
@@ -184,8 +183,7 @@ class ImageHandler:
     def previous_image(self, event=None):
         """Go to the previous image."""
         if self.owner.current_image_index - 1 >= 0:
-            if len(self.owner.archive) > 1:
-                self.owner.USER_INPUT_HANDLER.prompt_saving()
+            self.owner.USER_INPUT_HANDLER.prompt_saving()
             
             # Do Auto Save
             if self.owner.auto_save:
@@ -214,14 +212,11 @@ class ImageHandler:
         self.owner.USER_INPUT_HANDLER.jump_to_image()
 
     def save_annotated_image(self):
-        last_selected_idx = self.owner.selected_box_idx
-        last_selected_box = self.owner.selected_box
-        self.owner.selected_box_idx = None
-        self.owner.selected_box = None
-        self.owner.update_display()
-        img = self.owner.image_rgb.copy()
+        # Render annotations independently of the interactive viewport.
+        # The display path now uses Canvas overlays, so saving must not rely
+        # on self.owner.image_rgb containing drawn boxes.
+        img = self.owner.render_annotated_image()
 
-        
         file_path = filedialog.asksaveasfilename(
             defaultextension=".png",
             filetypes=[("PNG files", "*.png"), ("All files", "*.*")],
@@ -230,16 +225,10 @@ class ImageHandler:
         )
         if file_path:
             cv2.imwrite(file_path, cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
-            # Show infobox with choices OK and "Show in Folder" with external file explorer
-            messagebox.showinfo("Save Sucessfull",f"Image saved at {file_path}")
-            print(f"Image saved at {file_path}")            
+            messagebox.showinfo("Save Sucessfull", f"Image saved at {file_path}")
+            print(f"Image saved at {file_path}")
         else:
             print("Save operation canceled.")
-        
-        self.owner.selected_box_idx = last_selected_idx
-        self.owner.selected_box = last_selected_box
-        
-        self.owner.update_display()
         
         
 
@@ -415,6 +404,7 @@ class AnnotationHandler:
     # Function to save YOLO annotations to .txt file
     def save_yolo_annotations(self,annotations_path, annotations, image_width, image_height):
         self.owner.ZOOMER.reset_zoom()
+        image_height, image_width = self.owner.image.shape[:2]
         with open(annotations_path, 'w') as file:
             for box in self.annotations:
                 label, x1, y1, x2, y2 = box
@@ -490,13 +480,19 @@ class AnnotationHandler:
         self.remove_dim1_annotations()
         self.owner.update_display()
     
-    def reset_translation(self, event=None):             
-        self.w1.set(0)
-        self.w2.set(0)   
-        self.owner.root.update_idletasks()
-        
-        self.annotations = copy.deepcopy(self.owner.annotation_backup_before_translation)  
-        self.owner.update_display()        
+    def reset_translation(self, event=None):
+        window = self.owner.TRANSLATE_ANNOTATIONS_WINDOW
+    
+        window.w1.set(0)
+        window.w2.set(0)
+        window.last_translate_value_x.set(0)
+        window.last_translate_value_y.set(0)
+    
+        self.annotations = copy.deepcopy(
+            self.owner.annotation_backup_before_translation
+        )
+    
+        self.owner.update_display()      
        
     def translate_vertical(self, event=None):
         new_value = self.owner.TRANSLATE_ANNOTATIONS_WINDOW.w1.get()
@@ -505,7 +501,7 @@ class AnnotationHandler:
         self.clamp_all_coordinates()
         self.remove_dim1_annotations()
         self.owner.update_display()
-        self.owner.last_translate_value_y.set(new_value)
+        self.owner.TRANSLATE_ANNOTATIONS_WINDOW.last_translate_value_y.set(new_value)
 
     def add_vertical_translation_to_annotations(self, difference):
         for annotation in self.annotations:
@@ -519,7 +515,7 @@ class AnnotationHandler:
         self.clamp_all_coordinates()
         self.remove_dim1_annotations()
         self.owner.update_display()
-        self.owner.last_translate_value_x.set(new_value)
+        self.owner.TRANSLATE_ANNOTATIONS_WINDOW.last_translate_value_x.set(new_value)
 
     def add_horizontal_translation_to_annotations(self,difference):
         for annotation in self.annotations:
@@ -743,6 +739,9 @@ class BoxList:
     def toggle(self, event=None):
         """Show/hide the boxlist window."""
         if not self.shown:
+            # Refresh on demand instead of rebuilding this widget on every
+            # canvas redraw/zoom/pan event.
+            self.refresh_boxlist()
             self.boxlist.deiconify()
             self.shown = True
         else:
@@ -794,6 +793,9 @@ class BoxList:
             )
             btn.pack(pady=2, padx=10, fill="x")
             self.buttons.append(btn)
+
+        if hasattr(self.owner, "_current_boxlist_signature"):
+            self.owner._boxlist_render_signature = self.owner._current_boxlist_signature()
 
     def rgb2hex(self, rgb):
         """Convert RGB tuple to hex color."""
@@ -1143,11 +1145,11 @@ class ChangeClassNamesWindow(Window):
         self.save_button = tk.Button(self.window, text="Save", command=self.save_changes)
         self.save_button.pack(pady=10)
     
-    def save_changes(self,class_names = []):
+    def save_changes(self):
         input_text = self.text_input.get("1.0", tk.END).strip()
         
         if input_text:
-            class_names[:] = [name.strip() for name in input_text.split(',') if name.strip()]
+            class_names = [name.strip() for name in input_text.split(',') if name.strip()]
            
             if len(class_names) != len(self.owner.class_names):
                 self.generate_colors(len(class_names))
@@ -1157,7 +1159,7 @@ class ChangeClassNamesWindow(Window):
             if self.owner.class_dropdown:
                 self.owner.class_dropdown.configure(values=class_names)
                 self.owner.class_dropdown.current(0)
-            if self.owner.CHANGE_CLASS_NAMES_WINDOW:
+            if self.owner.COLOUR_SELECT_WINDOW:
                 self.owner.COLOUR_SELECT_WINDOW.update_on_class_name_change()
             if self.owner.USERINTERFACE:    
                 self.owner.USERINTERFACE.create_context_sensitive_drop_down_menu()
@@ -2176,9 +2178,36 @@ class UserInputHandler:
         self.delete_selected_box(event)
 
     def take_screenshot(self, event=None):
-        fileName = self.owner.title_label.cget("text")+"_viewport.png"
-        self.owner.image_pil.save(fileName)   
-        print("Screenshot Saved!")
+        try:
+            screenshot_dir = Path.home() / "AVAW_CV-Waste_Screenshots"
+            screenshot_dir.mkdir(parents=True, exist_ok=True)
+    
+            image_name = Path(self.owner.image_path).stem
+    
+            file_path = screenshot_dir / f"{image_name}_viewport.png"
+    
+            counter = 1
+            while file_path.exists():
+                file_path = screenshot_dir / f"{image_name}_viewport_{counter}.png"
+                counter += 1
+    
+            self.owner.render_viewport_snapshot().save(file_path)
+    
+            print(f"Screenshot Saved: {file_path}")
+    
+            messagebox.showinfo(
+                "Screenshot Saved",
+                f"Screenshot saved successfully:\n\n{file_path}"
+            )
+            
+        except Exception as e:
+            print(f"Screenshot failed: {e}")
+    
+            messagebox.showerror(
+                "Screenshot Failed",
+                f"Could not save screenshot:\n\n{e}\n\n"
+                f"Try Augmentation -> Save Annotated Image"
+            )
 
     def validate_numeric_input(self, new_value):
         return new_value.isdigit() or new_value == ""
@@ -2423,9 +2452,11 @@ class Zoomer:
             self.view_offset_y += dy
             self.start_pan_x, self.start_pan_y = event.x, event.y
     
-            # Calculate image size after zoom (use your actual base size if not always 640)
-            img_width = 640 * self.zoom_factor
-            img_height = 640 * self.zoom_factor
+            # Calculate the actual image size after zoom.
+            # Do not assume a fixed 640x640 annotation space here.
+            base_height, base_width = self.owner.image.shape[:2]
+            img_width = base_width * self.zoom_factor
+            img_height = base_height * self.zoom_factor
     
             canvas_width = max(1, self.owner.canvas.winfo_width())
             canvas_height = max(1, self.owner.canvas.winfo_height())
@@ -2739,8 +2770,18 @@ class BBOX_App:
         self.COLOUR_SELECT_WINDOW = None
         self.CHANGE_CLASS_NAMES_WINDOW = None
         self.image = None
-        self._cached_image_np = None
-        self._cached_zoom_factor = -1.0      
+
+        # Rendering caches. The old cache stored a complete enlarged image,
+        # which became very expensive at high zoom. The new cache stores the
+        # source RGB image plus only the currently visible viewport.
+        self._cached_image_np = None          # retained for compatibility; no longer used for zoom rendering
+        self._cached_zoom_factor = -1.0       # retained for compatibility
+        self._source_image_pil = None
+        self._cached_viewport_key = None
+        self._cached_viewport_pil = None
+        self._cached_viewport_tk = None
+        self._render_generation = 0
+        self._boxlist_render_signature = None
         
         
         self.class_names_path = str(Path(__file__).parent / "files_bbox" / "class_names.txt")
@@ -2996,107 +3037,316 @@ class BBOX_App:
             self.class_colors.append([int(c * 255) for c in rgb])
         return self.class_colors
 
-    def update_display(self):
-        if self.image is None:
-            print("No Image")
-            return
+    def invalidate_render_cache(self):
+        """Invalidate cached source/viewport images after the source image changes."""
+        self._source_image_pil = None
+        self._cached_viewport_key = None
+        self._cached_viewport_pil = None
+        self._cached_viewport_tk = None
+        self._cached_image_np = None
+        self._cached_zoom_factor = -1.0
+        self._render_generation = getattr(self, "_render_generation", 0) + 1
 
-        # Clear canvas        
-        self.canvas.delete("all")
-        #self.image_rgb = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
-        
-        # Zoom factor
-        zoom_factor = self.ZOOMER.zoom_factor
-        
-        # Cache resized image if zoom factor changed or if not already cached
-        if zoom_factor != self._cached_zoom_factor or self._cached_image_np is None:
-            self.image_pil = Image.fromarray(self.image)
-            new_size = (int(self.image_pil.width * zoom_factor), int(self.image_pil.height * zoom_factor))
-            image_resized = self.image_pil.resize(new_size, Image.NEAREST)
-            self._cached_image_np = np.array(image_resized)
-            self._cached_zoom_factor = zoom_factor
-        
-        # Convert cached image to RGB for display (OpenCV BGR -> RGB)
-        self.image_rgb = cv2.cvtColor(self._cached_image_np, cv2.COLOR_BGR2RGB)
-    
-        # Ensure class colors cover all defined classes
+    def _get_source_image_pil(self):
+        """Return the current source image as cached RGB PIL image."""
+        if self._source_image_pil is None:
+            # self.image is OpenCV BGR; keep self.image_rgb as the unscaled
+            # source RGB image for compatibility with the rest of the app.
+            self.image_rgb = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+            self._source_image_pil = Image.fromarray(self.image_rgb)
+            # image_pil remains the full source image for code paths that use
+            # it to obtain annotation-space dimensions.
+            self.image_pil = self._source_image_pil
+        return self._source_image_pil
+
+    def _get_viewport_background(self):
+        """
+        Return only the visible portion of the image, resized to screen space.
+
+        This is the key performance optimization: crop in ORIGINAL image space
+        first, then resize only that crop. Rendering cost therefore follows the
+        canvas size rather than (image_width * zoom) x (image_height * zoom).
+        """
+        source = self._get_source_image_pil()
+        image_width, image_height = source.size
+
+        zoom = max(float(self.ZOOMER.zoom_factor), 1e-9)
+        vx = float(self.ZOOMER.view_offset_x)
+        vy = float(self.ZOOMER.view_offset_y)
+        canvas_width = max(1, int(self.canvas.winfo_width()))
+        canvas_height = max(1, int(self.canvas.winfo_height()))
+
+        # Canvas coordinates [0..canvas] -> original image coordinates.
+        src_x1 = max(0, int(np.floor((0.0 - vx) / zoom)))
+        src_y1 = max(0, int(np.floor((0.0 - vy) / zoom)))
+        src_x2 = min(image_width, int(np.ceil((canvas_width - vx) / zoom)))
+        src_y2 = min(image_height, int(np.ceil((canvas_height - vy) / zoom)))
+
+        if src_x2 <= src_x1 or src_y2 <= src_y1:
+            return None, 0.0, 0.0
+
+        # Screen position of the cropped source image's top-left corner.
+        dest_x = vx + src_x1 * zoom
+        dest_y = vy + src_y1 * zoom
+        dest_width = max(1, int(round((src_x2 - src_x1) * zoom)))
+        dest_height = max(1, int(round((src_y2 - src_y1) * zoom)))
+
+        # Panning by sub-pixel amounts can reuse the same bitmap; dest_x/dest_y
+        # are intentionally not part of this cache key.
+        cache_key = (
+            self._render_generation,
+            round(zoom, 8),
+            src_x1, src_y1, src_x2, src_y2,
+            dest_width, dest_height,
+        )
+
+        if cache_key != self._cached_viewport_key or self._cached_viewport_pil is None:
+            crop = source.crop((src_x1, src_y1, src_x2, src_y2))
+            if crop.size != (dest_width, dest_height):
+                crop = crop.resize((dest_width, dest_height), Image.NEAREST)
+
+            self._cached_viewport_pil = crop
+            self._cached_viewport_tk = ImageTk.PhotoImage(crop)
+            self._cached_viewport_key = cache_key
+
+        return self._cached_viewport_pil, dest_x, dest_y
+
+    @staticmethod
+    def _rgb_to_canvas_hex(rgb):
+        r, g, b = [max(0, min(255, int(v))) for v in rgb]
+        return f"#{r:02x}{g:02x}{b:02x}"
+
+    def _draw_canvas_annotations(self):
+        """Draw annotation overlays as lightweight Tk Canvas primitives."""
+        zoom = float(self.ZOOMER.zoom_factor)
+        vx = float(self.ZOOMER.view_offset_x)
+        vy = float(self.ZOOMER.view_offset_y)
+        canvas_width = max(1, int(self.canvas.winfo_width()))
+        canvas_height = max(1, int(self.canvas.winfo_height()))
+
         needed_colors = len(self.class_names) if self.class_names else 20
         if not self.class_colors or len(self.class_colors) < needed_colors:
             self.generate_colors(max(needed_colors, 20))
-    
-        # Draw annotations
+
+        selected_outline = "#ffff00"
+        inactive_corner = "#800080"
+
         for i, box in enumerate(self.ANNOTATION_HANDLER.annotations):
             label, x1, y1, x2, y2 = box
-            
-            # Map coordinates to zoom level
-            zx1 = int(x1 * zoom_factor)
-            zx2 = int(x2 * zoom_factor)
-            zy1 = int(y1 * zoom_factor)
-            zy2 = int(y2 * zoom_factor)
-            
-            # Safety checks for label index
-            color = [0, 255, 0] # Default Green
+
+            sx1 = x1 * zoom + vx
+            sy1 = y1 * zoom + vy
+            sx2 = x2 * zoom + vx
+            sy2 = y2 * zoom + vy
+
+            left, right = min(sx1, sx2), max(sx1, sx2)
+            top, bottom = min(sy1, sy2), max(sy1, sy2)
+
+            # Do not create Tk items for annotations completely outside the
+            # visible viewport.
+            if right < 0 or bottom < 0 or left > canvas_width or top > canvas_height:
+                continue
+
+            color = [0, 255, 0]
             if 0 <= label < len(self.class_colors):
                 color = self.class_colors[label]
-    
-            # Highlight selected box
-            if i == self.selected_box:
-                vertices = [(zx1, zy1), (zx2, zy1), (zx1, zy2), (zx2, zy2)]
+            color_hex = self._rgb_to_canvas_hex(color)
+
+            is_selected = i == self.selected_box
+            is_multiselected = self.multiselect_on and i in self.multiselect_idx
+            outline = selected_outline if (is_selected or is_multiselected) else color_hex
+
+            self.canvas.create_rectangle(
+                sx1, sy1, sx2, sy2,
+                outline=outline,
+                width=1,
+                tags=("annotation",),
+            )
+
+            if is_selected:
                 corners = {
-                    "top_left": vertices[0],
-                    "top_right": vertices[1],
-                    "bottom_left": vertices[2],
-                    "bottom_right": vertices[3]
+                    "top_left": (sx1, sy1),
+                    "top_right": (sx2, sy1),
+                    "bottom_left": (sx1, sy2),
+                    "bottom_right": (sx2, sy2),
                 }
-                cv2.rectangle(self.image_rgb, (zx1, zy1), (zx2, zy2), (255, 255, 0), 1)
-                for corner, coords in corners.items():
-                    corner_color = [255, 255, 0] if corner == self.resize_corner else [128, 0, 128]
-                    cv2.circle(self.image_rgb, coords, 5, corner_color, 1)
-    
-            if i in self.multiselect_idx and self.multiselect_on:
-                cv2.rectangle(self.image_rgb, (zx1, zy1), (zx2, zy2), (255, 255, 0), 1)
-    
-            if i != self.selected_box and i not in self.multiselect_idx:
-                cv2.rectangle(self.image_rgb, (zx1, zy1), (zx2, zy2), color, 1)
-    
-            fontSize = 0.6
-            try:
-                class_text = str(self.class_names[label]) if 0 <= label < len(self.class_names) else "N.A."
-                cv2.putText(self.image_rgb, class_text, (zx1, zy1 - 5),
-                            cv2.FONT_HERSHEY_SIMPLEX, fontSize, color, 1)
-            except:
-                cv2.putText(self.image_rgb, "N.A.", (zx1, zy1 - 5),
-                            cv2.FONT_HERSHEY_SIMPLEX, fontSize, color, 1)
-    
+                radius = 5
+                for corner, (cx, cy) in corners.items():
+                    corner_color = selected_outline if corner == self.resize_corner else inactive_corner
+                    self.canvas.create_oval(
+                        cx - radius, cy - radius, cx + radius, cy + radius,
+                        outline=corner_color,
+                        width=1,
+                        tags=("annotation",),
+                    )
+
+            class_text = str(self.class_names[label]) if 0 <= label < len(self.class_names) else "N.A."
+            self.canvas.create_text(
+                sx1, sy1 - 4,
+                text=class_text,
+                anchor=tk.SW,
+                fill=color_hex,
+                font=("TkDefaultFont", 9),
+                tags=("annotation",),
+            )
+
             if self.show_conf:
-                try:
-                    conf_val = self.confidences[i] if i < len(self.confidences) else 0
-                    conf = str(conf_val)
-                    cv2.rectangle(self.image_rgb, (zx1 + 2, zy2 - 2),
-                                  (int(zx1 + 30 * fontSize / 0.4), int(zy2 - 16 * fontSize / 0.4)), (0, 0, 0), -1)
-                    cv2.putText(self.image_rgb, conf, (zx1 + 2, zy2 - 5), cv2.FONT_HERSHEY_SIMPLEX, fontSize, color, 1)
-                except:
-                    # If confidences is out of sync, just don't draw it for this box
-                    pass
-    
-        # Convert to PIL and then to Tkinter format
-        self.image_pil = Image.fromarray(self.image_rgb)
-        self.image_tk = ImageTk.PhotoImage(self.image_pil)
-        
-        vx = self.ZOOMER.view_offset_x
-        vy = self.ZOOMER.view_offset_y
-        self.image_id = self.canvas.create_image(vx, vy, anchor=tk.NW, image=self.image_tk)
-    
-        # Update archive and UI elements
+                conf_val = self.confidences[i] if i < len(self.confidences) else 0
+                conf_text = str(conf_val)
+                # Approximate the old OpenCV confidence label while keeping it
+                # as a Canvas overlay rather than modifying the image bitmap.
+                text_width = max(24, 7 * len(conf_text) + 6)
+                text_height = 16
+                self.canvas.create_rectangle(
+                    sx1 + 2, sy2 - text_height,
+                    sx1 + 2 + text_width, sy2 - 2,
+                    fill="black",
+                    outline="black",
+                    tags=("annotation",),
+                )
+                self.canvas.create_text(
+                    sx1 + 4, sy2 - 3,
+                    text=conf_text,
+                    anchor=tk.SW,
+                    fill=color_hex,
+                    font=("TkDefaultFont", 9),
+                    tags=("annotation",),
+                )
+
+    def _draw_pil_annotations(self, image_pil, offset_x=0.0, offset_y=0.0, zoom=1.0, include_selection=True):
+        """Draw annotations on a PIL image; used only for screenshots."""
+        draw = ImageDraw.Draw(image_pil)
+        width, height = image_pil.size
+
+        needed_colors = len(self.class_names) if self.class_names else 20
+        if not self.class_colors or len(self.class_colors) < needed_colors:
+            self.generate_colors(max(needed_colors, 20))
+
+        for i, box in enumerate(self.ANNOTATION_HANDLER.annotations):
+            label, x1, y1, x2, y2 = box
+            sx1 = int(round(x1 * zoom + offset_x))
+            sy1 = int(round(y1 * zoom + offset_y))
+            sx2 = int(round(x2 * zoom + offset_x))
+            sy2 = int(round(y2 * zoom + offset_y))
+
+            left, right = min(sx1, sx2), max(sx1, sx2)
+            top, bottom = min(sy1, sy2), max(sy1, sy2)
+            if right < 0 or bottom < 0 or left > width or top > height:
+                continue
+
+            color = tuple(self.class_colors[label]) if 0 <= label < len(self.class_colors) else (0, 255, 0)
+            selected = include_selection and (i == self.selected_box or (self.multiselect_on and i in self.multiselect_idx))
+            outline = (255, 255, 0) if selected else color
+            draw.rectangle((left, top, right, bottom), outline=outline, width=1)
+
+            class_text = str(self.class_names[label]) if 0 <= label < len(self.class_names) else "N.A."
+            draw.text((sx1, sy1 - 12), class_text, fill=color)
+
+            if self.show_conf:
+                conf_val = self.confidences[i] if i < len(self.confidences) else 0
+                draw.text((sx1 + 2, sy2 - 12), str(conf_val), fill=color, stroke_width=2, stroke_fill=(0, 0, 0))
+
+    def render_viewport_snapshot(self):
+        """Render the current viewport, including annotation overlays, to PIL."""
+        viewport, dest_x, dest_y = self._get_viewport_background()
+        canvas_width = max(1, int(self.canvas.winfo_width()))
+        canvas_height = max(1, int(self.canvas.winfo_height()))
+        snapshot = Image.new("RGB", (canvas_width, canvas_height), (0, 0, 0))
+
+        if viewport is not None:
+            px = int(round(dest_x))
+            py = int(round(dest_y))
+
+            # Explicitly crop to the output canvas before pasting. This keeps
+            # negative offsets and partially visible images portable in PIL.
+            src_left = max(0, -px)
+            src_top = max(0, -py)
+            src_right = min(viewport.width, canvas_width - px)
+            src_bottom = min(viewport.height, canvas_height - py)
+            if src_right > src_left and src_bottom > src_top:
+                visible = viewport.crop((src_left, src_top, src_right, src_bottom))
+                snapshot.paste(visible, (max(0, px), max(0, py)))
+
+        self._draw_pil_annotations(
+            snapshot,
+            offset_x=float(self.ZOOMER.view_offset_x),
+            offset_y=float(self.ZOOMER.view_offset_y),
+            zoom=float(self.ZOOMER.zoom_factor),
+            include_selection=True,
+        )
+        return snapshot
+
+    def render_annotated_image(self):
+        """Render a full-size annotated RGB image for export/save operations."""
+        image_rgb = cv2.cvtColor(self.image, cv2.COLOR_BGR2RGB)
+
+        needed_colors = len(self.class_names) if self.class_names else 20
+        if not self.class_colors or len(self.class_colors) < needed_colors:
+            self.generate_colors(max(needed_colors, 20))
+
+        for i, box in enumerate(self.ANNOTATION_HANDLER.annotations):
+            label, x1, y1, x2, y2 = box
+            x1, y1, x2, y2 = map(lambda v: int(round(v)), (x1, y1, x2, y2))
+            left, right = min(x1, x2), max(x1, x2)
+            top, bottom = min(y1, y2), max(y1, y2)
+            color = tuple(self.class_colors[label]) if 0 <= label < len(self.class_colors) else (0, 255, 0)
+
+            cv2.rectangle(image_rgb, (left, top), (right, bottom), color, 1)
+            class_text = str(self.class_names[label]) if 0 <= label < len(self.class_names) else "N.A."
+            cv2.putText(image_rgb, class_text, (left, top - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 1)
+
+            if self.show_conf:
+                conf_val = self.confidences[i] if i < len(self.confidences) else 0
+                conf_text = str(conf_val)
+                cv2.rectangle(image_rgb, (left + 2, bottom - 2), (left + 47, bottom - 24), (0, 0, 0), -1)
+                cv2.putText(image_rgb, conf_text, (left + 2, bottom - 5), cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 1)
+
+        return image_rgb
+
+    def _current_boxlist_signature(self):
+        """State that actually affects the Box List widget's contents."""
+        return (
+            len(self.ANNOTATION_HANDLER.annotations),
+            tuple(int(a[0]) for a in self.ANNOTATION_HANDLER.annotations),
+            self.selected_box,
+            tuple(self.class_names),
+        )
+
+    def update_display(self):
+        if self.image is None or self.canvas is None:
+            print("No Image")
+            return
+
+        # Rebuild only lightweight canvas objects. The image bitmap itself is
+        # restricted to the visible viewport and is cached independently.
+        self.canvas.delete("all")
+
+        viewport_pil, dest_x, dest_y = self._get_viewport_background()
+        if viewport_pil is not None and self._cached_viewport_tk is not None:
+            # image_pil deliberately remains the full source image; only the
+            # Tk display object represents the cropped viewport.
+            self.image_tk = self._cached_viewport_tk
+            self.image_id = self.canvas.create_image(
+                dest_x,
+                dest_y,
+                anchor=tk.NW,
+                image=self.image_tk,
+                tags=("background",),
+            )
+
+        self._draw_canvas_annotations()
+
+        # Archive comparison is cheap and preserves the existing undo behavior.
         self.ARCHIVE.fill_archive()
-    
-        if self.BOX_LIST is not None:
-            self.BOX_LIST.refresh_boxlist()
-    
-        #if self.ZOOM_WINDOW is not None:
-            #self.ZOOM_WINDOW.update_zoom_window()
-    
-        
+
+        # The Box List used to be destroyed/recreated on every zoom and pan.
+        # Refresh only while visible and only if its meaningful content changed.
+        if self.BOX_LIST is not None and self.BOX_LIST.shown:
+            signature = self._current_boxlist_signature()
+            if signature != self._boxlist_render_signature:
+                self.BOX_LIST.refresh_boxlist()
+                self._boxlist_render_signature = signature
+
     def exit_app(self):
         self.root.destroy()  
 
