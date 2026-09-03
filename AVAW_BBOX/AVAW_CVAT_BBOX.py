@@ -129,6 +129,13 @@ class ImageHandler:
 
             # Keep a backup of last saved annotations
             self.owner.last_save = copy.deepcopy(annotations)
+            
+            # Reset translation state for the newly loaded image
+            if (
+                hasattr(self.owner, "TRANSLATE_ANNOTATIONS_WINDOW")
+                and self.owner.TRANSLATE_ANNOTATIONS_WINDOW is not None
+            ):
+                self.owner.TRANSLATE_ANNOTATIONS_WINDOW.on_new_image()
 
             # Update title label (assuming title_label is owned by BBOX_App)
             image_name = Path(self.owner.image_paths[self.owner.current_image_index]).stem
@@ -482,11 +489,11 @@ class AnnotationHandler:
     
     def reset_translation(self, event=None):
         window = self.owner.TRANSLATE_ANNOTATIONS_WINDOW
-    
-        window.w1.set(0)
-        window.w2.set(0)
+            
         window.last_translate_value_x.set(0)
         window.last_translate_value_y.set(0)
+        window.w1.set(0)
+        window.w2.set(0)
     
         self.annotations = copy.deepcopy(
             self.owner.annotation_backup_before_translation
@@ -536,6 +543,7 @@ class AnnotationHandler:
         
     def delete_all_annotations(self, event=None):
         self.annotations = []
+        self.owner.confidences.clear()
         self.owner.update_display()
 
 class PredictionModelHandler:
@@ -640,24 +648,7 @@ class PredictionModelHandler:
                 f"Model loading failed: {e}"
             )
             return False
-
-    def next_image(self, event=None):
-        """Go to the next image."""
-        if self.owner.current_image_index + 1 < len(self.owner.image_paths):
-            self.owner.USER_INPUT_HANDLER.prompt_saving()
-
-            self.owner.ARCHIVE.clear_archive()
-            self.owner.USER_INPUT_HANDLER.stop_multiselect()
-            self.owner.number.set(self.owner.current_image_index + 1)
-
-            self.owner.last_annotations = copy.deepcopy(self.owner.ANNOTATION_HANDLER.annotations)
-            self.load_image(self.owner.current_image_index + 1)
-            self.owner.selected_box = None
-
-            # Refresh BoxList
-            self.owner.BOX_LIST.refresh_boxlist()
-  
-    
+   
    
     def run_yolo_inference(self, event=None):
         """Run YOLO inference on the current image and update annotations."""
@@ -1098,6 +1089,8 @@ class TranslateAnnotationsWindow:
             self.translate_window.withdraw()
             self.shown = False
         else:
+            self.on_new_image()
+    
             self.translate_window.deiconify()
             self.shown = True
             
@@ -1105,6 +1098,21 @@ class TranslateAnnotationsWindow:
         """Hide instead of destroy when X is clicked."""
         self.translate_window.withdraw()
         self.shown = False
+        
+    def on_new_image(self):
+        """Reset translation controls and use current annotations as new baseline."""
+    
+        # Important: reset these FIRST so Scale.set() callbacks cause zero movement.
+        self.last_translate_value_x.set(0)
+        self.last_translate_value_y.set(0)
+    
+        self.w1.set(0)
+        self.w2.set(0)
+    
+        # Current image/annotations are now the translation baseline.
+        self.owner.annotation_backup_before_translation = copy.deepcopy(
+            self.owner.ANNOTATION_HANDLER.annotations
+        )
 
 class Window:
     def __init__(self,owner,title="Window", size="400x400"):
@@ -1878,12 +1886,23 @@ class UserInputHandler:
     
             self.owner.update_display()
     
+            # Use currently selected class colour
+            try:
+                class_idx = self.owner.class_names.index(
+                    self.owner.class_dropdown.get()
+                )
+                outline_color = self.owner._rgb_to_canvas_hex(
+                    self.owner.class_colors[class_idx]
+                )
+            except (ValueError, IndexError):
+                outline_color = "green"  # fallback
+    
             self.owner.canvas.create_rectangle(
                 x1,
                 y1,
                 x2,
                 y2,
-                outline="green",
+                outline=outline_color,
                 width=2
             )
     
@@ -2127,10 +2146,9 @@ class UserInputHandler:
 
     # Function to handle saving the modified annotations
     def on_save(self):
-        try:
-            self.owner.last_save = copy.deepcopy(self.owner.ANNOTATION_HANDLER.annotations)
+        try:            
             self.owner.ANNOTATION_HANDLER.save_yolo_annotations(self.owner.annotations_path, self.owner.ANNOTATION_HANDLER.annotations, self.owner.image.shape[0], self.owner.image.shape[1])
-
+            self.owner.last_save = copy.deepcopy(self.owner.ANNOTATION_HANDLER.annotations)
             if not self.owner.auto_save: messagebox.showinfo("Success", f"Annotations saved to {self.owner.annotations_path}")
             print(f"Annotations saved to {self.owner.annotations_path}")
         except Exception as e:
@@ -2141,11 +2159,13 @@ class UserInputHandler:
         if self.owner.multiselect_on and len(self.owner.multiselect_idx) > 0:
             self.owner.copying_box = []
             for idx in self.owner.multiselect_idx:
-                self.owner.copying_box.append(self.owner.ANNOTATION_HANDLER.annotations[idx])
+                self.owner.copying_box.append(copy.deepcopy(self.owner.ANNOTATION_HANDLER.annotations[idx]))
             return
         
         if self.owner.selected_box is not None:
-            self.owner.copying_box = self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box]
+            self.owner.copying_box = copy.deepcopy(
+                self.owner.ANNOTATION_HANDLER.annotations[self.owner.selected_box]
+                )
             print("Copying")
         else:
             print("No Box Selected")
@@ -2155,13 +2175,13 @@ class UserInputHandler:
             # Do something if copying_box is a list of lists
             print("copying_box is a list of lists")
             for box in self.owner.copying_box:
-                self.owner.ANNOTATION_HANDLER.annotations.append(box)
+                self.owner.ANNOTATION_HANDLER.annotations.append(copy.deepcopy(box))
             self.owner.selected_box = None
             self.owner.update_display()
             return
         
         if self.owner.copying_box is not None:
-            self.owner.ANNOTATION_HANDLER.annotations.append(self.owner.copying_box)
+            self.owner.ANNOTATION_HANDLER.annotations.append(copy.deepcopy(self.owner.copying_box))
             self.owner.selected_box = len(self.owner.ANNOTATION_HANDLER.annotations)-1
             print("Pasted")
             self.owner.update_display()
