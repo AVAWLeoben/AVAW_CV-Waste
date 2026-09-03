@@ -393,10 +393,10 @@ class AnnotationHandler:
                     box_height *= image_height
                     
                     # Calculate top-left and bottom-right coordinates
-                    x1 = int(x_center - (box_width / 2))
-                    y1 = int(y_center - (box_height / 2))
-                    x2 = int(x_center + (box_width / 2))
-                    y2 = int(y_center + (box_height / 2))
+                    x1 = (x_center - (box_width / 2))
+                    y1 = (y_center - (box_height / 2))
+                    x2 = (x_center + (box_width / 2))
+                    y2 = (y_center + (box_height / 2))
                     
                     self.annotations.append([int(label), x1, y1, x2, y2])  # Save the box with the label
         return self.annotations
