@@ -87,7 +87,7 @@ Further publication details and citations will be added here as they become avai
 ---
 ## 🚀 Installation
 
-To get started, download the latest version of the software from the [Releases](https://github.com/AVAWLeoben/AVAW_CVAT/releases) page.
+To get started, download the latest version of the software from the [Releases](https://github.com/AVAWLeoben/AVAW_CV-Waste/releases) page.
 
 After downloading and extracting the release files, open the [INSTALL](https://github.com/AVAWLeoben/AVAW_CV-Waste/tree/JOSS-short-lived-branch/INSTALL) folder for detailed setup instructions.
 
