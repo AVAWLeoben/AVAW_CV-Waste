@@ -17,6 +17,7 @@ Built with Tkinter, OpenCV, and Ultralytics for fast manual labeling and assiste
 * 📊 Confidence display toggle
 * 🎨 Custom class names and colors
 * 🔄 Annotation translation utilities
+* 🖥️ Optional Browser Support - (in development)
 
 ---
 
