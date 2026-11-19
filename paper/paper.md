@@ -77,7 +77,7 @@ Lastly, `CV-Waste` was specifically tailored to bounding box annotation. Boundin
 
 Within these projects, the software has been applied in research workflows involving post-consumer textiles, lightweight packaging waste, and post-shredder scrap, where large quantities of annotated image data are required for training and evaluating object detection models.
 
-Datasets created using `AVAW_CV-Waste` contributed to research on sensor-based sorting of shredder scrap towards green steel production [@yolo_scrap_2026], AI-assisted recycling workflows for metal composite waste streams [@kiramet_green_steel; @kiramet_recycling], and plastic recycling systems for food-contact materials [@greenplast_food].
+Datasets created using `AVAW_CV-Waste` contributed to research on sensor-based sorting of shredder scrap towards green steel production [@copper_detection], AI-assisted recycling workflows for metal composite waste streams [@kiramet_green_steel; @kiramet_recycling], and plastic recycling systems for food-contact materials [@greenplast_food].
 
 The generated datasets also supported research on robust YOLO-based ejection of copper-containing particles from heavily corroded scrap streams [@robust_yolo_2026], detection of copper-containing scrap in post-shredder fractions using machine vision and artificial intelligence [@copper_detection], and deep learning approaches for classification of copper-containing metal scrap in recycling processes [@deep_learning_scrap].
 
